@@ -35,7 +35,7 @@ This Azure DevOps Pipeline template can be used with either:
     - `INFRACOST_API_KEY`: your Infracost API key. To get an API key [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register`.
     - [Azure credentials](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_client_secret) so Terraform init can be run. Usually these are `ARM_CLIENT_ID`, `ARM_CLIENT_SECRET`, `ARM_SUBSCRIPTION_ID` and `ARM_TENANT_ID`.
 
-4. Add the following stage to your `azure-pipelines.yml` (create this file if you don't have one already). You can customize the `env` section to add variables and environment variables mentioned in the following sections.
+4. Add the following stage to your `azure-pipelines.yml` (create this file if you don't have one already). You can customize the `env` section to add variables and environment variables mentioned in the following sections. If you're using a self-hosted agent, please ensure that `bc`, `curl` and `git` are installed as the `diff.sh` script uses those.
 
     ```yml
     pool:
@@ -50,6 +50,7 @@ This Azure DevOps Pipeline template can be used with either:
             steps:
               - checkout: self
               - bash: |
+                  sudo apt-get update -qq && sudo apt-get -qq install bc curl git
                   curl -sL https://github.com/infracost/infracost/releases/latest/download/infracost-linux-amd64.tar.gz | tar xz -C /tmp
                   sudo mv /tmp/infracost-linux-amd64 /usr/bin/infracost
                   curl -sL -o infracost_diff.sh https://raw.githubusercontent.com/infracost/infracost/master/scripts/ci/diff.sh
@@ -77,7 +78,7 @@ This Azure DevOps Pipeline template can be used with either:
     - `GITHUB_TOKEN`: your GitHub Token.
     - [Azure credentials](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_client_secret) so Terraform init can be run. Usually these are `ARM_CLIENT_ID`, `ARM_CLIENT_SECRET`, `ARM_SUBSCRIPTION_ID` and `ARM_TENANT_ID`.
 
-3. Add the following stage to your `azure-pipelines.yml` (create this file if you don't have one already). You can customize the `env` section to add environment variables mentioned in the following sections.
+3. Add the following stage to your `azure-pipelines.yml` (create this file if you don't have one already). You can customize the `env` section to add environment variables mentioned in the following sections. If you're using a self-hosted agent, please ensure that `bc`, `curl` and `git` are installed as the `diff.sh` script uses those.
 
     ```yml
     pool:
@@ -92,6 +93,7 @@ This Azure DevOps Pipeline template can be used with either:
             steps:
               - checkout: self
               - bash: |
+                  sudo apt-get update -qq && sudo apt-get -qq install bc curl git
                   curl -sL https://github.com/infracost/infracost/releases/latest/download/infracost-linux-amd64.tar.gz | tar xz -C /tmp
                   sudo mv /tmp/infracost-linux-amd64 /usr/bin/infracost
                   curl -sL -o infracost_diff.sh https://raw.githubusercontent.com/infracost/infracost/master/scripts/ci/diff.sh
