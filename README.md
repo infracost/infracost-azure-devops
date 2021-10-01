@@ -146,6 +146,7 @@ There are two sets of environment variables: ones that are used by this integrat
 
 **Optional** A JSON string describing the condition that triggers pull request comments, can be one of these:
 - `'{"has_diff": true}'`: only post a comment if there is a diff. This is the default behavior.
+- `'{"update": true}'`: post a comment if there is a diff, update the comment when the diff changes.
 - `'{"always": true}'`: always post a comment.
 - `'{"percentage_threshold": 0}'`: absolute percentage threshold that triggers a comment. For example, set to 1 to post a comment if the cost estimate changes by more than plus or minus 1%.
 
