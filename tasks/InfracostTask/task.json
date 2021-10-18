@@ -1,0 +1,69 @@
+{
+  "id": "78cd719b-d21a-4ff3-9028-bad230e7052e",
+  "name": "InfracostTask",
+  "friendlyName": "Infracost task",
+  "description": "Execute Infracost commands to obtain pricing information based on your terraform code or plan.",
+  "author": "Infracost",
+  "helpMarkDown": "",
+  "category": "Tool",
+  "visibility": ["Build", "Release"],
+  "demands": [],
+  "version": {
+    "Major": "0",
+    "Minor": "0",
+    "Patch": "1"
+  },
+  "instanceNameFormat": "Install Infracost $(infracostVersion)",
+  "inputs": [
+    {
+      "name": "command",
+      "type": "pickList",
+      "label": "Command",
+      "defaultValue": "breakdown",
+      "required": true,
+      "helpMarkDown": "The infracost command to execute.",
+      "options": {
+        "breakdown": "breakdown",
+        "completion": "completion",
+        "configure": "configure",
+        "diff": "diff",
+        "help": "help",
+        "output": "output"
+      },
+      "properties": {
+        "EditableOptions": "False"
+      }
+    },
+    {
+      "name": "workingDirectory",
+      "type": "filePath",
+      "label": "Configuration directory",
+      "defaultValue": "$(System.DefaultWorkingDirectory)",
+      "helpMarkDown": "Directory containing the Terraform configuration files or generated terraform plan. The default value is $(System.DefaultWorkingDirectory)",
+      "required": false
+    },
+    {
+      "name": "commandOptions",
+      "type": "string",
+      "label": "Additional command arguments",
+      "helpMarkDown": "Any additional arguments for the selected command such as '-option value' or '-flag'.",
+      "required": false
+    },
+    {
+      "name": "outputFile",
+      "type": "string",
+      "label": "The absolute path to a file that contains the output of the infracost command",
+      "helpMarkDown": "specifies the file that contains the output.",
+      "required": false
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "src/index.js"
+    }
+  },
+  "messages": {
+    "InfracostToolNotFound": "Failed to find infracost tool in paths",
+    "InfracostToolNonZeroExit": "Infracost exited with a non-zero return code"
+  }
+}

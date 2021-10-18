@@ -1,0 +1,25 @@
+{
+    "name": "terraformtask",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@types/he": "^1.1.2",
+        "@types/node": "^6.0.101",
+        "@types/q": "^1.5.0",
+        "azure-devops-node-api": "^11.0.1",
+        "azure-pipelines-task-lib": "2.8.0",
+        "azure-pipelines-tool-lib": "0.11.0",
+        "he": "^1.2.0",
+        "jsdom": "^18.0.0"
+    },
+    "devDependencies": {
+        "@types/jsdom": "^16.2.13",
+        "typescript": "^4.4.4"
+    }
+}

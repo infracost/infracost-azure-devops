@@ -1,0 +1,63 @@
+{
+  "manifestVersion": 1,
+  "id": "infracost-devops-extension",
+  "publisher": "infracost",
+  "version": "0.0.1",
+  "name": "Infracost",
+  "description": "A Visual Studio Services extension for infracost",
+  "public": false,
+  "categories": ["Azure Repos"],
+  "icons": {
+    "default": "images/logo.jpg",
+    "large": "images/logo.jpg"
+  },
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "contributions": [
+    {
+      "id": "my-hub",
+      "type": "ms.vss-web.tab",
+      "targets": ["ms.vss-code-web.pr-tabs"],
+      "properties": {
+        "name": "Infracost",
+        "uri": "my-hub.html"
+      }
+    },
+    {
+      "id": "8b70fbb2-b6cb-4301-b917-c9b378ff3699",
+      "type": "ms.vss-distributed-task.task",
+      "targets": ["ms.vss-distributed-task.tasks"],
+      "properties": {
+        "name": "tasks/InfracostInstaller"
+      }
+    },
+    {
+      "id": "78cd719b-d21a-4ff3-9028-bad230e7052e",
+      "type": "ms.vss-distributed-task.task",
+      "targets": ["ms.vss-distributed-task.tasks"],
+      "properties": {
+        "name": "tasks/InfracostTask"
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "my-hub.html",
+      "addressable": true
+    },
+    {
+      "path": "tasks/InfracostInstaller"
+    },
+    {
+      "path": "tasks/InfracostTask"
+    },
+    {
+      "path": "node_modules/vss-web-extension-sdk/lib",
+      "addressable": true,
+      "packagePath": "lib"
+    }
+  ]
+}
