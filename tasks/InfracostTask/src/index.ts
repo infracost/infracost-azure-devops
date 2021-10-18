@@ -80,7 +80,7 @@ const saveOutput = async (
     "infracost-devops-extension",
     "Default",
     "Current",
-    "PR",
+    "PRs",
     id
   );
   if (!doc) {
@@ -90,7 +90,7 @@ const saveOutput = async (
       "infracost-devops-extension",
       "Default",
       "Current",
-      "PR"
+      "PRs"
     );
   } else {
     const update = {
@@ -103,7 +103,7 @@ const saveOutput = async (
       "infracost-devops-extension",
       "Default",
       "Current",
-      "PR"
+      "PRs"
     );
   }
 
