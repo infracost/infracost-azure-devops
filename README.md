@@ -152,6 +152,10 @@ There are two sets of environment variables: ones that are used by this integrat
 
 Please use [this GitHub discussion](https://github.com/infracost/infracost/discussions/1016) to tell us what you'd like to see in PR comments.
 
+### `sync_usage_file` (experimental)
+
+**Optional**  If set to `true` this will create or update the usage file with missing resources, either using zero values or pulling data from AWS CloudWatch. For more information see the [Infracost docs here](https://www.infracost.io/docs/usage_based_resources#1-generate-usage-file). You must also specify the `usage_file` input if this is set to `true`.
+
 ### `GITHUB_TOKEN`
 
 **Optional** This is required if your repo is in GitHub so comments can be posted. This can be your Personal access token, and needs to have `repo` scope so it can post comments.
