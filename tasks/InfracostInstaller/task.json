@@ -1,0 +1,46 @@
+{
+  "id": "8b70fbb2-b6cb-4301-b917-c9b378ff3699",
+  "name": "InfracostInstaller",
+  "friendlyName": "Infracost tool installer",
+  "description": "Find in cache or download a specific version of Infracost and prepend it to the PATH",
+  "author": "Infracost",
+  "helpMarkDown": "",
+  "category": "Tool",
+  "visibility": ["Build", "Release"],
+  "demands": [],
+  "version": {
+    "Major": "0",
+    "Minor": "0",
+    "Patch": "1"
+  },
+  "instanceNameFormat": "Install Infracost $(infracostVersion)",
+  "inputs": [
+    {
+      "name": "infracostVersion",
+      "type": "string",
+      "label": "Version",
+      "defaultValue": "0.9.10",
+      "required": true,
+      "helpMarkDown": "The version of Infracost which should be installed on the agent if not already present"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "src/index.js"
+    }
+  },
+  "outputVariables": [
+    {
+      "name": "infracostLocation",
+      "description": "The location of the infracost binary that was installed on the agent."
+    }
+  ],
+  "messages": {
+    "VerifyInfracostInstallation": "Verifying Infracost installation...",
+    "InputVersionNotValidSemanticVersion": "Input version %s is not a valid semantic version",
+    "InfracostNotFoundInFolder": "Infracost executable not found in path %s",
+    "OperatingSystemNotSupported": "Operating system %s is not supported",
+    "ArchitectureNotSupported": "Architecture %s is not supported",
+    "InfracostDownloadFailed": "Failed to download Infracost from url %s. Error %s"
+  }
+}
