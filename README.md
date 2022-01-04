@@ -132,7 +132,7 @@ There are two sets of environment variables: ones that are used by this integrat
 
 ### `usage_file`
 
-**Optional** Path to Infracost [usage file](https://www.infracost.io/docs/usage_based_resources#infracost-usage-file) that specifies values for usage-based resources, see [this example file](https://github.com/infracost/infracost/blob/master/infracost-usage-example.yml) for the available options.
+**Optional** Path to Infracost [usage file](https://www.infracost.io/docs/features/usage_based_resources#infracost-usage-file) that specifies values for usage-based resources, see [this example file](https://github.com/infracost/infracost/blob/master/infracost-usage-example.yml) for the available options.
 
 ### `config_file`
 
@@ -140,7 +140,7 @@ There are two sets of environment variables: ones that are used by this integrat
 
 ### `show_skipped`
 
-**Optional** Show unsupported resources, some of which might be free, at the bottom of the Infracost output (default is false).
+**Optional** Show unsupported resources, at the bottom of the Infracost output (default is false).
 
 ### `post_condition`
 
