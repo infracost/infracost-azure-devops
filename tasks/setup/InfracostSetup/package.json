@@ -1,0 +1,28 @@
+{
+  "name": "setuptask",
+  "version": "1.0.0",
+  "description": "setup infracost cli task",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "azure-pipelines-task-lib": "^3.1.10",
+    "azure-pipelines-tool-lib": "^0.13.3",
+    "node-fetch": "^2.6.6",
+    "semver": "^7.3.5"
+  },
+  "devDependencies": {
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^17.0.7",
+    "@types/node-fetch": "^2.5.12",
+    "@types/q": "^1.5.5",
+    "sync-request": "^6.1.0",
+    "typescript": "^4.5.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "infracost",
+  "license": "ISC"
+}
