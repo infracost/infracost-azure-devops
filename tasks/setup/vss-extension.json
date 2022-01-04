@@ -1,0 +1,36 @@
+{
+  "manifestVersion": 1,
+  "id": "setup-infracost-task",
+  "name": "Setup Infracost",
+  "version": "0.0.15",
+  "publisher": "infracost",
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "description": "Sets up Infracost CLI in your Azure Devops pipeline. Show cloud cost estimates for Terraform in pull requests.",
+  "categories": [
+    "Azure Pipelines"
+  ],
+  "icons": {
+    "default": "images/extension-icon.png"
+  },
+  "files": [
+    {
+      "path": "InfracostSetup"
+    }
+  ],
+  "contributions": [
+    {
+      "id": "infracost-setuptask",
+      "type": "ms.vss-distributed-task.task",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "properties": {
+        "name": "InfracostSetup"
+      }
+    }
+  ]
+}
