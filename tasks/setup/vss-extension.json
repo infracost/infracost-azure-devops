@@ -21,6 +21,11 @@
       "path": "InfracostSetup"
     }
   ],
+  "content": {
+    "details": {
+      "path": "overview.md"
+    }
+  },
   "contributions": [
     {
       "id": "infracost-setuptask",
