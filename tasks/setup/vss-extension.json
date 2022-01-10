@@ -1,9 +1,9 @@
 {
   "manifestVersion": 1,
   "id": "setup-infracost-task",
-  "name": "Setup Infracost",
+  "name": "Infracost Setup",
   "version": "0.0.15",
-  "publisher": "infracost",
+  "publisher": "Infracost",
   "targets": [
     {
       "id": "Microsoft.VisualStudio.Services"
