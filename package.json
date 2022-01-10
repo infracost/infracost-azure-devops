@@ -1,13 +1,24 @@
 {
   "name": "infracost-azure-devops",
+  "description": "Infracost Azure Devops Pipeline Tasks",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/infracost/infracost-azure-devops.git"
+  },
+  "author": "Infracost",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/infracost/infracost-azure-devops/issues"
+  },
+  "homepage": "https://github.com/infracost/infracost-azure-devops#readme",
+  "directories": {
+    "scripts": "scripts"
+  },
   "version": "1.0.0",
-  "description": "",
   "main": "scripts/generateExamplesTests.js",
   "scripts": {
-    "generate-pipeline": "node scripts/generateExamplesTests.js"
+    "examples:generate_tests": "node scripts/generateExamplesTests.js"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "js-yaml": "^4.1.0"
   }
