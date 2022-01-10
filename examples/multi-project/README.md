@@ -1,6 +1,6 @@
 # Multi-project
 
-These examples show how to run Infracost Azure Devops tasks against a multi-project setup using either an [Infracost config file](https://www.infracost.io/docs/multi_project/config_file) or a GitHub Actions build matrix.
+These examples show how to run Infracost Azure Devops tasks against a multi-project setup using either an [Infracost config file](https://www.infracost.io/docs/multi_project/config_file) or These examples show how to run Infracost Azure Devops tasks against a multi-project setup using either an [Infracost config file](https://www.infracost.io/docs/multi_project/config_file) or the Azure DevOps pipeline matrix strategy.
 
 ## Using an Infracost config file
 
