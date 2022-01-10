@@ -57,9 +57,8 @@ function extractAllExamples(examplesDir) {
  */
 
 /**
- * fixupExamples modifies the examples by:
- * 1. Replacing any infracost/actions steps with the local path
- * 2. Replacing the infracost/actions/comment step with a step that comment contents
+ * fixupExamples modifies the examples by replacing the InfracostComment task
+ * with a step that checks comment contents
  *
  * @param {Pipeline[]} examples
  * @returns {Pipeline[]}
