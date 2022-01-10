@@ -1,0 +1,14 @@
+{
+  "name": "infracost-azure-devops",
+  "version": "1.0.0",
+  "description": "",
+  "main": "scripts/generateExamplesTests.js",
+  "scripts": {
+    "generate-pipeline": "node scripts/generateExamplesTests.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  }
+}
