@@ -7,14 +7,14 @@ import fetch from 'node-fetch';
 
 /**
  * archMappings defines how different https://nodejs.org/api/os.html#os_os_arch
- * should be represented in terms of the infracost cli assets.
+ * should be represented in terms of the Infracost CLI assets.
  */
 const archMappings: { [s: string]: string } = {
   x64: 'amd64',
 };
 
 /**
- * mapArch returns a string of the correct binary arch to use in the pipeline.
+ * mapArch() returns a string of the correct binary arch to use in the pipeline.
  *
  * @param arch - the os architecture, arch in [arm, x32, x64...] (https://nodejs.org/api/os.html#os_os_arch)
  */
@@ -23,15 +23,15 @@ function mapArch(arch: string): string {
 }
 
 /**
- * osMappings defines how different https://nodejs.org/api/os.html#os_os_platform
- * should be represented in terms of the infracost cli assets.
+ * osMappings() defines how different https://nodejs.org/api/os.html#os_os_platform
+ * should be represented in terms of the Infracost CLI assets.
  */
 const osMappings: { [s: string]: string } = {
   win32: 'windows',
 };
 
 /**
- * mapOS returns a string of the correct binary os to use in the pipeline.
+ * mapOS() returns a string of the correct binary os to use in the pipeline.
  *
  * @param os
  */
@@ -48,9 +48,9 @@ interface DownloadObject {
 }
 
 /**
- * getDownloadObject returns a Download object with the correct download url and name set.
+ * getDownloadObject() returns a Download object with the correct download url and name set.
  *
- * @param version - the semantic version of Infracost cli to use
+ * @param version - the semantic version of Infracost CLI to use
  */
 function getDownloadObject(version: string): DownloadObject {
   let path = `releases/download/v${version}`;
@@ -94,7 +94,7 @@ function addBinaryToPath(pathToCLI: string, binaryName: string) {
 }
 
 /**
- * getVersion returns a valid version from the task input version. If the input version is invalid it will attempt
+ * getVersion() returns a valid version from the task input version. If the input version is invalid it will attempt
  * to find the closest valid version to the input version.
  */
 async function getVersion(): Promise<string> {
@@ -128,7 +128,7 @@ interface ConfigOption {
 }
 
 /**
- * options defines a list of defined InfracostSetup task options. Defining how they correspond to cli configurations.
+ * options defines a list of defined InfracostSetup task options. Defining how they correspond to CLI configurations.
  */
 const options: ConfigOption[] = [
   {
@@ -157,8 +157,11 @@ const options: ConfigOption[] = [
   }
 ];
 
+/**
+ * configureInfracost sets the OPTIONS on the Infracost CLI
+ */
 async function configureInfracost() {
-  options.map(async (opt: ConfigOption) => {
+  for (const opt of options) {
     let value: any;
 
     if (opt.type == 'boolean') {
@@ -170,11 +173,11 @@ async function configureInfracost() {
     if (value) {
       await setConfig(opt.configName, value);
     }
-  });
+  }
 }
 
 /**
- * setConfig configures the infracost executable with provided values. If the cli returns a non-zero exit code this
+ * setConfig() configures the Infracost executable with provided values. If the CLI returns a non-zero exit code this
  * function throws an Error.
  *
  * @param opt - the config option to set
@@ -209,16 +212,16 @@ async function getAllVersions(): Promise<string[]> {
 }
 
 /**
- * Release defines the json response from get repo releases github api call.
+ * Release defines the JSON response from get repo releases Github API call.
  */
 interface Release {
   name: string;
 }
 
 /**
- * getReleases returns a list of valid Releases for the provided.
+ * getReleases() returns a list of valid Releases for the provided.
  *
- * @param user - the github user who owns the repo, can be an org
+ * @param user - the Github user who owns the repo, can be an org
  * @param name - the name of the repo
  */
 async function getReleases(user: string, name: string): Promise<Release[]> {
@@ -231,11 +234,11 @@ async function getReleases(user: string, name: string): Promise<Release[]> {
 }
 
 /**
- * downloadTool downloads the cli asset at the given version. It then extracts the tar and prepends
- * the cli to the pipeline tool path. This allows the `infracost` executable to be present for all subsequent
+ * downloadTool() downloads the CLI asset at the given version. It then extracts the tar and prepends
+ * the CLI to the pipeline tool path. This allows the `infracost` executable to be present for all subsequent
  * steps in the pipeline.
  *
- * @param version - a valid semantic version string of the Infracost cli
+ * @param version - a valid semantic version string of the Infracost CLI
  */
 async function downloadTool(version: string) {
   const download = getDownloadObject(version);
@@ -247,7 +250,7 @@ async function downloadTool(version: string) {
 }
 
 /**
- * exportEnvVars sets Infracost specific env vars which are available to other pipeline steps/tasks.
+ * exportEnvVars() sets Infracost specific env vars which are available to other pipeline steps/tasks.
  */
 function exportEnvVars() {
   taskLib.setVariable('INFRACOST_AZURE_DEVOPS_PIPELINE', 'true')
@@ -260,8 +263,8 @@ function exportEnvVars() {
 }
 
 /**
- * run is the main entrypoint of the InfracostSetup task.
- * It installs the Infracost cli as a tool to the pipeline.
+ * run() is the main entrypoint of the InfracostSetup task.
+ * It installs the Infracost CLI as a tool to the pipeline.
  */
 async function run() {
   try {
