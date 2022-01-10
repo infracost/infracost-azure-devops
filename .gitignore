@@ -1,6 +1,5 @@
 node_modules/
 *.vsix
-*.js
 .idea/
 .DS_STORE
 .taskkey
