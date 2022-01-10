@@ -1,0 +1,55 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+  "id": "26010371-cb06-4ee9-b209-4a03ca532428",
+  "name": "InfracostComment",
+  "friendlyName": "Infracost Comment Task",
+  "description": "Posts a comment to a pull request showing cloud cost estimates for Terraform. Requires setup task to have been run.",
+  "helpMarkDown": "",
+  "category": "Utility",
+  "author": "Infracost",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "instanceNameFormat": "Infracost Comment $(version)",
+  "inputs": [
+    {
+      "name": "path",
+      "type": "string",
+      "label": "Path",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The path to the `infracost breakdown` JSON that will be passed to `infracost output`. For multiple paths, pass a glob pattern (e.g. \"infracost_*.json\", glob needs quotes) or a JSON array of paths."
+    },
+    {
+      "name": "behavior",
+      "type": "string",
+      "label": "Behavior",
+      "defaultValue": "update",
+      "required": false,
+      "helpMarkDown": "The behavior to use when posting cost estimate comments. Must be one of 'update' | 'delete-and-new' | 'hide-and-new' | 'new'."
+    },
+    {
+      "name": "targetType",
+      "type": "string",
+      "label": "Target type",
+      "defaultValue": "pull-request",
+      "required": false,
+      "helpMarkDown": "Which objects should be commented on, either `pull-request` or `commit`. The `commit` option is available only for GitHub repositories."
+    },
+    {
+      "name": "tag",
+      "type": "string",
+      "label": "Tag",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Customize the comment tag. This is added to the comment as a markdown comment (hidden) to detect the previously posted comments. This is useful if you have multiple workflows that post comments to the same pull request or commit."
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "index.js"
+    }
+  }
+}
