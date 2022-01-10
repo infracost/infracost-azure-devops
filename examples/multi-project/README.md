@@ -13,6 +13,10 @@ pr:
 
 variables:
   API_KEY: $(apiKey)
+  DEV_AWS_ACCESS_KEY_ID: $(exampleDevAwsAccessKeyId)
+  DEV_AWS_SECRET_ACCESS_KEY: $(exampleDevAwsSecretAccessKey)
+  PROD_AWS_ACCESS_KEY_ID: $(exampleProdAwsAccessKeyId)
+  PROD_AWS_SECRET_ACCESS_KEY: $(exampleProdAwsSecretAccessKey)
   
 jobs:
   - job: multi_project_config_file
@@ -33,10 +37,10 @@ jobs:
         displayName: Run Infracost
         env:
           # IMPORTANT: add any required secrets to setup cloud credentials so Terraform can run
-          DEV_AWS_ACCESS_KEY_ID: $(example_dev_aws_access_key_id)
-          DEV_AWS_SECRET_ACCESS_KEY: $(example_dev_aws_secret_access_key)
-          PROD_AWS_ACCESS_KEY_ID: $(example_prod_aws_access_key_id)
-          PROD_AWS_SECRET_ACCESS_KEY: $(example_prod_aws_secret_access_key)
+          DEV_AWS_ACCESS_KEY_ID: $(DEV_AWS_ACCESS_KEY_ID)
+          DEV_AWS_SECRET_ACCESS_KEY: $(DEV_AWS_SECRET_ACCESS_KEY)
+          PROD_AWS_ACCESS_KEY_ID: $(PROD_AWS_ACCESS_KEY_ID)
+          PROD_AWS_SECRET_ACCESS_KEY: $(PROD_AWS_SECRET_ACCESS_KEY)
 
       - task: InfracostComment@0
         displayName: Post the comment
@@ -66,12 +70,12 @@ jobs:
     strategy:
       matrix:
         dev:
-          AWS_ACCESS_KEY_ID: $(example_dev_aws_access_key_id)
-          AWS_SECRET_ACCESS_KEY: $(example_dev_aws_secret_access_key) 
+          AWS_ACCESS_KEY_ID: $(DEV_AWS_ACCESS_KEY_ID)
+          AWS_SECRET_ACCESS_KEY: $(DEV_AWS_SECRET_ACCESS_KEY) 
           DIR: 'dev'
         prod:
-          AWS_ACCESS_KEY_ID: $(example_dev_prod_access_key_id)
-          AWS_SECRET_ACCESS_KEY: $(example_dev_prod_secret_access_key)
+          AWS_ACCESS_KEY_ID: $(PROD_AWS_ACCESS_KEY_ID)
+          AWS_SECRET_ACCESS_KEY: $(PROD_AWS_SECRET_ACCESS_KEY)
           DIR: 'prod'
       maxParallel: 2
 
