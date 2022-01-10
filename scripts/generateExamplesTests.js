@@ -84,13 +84,7 @@ function fixupExamples(examples) {
             {
               bash: `diff ${goldenFilePath} /tmp/infracost_comment.md`,
               displayName: 'Check the comment',
-              condition: `ne(variables['UPDATE_GOLDEN_FILES'], 'true')`,
             },
-            {
-              bash: `cp /tmp/infracost_comment.md ${goldenFilePath}`,
-              displayName: 'Update the golden comment file',
-              condition: `eq(variables['UPDATE_GOLDEN_FILES'], 'true')`,
-            }
           );
 
           continue;
