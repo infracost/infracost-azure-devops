@@ -13,10 +13,6 @@ pr:
 
 variables:
   API_KEY: $(apiKey)
-  DEV_AWS_ACCESS_KEY_ID: $(exampleDevAwsAccessKeyId)
-  DEV_AWS_SECRET_ACCESS_KEY: $(exampleDevAwsSecretAccessKey)
-  PROD_AWS_ACCESS_KEY_ID: $(exampleProdAwsAccessKeyId)
-  PROD_AWS_SECRET_ACCESS_KEY: $(exampleProdAwsSecretAccessKey)
   
 jobs:
   - job: multi_project_config_file
@@ -37,16 +33,16 @@ jobs:
         displayName: Run Infracost
         env:
           # IMPORTANT: add any required secrets to setup cloud credentials so Terraform can run
-          DEV_AWS_ACCESS_KEY_ID: $(DEV_AWS_ACCESS_KEY_ID)
-          DEV_AWS_SECRET_ACCESS_KEY: $(DEV_AWS_SECRET_ACCESS_KEY)
-          PROD_AWS_ACCESS_KEY_ID: $(PROD_AWS_ACCESS_KEY_ID)
-          PROD_AWS_SECRET_ACCESS_KEY: $(PROD_AWS_SECRET_ACCESS_KEY)
+          DEV_AWS_ACCESS_KEY_ID: $(exampleDevAwsAccessKeyId)
+          DEV_AWS_SECRET_ACCESS_KEY: $(exampleDevAwsSecretAccessKey)
+          PROD_AWS_ACCESS_KEY_ID: $(exampleProdAwsAccessKeyId)
+          PROD_AWS_SECRET_ACCESS_KEY: $(exampleProdAwsSecretAccessKey)
 
       - task: InfracostComment@0
         displayName: Post the comment
         inputs:
           path: /tmp/infracost.json
-          behavior: update # Create a single comment and update it. See https://github.com/infracost/actions/tree/master/comment for other options
+          behavior: update # Create a single comment and update it. See https://github.com/infracost/infracost-azure-devops#comment-options for other options
 ```
 [//]: <> (END EXAMPLE)
 
@@ -70,12 +66,12 @@ jobs:
     strategy:
       matrix:
         dev:
-          AWS_ACCESS_KEY_ID: $(DEV_AWS_ACCESS_KEY_ID)
-          AWS_SECRET_ACCESS_KEY: $(DEV_AWS_SECRET_ACCESS_KEY) 
+          AWS_ACCESS_KEY_ID: $(exampleDevAwsAccessKeyId)
+          AWS_SECRET_ACCESS_KEY: $(exampleDevAwsSecretAccessKey) 
           DIR: 'dev'
         prod:
-          AWS_ACCESS_KEY_ID: $(PROD_AWS_ACCESS_KEY_ID)
-          AWS_SECRET_ACCESS_KEY: $(PROD_AWS_SECRET_ACCESS_KEY)
+          AWS_ACCESS_KEY_ID: $(exampleProdAwsAccessKeyId)
+          AWS_SECRET_ACCESS_KEY: $(exampleProdAwsSecretAccessKey)
           DIR: 'prod'
       maxParallel: 2
 
@@ -128,6 +124,6 @@ jobs:
         displayName: Post the comment
         inputs:
           path: /tmp/infracost_combined.json
-          behavior: update # Create a single comment and update it. See https://github.com/infracost/actions/tree/master/comment for other options
+          behavior: update # Create a single comment and update it. See https://github.com/infracost/infracost-azure-devops#comment-options for other options
 ```
 [//]: <> (END EXAMPLE)
