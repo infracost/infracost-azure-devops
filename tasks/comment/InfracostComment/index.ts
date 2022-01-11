@@ -1,6 +1,5 @@
 import taskLib = require('azure-pipelines-task-lib/task');
-import compost from '@infracost/compost';
-import { PostBehavior, TargetType } from '@infracost/compost';
+import compost, { PostBehavior, TargetType } from '@infracost/compost';
 import { promises as fsPromises } from 'fs';
 
 /**
@@ -12,12 +11,16 @@ import { promises as fsPromises } from 'fs';
  * @param behavior - post behavior, used by `infracost output` command
  * @return the saved file path
  */
-function generateOutput(path: string, format: string, behavior: string): string {
-  const outputFile = '/tmp/infracost-comment.md';
+async function generateOutput(path: string, format: string, behavior: string): Promise<string> {
+  const outputFile = 'infracost-comment.md';
 
   let pathList: string[];
   try {
     pathList = JSON.parse(path);
+
+    if (typeof(pathList) === 'string') {
+      pathList = [path];
+    }
   } catch(error) {
     if (error instanceof SyntaxError) {
       pathList = [path];
@@ -29,7 +32,7 @@ function generateOutput(path: string, format: string, behavior: string): string 
 
   taskLib.setVariable('INFRACOST_CI_POST_CONDITION', behavior);
 
-  const result = taskLib.execSync(
+  const resultCode = await taskLib.exec(
     'infracost',
     [
       'output',
@@ -37,10 +40,14 @@ function generateOutput(path: string, format: string, behavior: string): string 
       `--format ${format}`,
       `--out-file ${outputFile}`,
       '--show-skipped',
-    ].join(' ')
+    ],
   );
 
-  return result.code === 0 ? outputFile : '';
+  if (resultCode !== 0) {
+    throw new Error(`infracost output command failed with code ${resultCode}`);
+  }
+
+  return outputFile;
 }
 
 /**
@@ -92,7 +99,6 @@ function formatOutput(output: string, targetType: string, behavior: string): str
  */
 async function run() {
   const githubProvider = 'GitHub';
-  const azureProvider = 'TfsGit';
 
   try {
     // Collect inputs
@@ -102,22 +108,15 @@ async function run() {
     const tag: string | undefined = taskLib.getInput('tag');
     const dryRun = taskLib.getBoolInput('dryRun');
 
-    const repoProvider = taskLib.getVariable('BUILD_REPOSITORY_PROVIDER');
-
-    if (repoProvider === azureProvider && targetType === 'commit') {
-      const failMessage = 'Azure DevOps Repos only support pull-request targetType';
-      taskLib.setResult(taskLib.TaskResult.Failed, failMessage);
-      return;
-    }
-
     // Detect comment format
+    const repoProvider = taskLib.getVariable('BUILD_REPOSITORY_PROVIDER');
     let format = 'azure-repos-comment';
     if (repoProvider === githubProvider) {
       format = 'github-comment';
     }
 
     // Generate a comment
-    const outputFile = generateOutput(path, format, behavior);
+    const outputFile = await generateOutput(path, format, behavior);
     const data = await fsPromises.readFile(outputFile);
     const comment = formatOutput(data.toString(), targetType, behavior);
 
@@ -133,11 +132,13 @@ async function run() {
     if (platform) {
       platform.postComment(postBehavior, comment);
     }
-  } catch (e) {
-    let message = 'failed to post a comment';
+  } catch (e: any) {
+    let message = 'Failed to post a comment';
 
     if (e instanceof Error) {
-      message = e.message;
+      message = `${message}: ${e.message}`;
+    } else {
+      message = `${message}: ${e}`;
     }
 
     taskLib.setResult(taskLib.TaskResult.Failed, message);
