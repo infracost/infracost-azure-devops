@@ -195,6 +195,16 @@ For all other users, the following is needed so Terraform can run `init`:
 
 Issues and pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
+## Testing
+
+Each task has a set of tests. To run them:
+
+1. `cd` to `tasks/<task>/<InfracostX>/`.
+1. Run `npm install`.
+1. Run `tsc` in tasks folder to generate javascript files.
+1. `cd` to the `tests` folder and run `tsc` there.
+1. Run `mocha _suite.js`.
+
 ## License
 
 [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
