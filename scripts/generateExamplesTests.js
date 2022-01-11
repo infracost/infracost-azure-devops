@@ -104,6 +104,7 @@ function fixupExamples(examples) {
 
 const pipelineSyntax = {
   pr: ['master'],
+  name: 'Infracost.InfracostAzureDevops.Examples.Test',
   variables: {
     'API_KEY': '$(apiKey)'
   },
