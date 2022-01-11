@@ -29,6 +29,6 @@ jobs:
         displayName: Post the comment
         inputs:
           path: /tmp/infracost.json
-          behavior: update # Create a single comment and update it. See https://github.com/infracost/actions/tree/master/comment for other options
+          behavior: update # Create a single comment and update it. See https://github.com/infracost/infracost-azure-devops#comment-options for other options
 ```
 [//]: <> (END EXAMPLE)
