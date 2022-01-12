@@ -1,6 +1,6 @@
 # Private Terraform module
 
-This example shows how to run Infracost Azure Devops tasks with a Terraform project that uses a private Terraform module. This requires a secret to be added to your GitHub repository called `gitSshKeyBase464` containing a base 64 encoded private key so that Terraform can access the private repository.
+This example shows how to run Infracost in an Azure Devops pipeline with a Terraform project that uses a private Terraform module. This requires a secret to be added to your GitHub repository called `gitSshKeyBase464` containing a base 64 encoded private key so that Terraform can access the private repository.
 
 [//]: <> (BEGIN EXAMPLE)
 ```yml
@@ -16,7 +16,7 @@ jobs:
     steps:
       - task: TerraformInstaller@0
         displayName: Install Terraform
-        
+
       # Add your git SSH key so Terraform can checkout the private modules
       - bash: |
           mkdir -p .ssh
@@ -31,7 +31,7 @@ jobs:
         displayName: Setup Infracost
         inputs:
           apiKey: $(apiKey)
-      
+
       - bash: |
           infracost breakdown --path=examples/private-terraform-module/code --format=json --out-file=/tmp/infracost.json
         displayName: Run Infracost
