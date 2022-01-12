@@ -21,7 +21,9 @@
     "typescript": "^4.5.4"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "build:test": "tsc tests/*.ts",
+    "test": "npm run build && npm run build:test && mocha tests/_suite.js"
   },
   "author": "infracost",
   "license": "ISC"
