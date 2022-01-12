@@ -1,19 +1,16 @@
 # Setup Infracost Task
 
-This Azure Devops Task downloads and installs the Infracost CLI in your Azure Devops Pipeline. Subsequent steps in the same job can run the CLI in the same way it is run on the command line.
+This Azure DevOps Task downloads and installs the Infracost CLI in your Azure DevOps Pipeline. Subsequent steps in the same job can run the CLI in the same way it is run on the command line.
 
 ## Usage
 
 The task can be used as follows. You probably want to run Infracost CLI commands then use the [comment](TODO link to comment webpage) task to post comments! See the [examples](https://github.com/infracost/infracost-azure-devops/examples) section on github for examples of how these tasks can be combined.
 
 ```yml
-variables:
-  INFRACOST_API_KEY: $(infracostAPIKey)
-  
 steps:
   - task: SetupInfracostTask@v0
     inputs:
-      apiKey: $(INFRACOST_API_KEY)
+      apiKey: $(apiKey)
 ```
 
 ## Inputs
