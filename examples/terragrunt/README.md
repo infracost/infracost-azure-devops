@@ -6,7 +6,7 @@ This example shows how to run Infracost Azure Devops tasks with Terragrunt.
 ```yml
 pr:
   - master
-  
+
 jobs:
   - job: terragrunt
     displayName: Terragrunt
