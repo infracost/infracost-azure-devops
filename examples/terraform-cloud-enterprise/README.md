@@ -15,7 +15,7 @@ jobs:
       vmImage: ubuntu-latest
 
     steps:
-      - task: TerraformInstaller@0
+      - task: TerraformInstaller@0  # This can be obtained by installing the Microsoft Terraform extension: https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks
         displayName: Install Terraform
         
       - task: InfracostSetup@0
