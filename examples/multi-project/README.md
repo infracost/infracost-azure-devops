@@ -1,10 +1,10 @@
 # Multi-project
 
-These examples show how to run Infracost Azure Devops tasks against a multi-project setup using either an [Infracost config file](https://www.infracost.io/docs/multi_project/config_file) or These examples show how to run Infracost Azure Devops tasks against a multi-project setup using either an [Infracost config file](https://www.infracost.io/docs/multi_project/config_file) or the Azure DevOps pipeline matrix strategy.
+These examples show how to run Infracost Azure DevOps tasks against a multi-project setup using either an [Infracost config file](https://www.infracost.io/docs/multi_project/config_file) or These examples show how to run Infracost Azure DevOps tasks against a multi-project setup using either an [Infracost config file](https://www.infracost.io/docs/multi_project/config_file) or the Azure DevOps pipeline matrix strategy.
 
 ## Using an Infracost config file
 
-This example shows how to run Infracost Azure Devops tasks with multiple Terraform projects using an [Infracost config file](https://www.infracost.io/docs/multi_project/config_file).
+This example shows how to run Infracost Azure DevOps tasks with multiple Terraform projects using an [Infracost config file](https://www.infracost.io/docs/multi_project/config_file).
 
 [//]: <> (BEGIN EXAMPLE)
 ```yml
@@ -43,9 +43,9 @@ jobs:
 ```
 [//]: <> (END EXAMPLE)
 
-## Using Azure Devops Pipeline matrix strategy 
+## Using Azure DevOps Pipeline matrix strategy
 
-This example shows how to run Infracost Azure Devops tasks with multiple Terraform projects using the Azure Devops Pipeline matrix strategy. The first job uses a matrix strategy to generate multiple Infracost output JSON files and upload them as artifacts. The second job downloads these JSON files, combines them using `infracost output`, and posts a comment.
+This example shows how to run Infracost Azure DevOps tasks with multiple Terraform projects using the Azure DevOps Pipeline matrix strategy. The first job uses a matrix strategy to generate multiple Infracost output JSON files and upload them as artifacts. The second job downloads these JSON files, combines them using `infracost output`, and posts a comment.
 
 [//]: <> (BEGIN EXAMPLE)
 ```yml
