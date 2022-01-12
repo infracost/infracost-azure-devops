@@ -89,6 +89,19 @@ function fixupExamples(examples) {
           continue;
         }
 
+        if  (step.displayName && step.displayName === 'Send cost estimate to Slack') {
+          const goldenFilePath = `./testdata/${job.job}_slack_message_golden.json`;
+
+          steps.push(
+            {
+              bash: `diff ${goldenFilePath} /tmp/slack-message.json`,
+              displayName: 'Check the Slack message',
+            },
+          );
+
+          continue
+        }
+
 
         steps.push({
           ...step,
