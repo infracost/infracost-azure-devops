@@ -1,6 +1,6 @@
 # Terragrunt
 
-This example shows how to run Infracost Azure Devops tasks with Terragrunt.
+This example shows how to run Infracost Azure DevOps tasks with Terragrunt.
 
 [//]: <> (BEGIN EXAMPLE)
 ```yml
