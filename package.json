@@ -1,6 +1,6 @@
 {
   "name": "infracost-azure-devops",
-  "description": "Infracost Azure Devops Pipeline Tasks",
+  "description": "Infracost Azure DevOps Pipeline Tasks",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/infracost/infracost-azure-devops.git"

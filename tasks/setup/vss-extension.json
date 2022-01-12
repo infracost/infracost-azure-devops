@@ -9,7 +9,7 @@
       "id": "Microsoft.VisualStudio.Services"
     }
   ],
-  "description": "Sets up Infracost CLI in your Azure Devops pipeline. Show cloud cost estimates for Terraform in pull requests.",
+  "description": "Sets up Infracost CLI in your Azure DevOps pipeline. Show cloud cost estimates for Terraform in pull requests.",
   "categories": [
     "Azure Pipelines"
   ],
