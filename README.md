@@ -201,9 +201,7 @@ Each task has a set of tests. To run them:
 
 1. `cd` to `tasks/<task>/<InfracostX>/`.
 1. Run `npm install`.
-1. Run `tsc` in tasks folder to generate javascript files.
-1. `cd` to the `tests` folder and run `tsc` there.
-1. Run `mocha _suite.js`.
+1. Run `npm run test`.
 
 ## License
 
