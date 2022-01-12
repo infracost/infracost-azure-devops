@@ -7,9 +7,6 @@ This example shows how to run Infracost tasks with a Terraform plan JSON file. I
 pr:
   - master
 
-variables:
-  API_KEY: $(apiKey)
-
 jobs:
   - job: terraform_plan_json
     displayName: Terraform plan JSON
@@ -20,7 +17,7 @@ jobs:
       - task: InfracostSetup@0
         displayName: Setup Infracost
         inputs:
-          apiKey: $(API_KEY)
+          apiKey: $(apiKey)
           
       - bash: infracost breakdown --path=examples/terraform-plan-json/code/plan.json --format=json --out-file=/tmp/infracost.json
         displayName: Run Infracost

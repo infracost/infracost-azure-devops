@@ -11,9 +11,6 @@ This example shows how to run Infracost Azure Devops tasks with multiple Terrafo
 pr:
   - master
 
-variables:
-  API_KEY: $(apiKey)
-  
 jobs:
   - job: multi_project_config_file
     displayName: Multi-project config file
@@ -27,7 +24,7 @@ jobs:
       - task: InfracostSetup@0
         displayName: Setup Infracost
         inputs:
-          apiKey: $(API_KEY)
+          apiKey: $(apiKey)
       
       - bash: infracost breakdown --config-file=examples/multi-project/code/infracost.yml --format=json --out-file=/tmp/infracost.json
         displayName: Run Infracost
@@ -55,9 +52,6 @@ This example shows how to run Infracost Azure Devops tasks with multiple Terrafo
 pr:
   - master
 
-variables:
-  API_KEY: $(apiKey)
-
 jobs:
   - job: multi_project_matrix
     displayName: Multi-project matrix
@@ -82,7 +76,7 @@ jobs:
       - task: InfracostSetup@0
         displayName: Setup Infracost
         inputs:
-          apiKey: $(API_KEY)
+          apiKey: $(apiKey)
           
       - bash: infracost breakdown --path=examples/multi-project/code/$(DIR) --format=json --out-file=/tmp/infracost_$(DIR).json
         displayName: Run Infracost
@@ -114,7 +108,7 @@ jobs:
       - task: InfracostSetup@0
         displayName: Setup Infracost
         inputs:
-          apiKey: $(API_KEY)
+          apiKey: $(apiKey)
           
       - bash: |
           infracost output --path="infracost_jsons/*.json" --format=json --out-file=/tmp/infracost_combined.json
