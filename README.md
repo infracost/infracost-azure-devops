@@ -1,6 +1,6 @@
 # Infracost Azure DevOps integration
 
-This project provides an Azure DevOps task for for Infracost along with examples of how you can use it to to see cloud cost estimates for Terraform in pull requests 💰
+This project provides an Azure DevOps task for Infracost along with examples of how you can use it to to see cloud cost estimates for Terraform in pull requests 💰
 
 <img src="screenshot.png" width="800px" alt="Example screenshot" />
 
