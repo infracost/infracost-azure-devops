@@ -10,13 +10,13 @@ pr:
 
 variables:
   API_KEY: $(apiKey)
-  
+
 jobs:
   - job: thresholds
     displayName: Thresholds
     pool:
       vmImage: ubuntu-latest
-    
+
     steps:
       - task: InfracostSetup@0
         displayName: Setup Infracost
@@ -53,16 +53,16 @@ jobs:
           echo "##vso[task.setvariable variable=absoluteCostChange;]${absolute_cost_change}"
           echo "##vso[task.setvariable variable=costChange;]${cost_change}"
         displayName: Calculate Cost Change
-      
+
       - task: InfracostComment@0
         displayName: Post the comment
-        # Setup the conditions for the task to comment on the pipeline. We use the lt expression (less than): 
+        # Setup the conditions for the task to comment on the pipeline. We use the lt expression (less than):
         # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/expressions?view=azure-devops#lt
         # as azure automatically casts the RIGHT parameter to the type of the LEFT. Variables set in
-        # task always evaluate to strings, which means using numerical expressions like lt & gt with variables as the 
+        # task always evaluate to strings, which means using numerical expressions like lt & gt with variables as the
         # first parameter are likely to perform incorrectly. e.g:
-        #   if a absolutePercentChange is set to '999' then gt(variables.absolutePercentChange, 1000) will evaluate to true.  
-        condition: lt(1, variables.absolutePercentChange) # Only comment if cost changed by more than plus or minus 1%
+        #   if a absolutePercentChange is set to '999' then gt(variables.absolutePercentChange, 1000) will evaluate to true.
+        condition: gt(variables.costChange, 80) # Only comment if cost changed by more than plus or minus 1%
         # condition: lt(1, variables.percentChange) # Only comment if cost increased by more than 1%
         # condition: lt(100, variables.absoluteCostChange) # Only comment if cost changed by more than plus or minus $100
         # condition: lt(100, variables.costChange) # Only comment if cost increased by more than $100
