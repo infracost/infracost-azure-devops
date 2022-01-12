@@ -4,3 +4,4 @@ node_modules/
 .DS_STORE
 .taskkey
 infracost-comment.md
+.vscode
