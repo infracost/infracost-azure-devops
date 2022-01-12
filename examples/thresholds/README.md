@@ -7,9 +7,6 @@ terraform-plan-json example, which does not require Terraform to be installed.
 ```yml
 pr:
   - master
-
-variables:
-  API_KEY: $(apiKey)
   
 jobs:
   - job: thresholds
@@ -21,7 +18,7 @@ jobs:
       - task: InfracostSetup@0
         displayName: Setup Infracost
         inputs:
-          apiKey: $(API_KEY)
+          apiKey: $(apiKey)
 
       - bash: infracost breakdown --path=examples/thresholds/code/plan.json --format=json --out-file=/tmp/infracost.json
         displayName: Run Infracost

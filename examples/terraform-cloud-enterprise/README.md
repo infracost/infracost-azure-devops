@@ -21,7 +21,7 @@ jobs:
       - task: InfracostSetup@0
         displayName: Setup Infracost
         inputs:
-          apiKey: $(API_KEY)
+          apiKey: $(apiKey)
 
       - bash: infracost breakdown --path=examples/terraform-cloud-enterprise/code --format=json --out-file=/tmp/infracost.json
         displayName: Run Infracost
