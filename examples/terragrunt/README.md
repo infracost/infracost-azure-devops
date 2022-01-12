@@ -6,9 +6,6 @@ This example shows how to run Infracost Azure Devops tasks with Terragrunt.
 ```yml
 pr:
   - master
-
-variables:
-  API_KEY: $(apiKey)
   
 jobs:
   - job: terragrunt
@@ -34,7 +31,7 @@ jobs:
       - task: InfracostSetup@0
         displayName: Setup Infracost
         inputs:
-          apiKey: $(API_KEY)
+          apiKey: $(apiKey)
 
       - bash: infracost breakdown --path=examples/terragrunt/code --format=json --out-file=/tmp/infracost.json
         displayName: Run Infracost
