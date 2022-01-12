@@ -2,6 +2,8 @@
 
 This project provides an Azure DevOps task for Infracost along with examples of how you can use it to to see cloud cost estimates for Terraform in pull requests 💰
 
+<img src="screenshot.png" width="800px" alt="Example screenshot" />
+
 ## Quick start
 
 The following steps assume a simple Terraform directory is being used, we recommend you use a more relevant [example](#examples) if required.
