@@ -3,6 +3,19 @@ import compost, { PostBehavior, TargetType } from '@infracost/compost';
 import { promises as fsPromises } from 'fs';
 
 /**
+ * setEnvVariable sets ENV variable.
+ *
+ * @param name - ENV variable name
+ * @param value - ENV variable value
+ */
+function setEnvVariable(name: string, value: string, isSecret: boolean = false) {
+  process.env[name] = value;
+
+  const debugValue = isSecret ? '************' : value;
+  taskLib.debug(`set env var ${name}=${debugValue}`);
+}
+
+/**
  * generateOutput() creates a formatted comment body and saves it to a temporary
  * file. Returns the file path.
  *
@@ -30,7 +43,7 @@ async function generateOutput(path: string, format: string, behavior: string): P
   }
   const pathArgs = pathList.map(path => `--path ${path}`);
 
-  taskLib.setVariable('INFRACOST_CI_POST_CONDITION', behavior);
+  setEnvVariable('INFRACOST_CI_POST_CONDITION', behavior);
 
   const resultCode = await taskLib.exec(
     'infracost',
@@ -93,30 +106,73 @@ function formatOutput(output: string, targetType: string, behavior: string): str
 }
 
 /**
+ * RepoProvider defines an interface for repository provider settings
+ */
+interface RepoProvider {
+  inputToken: string,
+  envVariable: string,
+  commentFormat: string,
+}
+
+/**
+ * supportedRepoProviders defines settings for supported repository providers
+ */
+const supportedRepoProviders: { [name: string]: RepoProvider } = {
+  'GitHub': {
+    inputToken: 'githubToken',
+    envVariable: 'GITHUB_TOKEN',
+    commentFormat: 'github-comment',
+  },
+  'TfsGit': {
+    inputToken: 'azureReposToken',
+    envVariable: 'SYSTEM_ACCESSTOKEN',
+    commentFormat: 'azure-repos-comment',
+  },
+}
+
+/**
+ * setupRepoProvider() detects the repository provider and configures the task with it.
+ *
+ * @return repo provider
+ */
+function setupRepoProvider(): RepoProvider {
+  const env = taskLib.getVariable('BUILD_REPOSITORY_PROVIDER') ?? '';
+  const provider = supportedRepoProviders[env];
+
+  if (!provider) {
+    throw new Error(`Unsupported repo provider: ${env}.`);
+  }
+
+  const token = taskLib.getInput(provider.inputToken) ?? '';
+  if (token === '') {
+    throw new Error(`Input required: ${provider.inputToken}`);
+  }
+
+  setEnvVariable(provider.envVariable, token, true);
+
+  return provider;
+}
+
+/**
  * run() is a main entrypoint of the InfracostComment task.
  * It generates a comment body using previously installed `infracost` CLI tool
  * and posts it to the repository.
  */
 async function run() {
-  const githubProvider = 'GitHub';
-
   try {
     // Collect inputs
     const path: string = taskLib.getInput('path', true) ?? '';
+
     const behavior: string = taskLib.getInput('behavior') ?? 'update';
     const targetType: string = taskLib.getInput('targetType') ?? 'pull-request';
     const tag: string | undefined = taskLib.getInput('tag');
     const dryRun = taskLib.getBoolInput('dryRun');
 
-    // Detect comment format
-    const repoProvider = taskLib.getVariable('BUILD_REPOSITORY_PROVIDER');
-    let format = 'azure-repos-comment';
-    if (repoProvider === githubProvider) {
-      format = 'github-comment';
-    }
+    // Detect repo provider
+    const repoProvider = setupRepoProvider();
 
     // Generate a comment
-    const outputFile = await generateOutput(path, format, behavior);
+    const outputFile = await generateOutput(path, repoProvider.commentFormat, behavior);
     const data = await fsPromises.readFile(outputFile);
     const comment = formatOutput(data.toString(), targetType, behavior);
 

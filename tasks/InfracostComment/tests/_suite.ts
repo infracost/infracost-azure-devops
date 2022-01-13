@@ -24,8 +24,26 @@ describe('InfracostComment', function () {
     return runner;
   }
 
+  function setRepoProvider(provider: string) {
+    let value: string;
+
+    switch (provider) {
+      case 'github':
+        value = 'GitHub';
+        break;
+      case 'azure':
+        value = 'TfsGit';
+        break;
+      default:
+        value = provider;
+        break;
+    }
+
+    process.env['BUILD_REPOSITORY_PROVIDER'] = value;
+  }
+
   beforeEach((done) => {
-    process.env['BUILD_REPOSITORY_PROVIDER'] = 'GitHub';
+    setRepoProvider('github');
 
     done();
   });
@@ -33,13 +51,14 @@ describe('InfracostComment', function () {
   after(() => { });
 
   it('sends comment when repo provider is GitHub', (done: Mocha.Done) => {
-    process.env['BUILD_REPOSITORY_PROVIDER'] = 'GitHub';
+    setRepoProvider('github');
 
     const test = run('pass-string-path.js');
 
     expect(() => {
       assert.ok(test.stdOutContained('[mock infracost] output github-comment'), 'calls infracost output with GitHub format');
-      assert.ok(test.stdOutContained('##vso[task.debug]set INFRACOST_CI_POST_CONDITION=update'), 'sets env var with behavior');
+      assert.ok(test.stdOutContained('##vso[task.debug]set env var INFRACOST_CI_POST_CONDITION=update'), 'sets env var with behavior');
+      assert.ok(test.stdOutContained('##vso[task.debug]set env var GITHUB_TOKEN=************'), 'sets GITHUB_TOKEN env var');
 
       assert.ok(test.stdOutContained('[mock compost] autodetect targetType pull-request'), 'uses default targetType');
       assert.ok(test.stdOutContained('[mock compost] postComment behavior update'), 'uses default behavior');
@@ -54,13 +73,14 @@ describe('InfracostComment', function () {
   });
 
   it('sends comment when repo provider is Azure DevOps', (done: Mocha.Done) => {
-    process.env['BUILD_REPOSITORY_PROVIDER'] = 'TfsGit';
+    setRepoProvider('azure');
 
     const test = run('pass-string-path.js');
 
     expect(() => {
       assert.ok(test.stdOutContained('[mock infracost] output azure-devops-comment'), 'calls infracost output with Azure DevOps format');
-      assert.ok(test.stdOutContained('##vso[task.debug]set INFRACOST_CI_POST_CONDITION=update'), 'sets env var with behavior');
+      assert.ok(test.stdOutContained('##vso[task.debug]set env var INFRACOST_CI_POST_CONDITION=update'), 'sets env var with behavior');
+      assert.ok(test.stdOutContained('##vso[task.debug]set env var SYSTEM_ACCESSTOKEN=************'), 'sets SYSTEM_ACCESSTOKEN env var');
 
       assert.ok(test.stdOutContained('[mock compost] autodetect targetType pull-request'), 'uses default targetType');
       assert.ok(test.stdOutContained('[mock compost] postComment behavior update'), 'uses default behavior');
@@ -137,6 +157,43 @@ describe('InfracostComment', function () {
     expect(() => {
       assert.ok(test.stdOutContained('[mock infracost] output error'), 'calls infracost output with invalid path');
       assert.ok(test.stdOutContained('Failed to post a comment: infracost failed with return code: 42'), 'handles error');
+      assert.ok(test.failed, 'task failed');
+    }, test, done);
+  });
+
+  it('fails when repo provider is GitHub but githubToken is missing', (done: Mocha.Done) => {
+    const test = run('fail-missing-token.js');
+
+    expect(() => {
+      assert.ok(test.stdOutContained('Input required: githubToken'), 'requires githubToken');
+
+      assert.ok(test.failed, 'task failed');
+    }, test, done);
+  });
+
+  it('fails when repo provider is Azure Repos but azureReposToken is missing', (done: Mocha.Done) => {
+    setRepoProvider('azure');
+
+    const test = run('fail-missing-token.js');
+
+    expect(() => {
+      assert.ok(test.stdOutContained('Input required: azureReposToken'), 'requires azureReposToken');
+
+      assert.ok(test.failed, 'task failed');
+    }, test, done);
+  });
+
+  it('fails when repo provider is not supported', (done: Mocha.Done) => {
+    setRepoProvider('unsupported');
+
+    const test = run('fail-missing-token.js');
+
+    expect(() => {
+      assert.ok(
+        test.stdOutContained('##vso[task.complete result=Failed;]Failed to post a comment: Unsupported repo provider: unsupported.'),
+        'handles unsupported repo provider'
+      );
+
       assert.ok(test.failed, 'task failed');
     }, test, done);
   });
