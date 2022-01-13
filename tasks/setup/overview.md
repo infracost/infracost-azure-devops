@@ -10,7 +10,7 @@ The task can be used as follows. You probably want to run Infracost CLI commands
 steps:
   - task: SetupInfracostTask@v0
     inputs:
-      apiKey: $(apiKey)
+      apiKey: $(infracostApiKey)
 ```
 
 ## Inputs

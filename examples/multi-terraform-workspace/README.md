@@ -20,7 +20,7 @@ jobs:
       - task: InfracostSetup@0
         displayName: Setup Infracost
         inputs:
-          apiKey: $(apiKey)
+          apiKey: $(infracostApiKey)
 
       - bash: |
           infracost breakdown --config-file=examples/multi-terraform-workspace/code/infracost.yml --format=json --out-file=/tmp/infracost.json
