@@ -23,6 +23,22 @@
       "helpMarkDown": "The path to the `infracost breakdown` JSON that will be passed to `infracost output`. For multiple paths, pass a glob pattern (e.g. \"infracost_*.json\", glob needs quotes) or a JSON array of paths."
     },
     {
+      "name": "githubToken",
+      "type": "string",
+      "label": "githubToken",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "GitHub access token. Required if repository provider is GitHub."
+    },
+    {
+      "name": "azureReposToken",
+      "type": "string",
+      "label": "azureReposToken",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Azure Repos system access token. Required if repository provider is Azure Repos."
+    },
+    {
       "name": "behavior",
       "type": "string",
       "label": "behavior",

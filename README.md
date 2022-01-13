@@ -12,7 +12,11 @@ The following steps assume a simple Terraform directory is being used, we recomm
 
 2. In your Azure DevOps project create a new pipeline by going to 'Pipelines' > 'New pipeline', connect to your code repo and select 'Starter pipeline'.
 
-3. Add a pipeline variable called `infracostApiKey` with your Infracost API key as the value, and select 'Keep this value secre'.
+3. Add the following pipeline variables:
+
+    - `infracostApiKey` with your Infracost API key as the value, and select 'Keep this value secret'.
+    - `githubToken` with your GitHub access token as the value if your repository provider is GitHub. Select 'Keep this value secret'.
+    - `azureReposToken` with your Azure Repos access token as the value if your repository provider is Azure Repos. Select 'Keep this value secret'.
 
 4. Create required variables for any cloud credentials that are needed for Terraform to run.
 
@@ -63,6 +67,7 @@ The following steps assume a simple Terraform directory is being used, we recomm
           - task: InfracostComment@0
             displayName: Post the comment
             inputs:
+              githubToken: $(githubToken)
               path: /tmp/infracost.json
               behavior: update # Create a single comment and update it. See https://github.com/infracost/infracost-azure-devops#comment-options for other options
     ```
