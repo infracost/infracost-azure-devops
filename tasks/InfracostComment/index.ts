@@ -40,7 +40,7 @@ async function generateOutput(path: string, format: string, behavior: string): P
       `--format ${format}`,
       `--out-file ${outputFile}`,
       '--show-skipped',
-    ],
+    ].join(' '),
   );
 
   if (resultCode !== 0) {
