@@ -1,0 +1,93 @@
+{
+  "manifestVersion": 1,
+  "id": "infracost-tasks",
+  "name": "Infracost Tasks",
+  "version": "0.1.0",
+  "publisher": "Infracost",
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "description": "Tasks for setting up Infracost in your Azure DevOps Pipelines and showing cloud cost estimates for Terraform in pull requests.",
+  "tags": [
+    "AWS",
+    "Azure DevOps Extensions",
+    "Azure Pipelines",
+    "Azure",
+    "Cloud Cost Estimates",
+    "Cloud",
+    "Continuous Integration",
+    "Cost Estimation",
+    "Cost Management",
+    "Cost Optimization",
+    "GCP",
+    "Google",
+    "Infracost",
+    "Infrastructure as Code",
+    "Monthly Costs",
+    "OPA",
+    "Terraform Cost Estimation",
+    "Terraform",
+    "Terragrunt"
+  ],
+  "categories": [
+    "Azure Pipelines"
+  ],
+  "icons": {
+    "default": "infracost-logo.png"
+  },
+  "files": [
+    {
+      "path": "tasks/InfracostSetup"
+    },
+    {
+      "path": "tasks/InfracostComment"
+    }
+  ],
+  "content": {
+    "details": {
+      "path": "overview.md"
+    },
+    "license": {
+      "path": "LICENSE"
+    }
+  },
+  "links": {
+    "repository": {
+      "uri": "https://github.com/infracost/infracost-azure-devops"
+    },
+    "issues": {
+      "uri": "https://github.com/infracost/infracost-azure-devops/issues"
+    },
+    "support": {
+      "uri": "mailto:hello@infracost.io"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "uri": "https://github.com/infracost/infracost-azure-devops"
+  },
+  "contributions": [
+    {
+      "id": "infracost-setup-task",
+      "type": "ms.vss-distributed-task.task",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "properties": {
+        "name": "tasks/InfracostSetup"
+      }
+    },
+    {
+      "id": "infracost-comment-task",
+      "type": "ms.vss-distributed-task.task",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "properties": {
+        "name": "tasks/InfracostComment"
+      }
+    }
+  ]
+}
