@@ -1,9 +1,12 @@
 import setupRunner from './mock-helper';
 
-const path = '"example*.json"'
+process.env.BUILD_REPOSITORY_PROVIDER = 'GitHub';
+
+const path = 'example-path.json'
+
 const taskRunner = setupRunner({ path: path });
 
 taskRunner.setInput('path', path);
-taskRunner.setInput('githubToken', 'github-token');
+// not setting 'githubToken'
 
 taskRunner.run();

@@ -56,6 +56,7 @@ The action can be used as follows. See the [top-level readme](https://github.com
 steps:
   - task: InfracostComment@v0
     inputs:
+      githubToken: $(githubToken)
       path: /tmp/infracost.json
       behavior: update
 ```
@@ -65,6 +66,8 @@ steps:
 The action supports the following inputs:
 
 - `path`: Required. The path to the `infracost breakdown` JSON that will be passed to `infracost output`. For multiple paths, pass a glob pattern (e.g. "infracost_*.json", glob needs quotes) or a JSON array of paths.
+- `githubToken`: GitHub access token. Required if repository provider is GitHub.
+- `azureReposToken`: Azure Repos access token. Required if repository provider is Azure Repos.
 - `behavior`: Optional, defaults to `update`. The behavior to use when posting cost estimate comments. Must be one of the following:
   - `update`: Create a single comment and update it on changes. This is the "quietest" option. The Azure DevOps Repos/GitHub comments UI shows what/when changed when the comment is updated. Pull request followers will only be notified on the comment create (not updates), and the comment will stay at the same location in the comment history.
   - `delete-and-new`: Delete previous cost estimate comments and create a new one. Pull request followers will be notified on each comment.
