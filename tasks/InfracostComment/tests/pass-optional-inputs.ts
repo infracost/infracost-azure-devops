@@ -4,6 +4,8 @@ const path = 'example.json'
 const taskRunner = setupRunner({ path: path });
 
 taskRunner.setInput('path', path);
+taskRunner.setInput('githubToken', 'github-token');
+
 taskRunner.setInput('behavior', 'new');
 taskRunner.setInput('targetType', 'commit');
 taskRunner.setInput('tag', 'test-tag');
