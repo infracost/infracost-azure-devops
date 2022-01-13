@@ -24,7 +24,7 @@ jobs:
       - task: InfracostSetup@0
         displayName: Setup Infracost
         inputs:
-          apiKey: $(apiKey)
+          apiKey: $(infracostApiKey)
       
       - bash: infracost breakdown --config-file=examples/multi-project/code/infracost.yml --format=json --out-file=/tmp/infracost.json
         displayName: Run Infracost
@@ -43,7 +43,7 @@ jobs:
 ```
 [//]: <> (END EXAMPLE)
 
-## Using Azure DevOps Pipeline matrix strategy
+## Using Azure DevOps Pipeline matrix strategy 
 
 This example shows how to run Infracost Azure DevOps tasks with multiple Terraform projects using the Azure DevOps Pipeline matrix strategy. The first job uses a matrix strategy to generate multiple Infracost output JSON files and upload them as artifacts. The second job downloads these JSON files, combines them using `infracost output`, and posts a comment.
 
@@ -76,7 +76,7 @@ jobs:
       - task: InfracostSetup@0
         displayName: Setup Infracost
         inputs:
-          apiKey: $(apiKey)
+          apiKey: $(infracostApiKey)
           
       - bash: infracost breakdown --path=examples/multi-project/code/$(DIR) --format=json --out-file=/tmp/infracost_$(DIR).json
         displayName: Run Infracost
@@ -108,7 +108,7 @@ jobs:
       - task: InfracostSetup@0
         displayName: Setup Infracost
         inputs:
-          apiKey: $(apiKey)
+          apiKey: $(infracostApiKey)
           
       - bash: |
           infracost output --path="infracost_jsons/*.json" --format=json --out-file=/tmp/infracost_combined.json
