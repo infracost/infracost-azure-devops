@@ -39,6 +39,7 @@ jobs:
       - task: InfracostComment@0
         displayName: Post the comment
         inputs:
+          githubToken: $(githubToken)
           path: /tmp/infracost.json
           behavior: update # Create a single comment and update it. See https://github.com/infracost/infracost-azure-devops#comment-options for other options
 ```
