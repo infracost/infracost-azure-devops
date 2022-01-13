@@ -70,7 +70,7 @@ jobs:
       - task: InfracostSetup@0
         displayName: Setup Infracost
         inputs:
-          apiKey: $(apiKey)
+          apiKey: $(infracostApiKey)
 
       - bash: |
           INSTALL_LOCATION="$(Build.SourcesDirectory)/bin"
