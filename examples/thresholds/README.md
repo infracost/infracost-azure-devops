@@ -64,6 +64,7 @@ jobs:
         # condition: lt(100, variables.absoluteCostChange) # Only comment if cost changed by more than plus or minus $100
         # condition: lt(100, variables.costChange) # Only comment if cost increased by more than $100
         inputs:
+          githubToken: $(githubToken)
           path: /tmp/infracost.json
           behavior: update # Create a single comment and update it. See https://github.com/infracost/infracost-azure-devops#comment-options for other options
 ```
