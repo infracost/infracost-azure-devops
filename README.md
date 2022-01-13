@@ -12,7 +12,7 @@ The following steps assume a simple Terraform directory is being used, we recomm
 
 2. In your Azure DevOps project create a new pipeline by going to 'Pipelines' > 'New pipeline', connect to your code repo and select 'Starter pipeline'.
 
-3. Add a pipeline variable called `apiKey` with your Infracost API key as the value, and select 'Keep this value secre'.
+3. Add a pipeline variable called `infracostApiKey` with your Infracost API key as the value, and select 'Keep this value secre'.
 
 4. Create required variables for any cloud credentials that are needed for Terraform to run.
 
@@ -55,7 +55,7 @@ The following steps assume a simple Terraform directory is being used, we recomm
           - task: InfracostSetup@0
             displayName: Setup Infracost
             inputs:
-              apiKey: $(apiKey)
+              apiKey: $(infracostApiKey)
 
           - bash: infracost breakdown --path=$(TF_ROOT)/plan.json --format=json --out-file=/tmp/infracost.json
             displayName: Run Infracost
