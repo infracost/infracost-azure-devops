@@ -61,7 +61,13 @@
       "uri": "https://github.com/infracost/infracost-azure-devops/issues"
     },
     "support": {
-      "uri": "mailto:hello@infracost.io"
+      "uri": "https://www.infracost.io/docs/support/"
+    },
+    "license": {
+      "uri": "https://github.com/infracost/infracost-azure-devops/blob/master/LICENSE"
+    },
+    "privacypolicy": {
+      "uri": "https://www.infracost.io/docs/privacy-policy/"
     }
   },
   "repository": {
