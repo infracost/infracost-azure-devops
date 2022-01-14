@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "dependencies": {
-    "@infracost/compost": "^0.0.8",
+    "@infracost/compost": "^0.0.9",
     "azure-pipelines-task-lib": "^3.1.10"
   },
   "devDependencies": {
