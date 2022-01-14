@@ -10,14 +10,14 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 5
+    "Patch": 6
   },
   "instanceNameFormat": "InfracostComment $(version)",
   "inputs": [
     {
       "name": "path",
       "type": "string",
-      "label": "path",
+      "label": "Path",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "The path to the `infracost breakdown` JSON that will be passed to `infracost output`. For multiple paths, pass a glob pattern (e.g. \"infracost_*.json\", glob needs quotes) or a JSON array of paths."
@@ -25,7 +25,7 @@
     {
       "name": "githubToken",
       "type": "string",
-      "label": "githubToken",
+      "label": "Github Token",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "GitHub access token. Required if repository provider is GitHub."
@@ -33,7 +33,7 @@
     {
       "name": "azureReposToken",
       "type": "string",
-      "label": "azureReposToken",
+      "label": "Azure Repos Token",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Azure Repos system access token. Required if repository provider is Azure Repos."
@@ -41,7 +41,7 @@
     {
       "name": "behavior",
       "type": "string",
-      "label": "behavior",
+      "label": "Behavior",
       "defaultValue": "update",
       "required": false,
       "helpMarkDown": "The behavior to use when posting cost estimate comments. Must be one of 'update' | 'delete-and-new' | 'hide-and-new' | 'new'."
@@ -49,7 +49,7 @@
     {
       "name": "targetType",
       "type": "string",
-      "label": "targetType",
+      "label": "Target Type",
       "defaultValue": "pull-request",
       "required": false,
       "helpMarkDown": "Which objects should be commented on, either `pull-request` or `commit`. The `commit` option is available only for GitHub repositories."
@@ -57,7 +57,7 @@
     {
       "name": "tag",
       "type": "string",
-      "label": "tag",
+      "label": "Tag",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Customize the comment tag. This is added to the comment as a markdown comment (hidden) to detect the previously posted comments. This is useful if you have multiple workflows that post comments to the same pull request or commit."

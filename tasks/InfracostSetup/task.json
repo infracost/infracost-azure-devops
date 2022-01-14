@@ -10,14 +10,14 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 5
+    "Patch": 6
   },
   "instanceNameFormat": "InfracostSetup $(version)",
   "inputs": [
     {
       "name": "apiKey",
       "type": "string",
-      "label": "apiKey",
+      "label": "API Key",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "Your Infracost API key. It can be retrieved by running `infracost configure get api_key`. If you don't have one, download Infracost (https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key."
@@ -25,7 +25,7 @@
     {
       "name": "version",
       "type": "string",
-      "label": "version",
+      "label": "Version",
       "defaultValue": "0.9.x",
       "required": false,
       "helpMarkDown": "Version of Infracost CLI to install. SemVer ranges (https://www.npmjs.com/package/semver#ranges) are supported.\n    required: false\n    default: 0.9.x"
@@ -33,7 +33,7 @@
     {
       "name": "currency",
       "type": "string",
-      "label": "currency",
+      "label": "Currency",
       "defaultValue": "USD",
       "required": false,
       "helpMarkDown": "Convert output from USD to your preferred ISO 4217 currency (https://en.wikipedia.org/wiki/ISO_4217#Active_codes), e.g. EUR, BRL or INR."
@@ -41,7 +41,7 @@
     {
       "name": "pricingApiEndpoint",
       "type": "string",
-      "label": "pricingApiEndpoint",
+      "label": "Pricing API Endpoint",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "For self-hosted (https://www.infracost.io/docs/cloud_pricing_api/self_hosted) users, endpoint of the Cloud Pricing API, e.g. https://cloud-pricing-api."
@@ -49,7 +49,7 @@
     {
       "name": "enableDashboard",
       "type": "boolean",
-      "label": "enableDashboard",
+      "label": "Enable Dashboard",
       "defaultValue": false,
       "required": false,
       "helpMarkDown": "Enables [Infracost dashboard features](https://www.infracost.io/docs/features/share_links), not supported for self-hosted Cloud Pricing API. Available options are true and false, defaults to false."
