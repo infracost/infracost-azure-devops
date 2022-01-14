@@ -4,7 +4,7 @@ This extension provides tasks to setup and use [Infracost](https://www.infracost
 
 # How to use
 
-After installing this extension you can use it in tasks in [your pipeline](https://docs.microsoft.com/en-us/azure/devops/pipelines/).
+After installing this extension you can use it in tasks in your Azure pipeline. See [the quick start on GitHub](https://github.com/infracost/infracost-azure-devops) to get started.
 
 # Available tasks
 
@@ -71,9 +71,9 @@ The action supports the following inputs:
 - `behavior`: Optional, defaults to `update`. The behavior to use when posting cost estimate comments. Must be one of the following:
   - `update`: Create a single comment and update it on changes. This is the "quietest" option. The Azure DevOps Repos/GitHub comments UI shows what/when changed when the comment is updated. Pull request followers will only be notified on the comment create (not updates), and the comment will stay at the same location in the comment history.
   - `delete-and-new`: Delete previous cost estimate comments and create a new one. Pull request followers will be notified on each comment.
-  - `hide-and-new`: Minimize previous cost estimate comments and create a new one. Pull request followers will be notified on each comment.
+  - `hide-and-new` (only available for GitHub repos): Minimize previous cost estimate comments and create a new one. Pull request followers will be notified on each comment.
   - `new`: Create a new cost estimate comment. Pull request followers will be notified on each comment.
-- `targetType`: Optional. Which objects should be commented on, either `pull-request` or `commit`. The `commit` option is available only for GitHub repositories.
+- `targetType`: Optional. Which objects should be commented on, either `pull-request` or `commit`. The `commit` option is available only for GitHub repos.
 - `tag`: Optional. Customize the comment tag. This is added to the comment as a markdown comment (hidden) to detect the previously posted comments. This is useful if you have multiple pipelines that post comments to the same pull request or commit.
 
 ### Outputs
