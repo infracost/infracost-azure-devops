@@ -11,13 +11,13 @@ pr:
 jobs:
   - job: terraform_cloud_enterprise
     displayName: Terraform Cloud/Enterprise
-    pool: 
+    pool:
       vmImage: ubuntu-latest
 
     steps:
       - task: TerraformInstaller@0  # This can be obtained by installing the Microsoft Terraform extension: https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks
         displayName: Install Terraform
-        
+
       - task: InfracostSetup@0
         displayName: Setup Infracost
         inputs:
@@ -28,9 +28,9 @@ jobs:
         env:
           # The following env vars are required so that Infracost can work with the Terraform Cloud remote state/execution.
           INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
-          # If you are using a Terraform Cloud Enterprise instance configure the below with your host name.  
+          # If you are using a Terraform Cloud Enterprise instance configure the below with your host name.
           INFRACOST_TERRAFORM_CLOUD_HOST: "app.terraform.io"
-        
+
       - task: InfracostComment@0
         displayName: Post the comment
         inputs:
