@@ -7,13 +7,13 @@ terraform-plan-json example, which does not require Terraform to be installed.
 ```yml
 pr:
   - master
-  
+
 jobs:
   - job: thresholds
     displayName: Thresholds
     pool:
       vmImage: ubuntu-latest
-    
+
     steps:
       - task: InfracostSetup@0
         displayName: Setup Infracost
@@ -50,7 +50,7 @@ jobs:
           echo "##vso[task.setvariable variable=absoluteCostChange;]${cost_change#-}"
           echo "##vso[task.setvariable variable=costChange;]${cost_change}"
         displayName: Calculate Cost Change
-      
+
       - task: InfracostComment@0
         displayName: Post the comment
         # Setup the conditions for the task to comment on the pipeline. We use the lt expression (less than): 
