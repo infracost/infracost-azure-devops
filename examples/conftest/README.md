@@ -4,7 +4,7 @@ This example shows how to set cost policies using [Conftest](https://www.conftes
 
 When the policy checks pass, the pipeline step called "Check Conftest Policies" passes and outputs `3 tests, 3 passed, 0 warnings, 0 failures, 0 exceptions` in the task logs. When the policy checks fail, that step fails and the task logs show the details of the failing policies.
 
-Create a policy file (e.g. `policy.rego`) that checks the Infracost JSON: 
+Create a policy file (e.g. `policy.rego`) that checks the Infracost JSON:
 ```rego
 package main
 

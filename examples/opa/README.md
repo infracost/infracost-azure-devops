@@ -4,7 +4,7 @@ This example shows how to set cost policies using [Open Policy Agent](https://ww
 
 When the policy checks pass, the Azure DevOps pipeline step called "Check Policies" passes and outputs `Policy check passed.` in the task logs. When the policy checks fail, that step fails and the task logs show the details of the failing policies.
 
-Create a policy file (e.g. `policy.rego`) that checks the Infracost JSON: 
+Create a policy file (e.g. `policy.rego`) that checks the Infracost JSON:
 ```rego
 package infracost
 
@@ -63,7 +63,7 @@ pr:
 jobs:
   - job: open_policy_agent
     displayName: Open Policy Agent
-    pool: 
+    pool:
       vmImage: ubuntu-latest
 
     steps:
@@ -75,8 +75,8 @@ jobs:
       - bash: |
           INSTALL_LOCATION="$(Build.SourcesDirectory)/bin"
           mkdir -p ${INSTALL_LOCATION}
-          
-          wget -O ${INSTALL_LOCATION}/opa https://openpolicyagent.org/downloads/v${OPA_VERSION}/opa_linux_amd64_static 
+
+          wget -O ${INSTALL_LOCATION}/opa https://openpolicyagent.org/downloads/v${OPA_VERSION}/opa_linux_amd64_static
           chmod +x ${INSTALL_LOCATION}/opa
 
           echo "##vso[task.setvariable variable=PATH;]$(PATH):${INSTALL_LOCATION}"
@@ -87,7 +87,7 @@ jobs:
 
       - bash: infracost breakdown --path=examples/opa/code/plan.json --format=json --out-file=/tmp/infracost.json
         displayName: Run Infracost
-        
+
       - bash: opa eval --input /tmp/infracost.json -d examples/opa/policy/policy.rego --format pretty "data.infracost.deny" | tee /tmp/opa.out
         displayName: Run OPA
 

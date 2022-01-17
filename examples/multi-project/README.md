@@ -25,7 +25,7 @@ jobs:
         displayName: Setup Infracost
         inputs:
           apiKey: $(infracostApiKey)
-      
+
       - bash: infracost breakdown --config-file=examples/multi-project/code/infracost.yml --format=json --out-file=/tmp/infracost.json
         displayName: Run Infracost
         env:
@@ -43,7 +43,7 @@ jobs:
 ```
 [//]: <> (END EXAMPLE)
 
-## Using Azure DevOps Pipeline matrix strategy 
+## Using Azure DevOps Pipeline matrix strategy
 
 This example shows how to run Infracost Azure DevOps tasks with multiple Terraform projects using the Azure DevOps Pipeline matrix strategy. The first job uses a matrix strategy to generate multiple Infracost output JSON files and upload them as artifacts. The second job downloads these JSON files, combines them using `infracost output`, and posts a comment.
 
@@ -61,7 +61,7 @@ jobs:
       matrix:
         dev:
           AWS_ACCESS_KEY_ID: $(exampleDevAwsAccessKeyId)
-          AWS_SECRET_ACCESS_KEY: $(exampleDevAwsSecretAccessKey) 
+          AWS_SECRET_ACCESS_KEY: $(exampleDevAwsSecretAccessKey)
           DIR: 'dev'
         prod:
           AWS_ACCESS_KEY_ID: $(exampleProdAwsAccessKeyId)
@@ -77,13 +77,13 @@ jobs:
         displayName: Setup Infracost
         inputs:
           apiKey: $(infracostApiKey)
-          
+
       - bash: infracost breakdown --path=examples/multi-project/code/$(DIR) --format=json --out-file=/tmp/infracost_$(DIR).json
         displayName: Run Infracost
         env:
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
-          
+
       - task: PublishBuildArtifacts@1
         displayName: Upload Infracost breakdown
         inputs:
@@ -104,16 +104,16 @@ jobs:
           downloadType: 'single'
           artifactName: infracost_jsons
           downloadPath: '$(System.DefaultWorkingDirectory)'
-          
+
       - task: InfracostSetup@0
         displayName: Setup Infracost
         inputs:
           apiKey: $(infracostApiKey)
-          
+
       - bash: |
           infracost output --path="infracost_jsons/*.json" --format=json --out-file=/tmp/infracost_combined.json
         displayName: Combine the results
-          
+
       - task: InfracostComment@0
         displayName: Post the comment
         inputs:
