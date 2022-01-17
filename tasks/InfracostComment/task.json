@@ -61,6 +61,14 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Customize the comment tag. This is added to the comment as a markdown comment (hidden) to detect the previously posted comments. This is useful if you have multiple workflows that post comments to the same pull request or commit."
+    },
+    {
+      "name": "dryRun",
+      "type": "string",
+      "label": "Dry Run",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "Set if the comment cmd should should run in dry run mode. If dryRun is enabled the cmd echos the contents of the InfracostComment to stdOut rather than posting it to commit/PR."
     }
   ],
   "execution": {

@@ -1,6 +1,27 @@
 import taskLib = require('azure-pipelines-task-lib/task');
-import compost, { PostBehavior, TargetType } from '@infracost/compost';
-import { promises as fsPromises } from 'fs';
+import compost, {Logger, PostBehavior, TargetType} from '@infracost/compost';
+import {promises as fsPromises} from 'fs';
+
+
+/**
+ * OutputCapture implements the Logger interface, capturing calls to the logger
+ * and prepending it to an out bucket.
+ */
+class OutputCapture implements Logger {
+  public out: string = '';
+
+  debug(arg: string) {
+    this.out += `DEBUG: ${arg}`;
+  }
+
+  info(arg: string) {
+    this.out += `INFO: ${arg}`;
+  }
+
+  warn(arg: string) {
+    this.out += `WARN: ${arg}`;
+  }
+}
 
 /**
  * setEnvVariable sets ENV variable.
@@ -31,10 +52,10 @@ async function generateOutput(path: string, format: string, behavior: string): P
   try {
     pathList = JSON.parse(path);
 
-    if (typeof(pathList) === 'string') {
+    if (typeof (pathList) === 'string') {
       pathList = [path];
     }
-  } catch(error) {
+  } catch (error) {
     if (error instanceof SyntaxError) {
       pathList = [path];
     } else {
@@ -176,17 +197,26 @@ async function run() {
     const data = await fsPromises.readFile(outputFile);
     const comment = formatOutput(data.toString(), targetType, behavior);
 
+    let logger: Logger = console;
+    if (dryRun) {
+      logger = new OutputCapture();
+    }
+
     // Send the comment
     const platform = compost.autodetect({
-      logger: console,
-      tag: tag,
-      dryRun: dryRun,
+      logger,
+      tag,
+      dryRun,
       targetType: targetType as TargetType,
     });
     const postBehavior = behavior as PostBehavior;
 
     if (platform) {
-      platform.postComment(postBehavior, comment);
+      await platform.postComment(postBehavior, comment);
+    }
+
+    if (dryRun) {
+      taskLib.setVariable("Infracost.Comment.Out", logger.out)
     }
   } catch (e: any) {
     let message = 'Failed to post a comment';
