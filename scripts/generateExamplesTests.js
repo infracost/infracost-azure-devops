@@ -72,16 +72,13 @@ function fixupExamples(examples) {
 
       for (const step of job.steps) {
         if (step.task && step.task.startsWith('InfracostComment')) {
-          const path = step.inputs.path;
           const goldenFilePath = `./testdata/${job.job}_comment_golden.md`;
+          step.inputs['dryRun'] = true
 
           steps.push(
+            step,
             {
-              bash: `infracost output --path=${path} --format=azure-repos-comment --show-skipped --out-file=/tmp/infracost_comment.md`,
-              displayName: 'Generate Infracost comment',
-            },
-            {
-              bash: `diff ${goldenFilePath} /tmp/infracost_comment.md`,
+              bash: `diff ${goldenFilePath} infracost-comment.md`,
               displayName: 'Check the comment',
             },
           );
@@ -116,7 +113,7 @@ function fixupExamples(examples) {
 }
 
 const pipelineSyntax = {
-  pr: ['master'],
+  pr: ['master', 'azure-devops-tasks'],
   name: 'Infracost.InfracostAzureDevops.Examples.Test',
   jobs: [],
 };
