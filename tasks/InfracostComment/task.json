@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 6
+    "Patch": 10
   },
   "instanceNameFormat": "InfracostComment $(version)",
   "inputs": [
@@ -61,6 +61,14 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Customize the comment tag. This is added to the comment as a markdown comment (hidden) to detect the previously posted comments. This is useful if you have multiple workflows that post comments to the same pull request or commit."
+    },
+    {
+      "name": "dryRun",
+      "type": "string",
+      "label": "Dry Run",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "Skips any comment posting, deleting or hiding. The comment output is still saved to the $(Build.SourcesDirectory)/infracost-comment.md."
     }
   ],
   "execution": {
