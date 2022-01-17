@@ -27,7 +27,7 @@ function setEnvVariable(name: string, value: string, isSecret: boolean = false) 
 async function generateOutput(path: string, format: string, behavior: string): Promise<string> {
   const outputFile = 'infracost-comment.md';
 
-  let pathList: string[];
+  let pathList: string[] | string;
   try {
     pathList = JSON.parse(path);
 
@@ -150,6 +150,10 @@ function setupRepoProvider(): RepoProvider {
 
   setEnvVariable(provider.envVariable, token, true);
 
+  if (taskLib.getVariable('System.Debug') === 'true') {
+    setEnvVariable("DEBUG", "*")
+  }
+
   return provider;
 }
 
@@ -179,14 +183,14 @@ async function run() {
     // Send the comment
     const platform = compost.autodetect({
       logger: console,
-      tag: tag,
-      dryRun: dryRun,
+      tag,
+      dryRun,
       targetType: targetType as TargetType,
     });
     const postBehavior = behavior as PostBehavior;
 
     if (platform) {
-      platform.postComment(postBehavior, comment);
+      await platform.postComment(postBehavior, comment);
     }
   } catch (e: any) {
     let message = 'Failed to post a comment';
