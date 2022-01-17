@@ -10,7 +10,7 @@ pr:
 jobs:
   - job: terragrunt
     displayName: Terragrunt
-    pool: 
+    pool:
       vmImage: ubuntu-latest
 
     steps:
@@ -35,7 +35,7 @@ jobs:
 
       - bash: infracost breakdown --path=examples/terragrunt/code --format=json --out-file=/tmp/infracost.json
         displayName: Run Infracost
-        
+
       - task: InfracostComment@0
         displayName: Post the comment
         inputs:

@@ -4,7 +4,7 @@ This example shows how to write cost policies with HashiCorp's [Sentinel](https:
 
 When the policy checks pass, the Azure Devops pipeline step called "Check Policies" passes and outputs `Policy check passed.` in the task logs. When the policy checks fail, that step fails and the task logs show the Sentinel output indicating failing policies.
 
-Create a policy file (e.g. `policy.policy) that checks a global parameter 'breakdown' containing the Infracost JSON: 
+Create a policy file (e.g. `policy.policy) that checks a global parameter 'breakdown' containing the Infracost JSON:
 ```policy
 import "strings"
 
@@ -65,7 +65,7 @@ pr:
 jobs:
   - job: sentinel
     displayName: Sentinel
-    pool: 
+    pool:
       vmImage: ubuntu-latest
 
     steps:
@@ -73,16 +73,16 @@ jobs:
         displayName: Setup Infracost
         inputs:
           apiKey: $(infracostApiKey)
-          
+
       - bash: |
           INSTALL_LOCATION="$(Build.SourcesDirectory)/sentinel"
           mkdir -p ${INSTALL_LOCATION}
 
           curl -o sentinel.zip https://releases.hashicorp.com/sentinel/0.18.4/sentinel_0.18.4_linux_amd64.zip
           unzip -d ${INSTALL_LOCATION} sentinel.zip
-          
+
           echo "##vso[task.setvariable variable=PATH;]$(PATH):${INSTALL_LOCATION}"
-            
+
         displayName: Setup Sentinel
 
       - bash: infracost breakdown --path=examples/sentinel/code/plan.json --format=json --out-file=/tmp/infracost.json
@@ -93,7 +93,7 @@ jobs:
 
       - bash: |
           result=$(</tmp/sentinel.out)
-          
+
           if [ "$result" != "Pass - policy.policy" ]; then
             echo "##vso[task.logissue type=error]Policy check failed"
             echo "##vso[task.logissue type=error]$result"
