@@ -3,7 +3,7 @@
   "id": "b7cd5a2e-1c4c-4f61-8b25-ba72cf4fc8ce",
   "name": "InfracostSetup",
   "friendlyName": "Infracost Setup Task",
-  "description": "Sets up Infracost CLI in your Azure DevOps pipeline. Show cloud cost estimates for Terraform in pull requests.",
+  "description": "Sets up Infracost CLI in Azure Pipelines. Show cloud cost estimates for Terraform in pull requests.",
   "helpMarkDown": "",
   "category": "Utility",
   "author": "Infracost",

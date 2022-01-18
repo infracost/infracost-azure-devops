@@ -1,6 +1,6 @@
 # Slack Example
 
-This example shows how to send cost estimates to Slack using Azure DevOps pipeline tasks.
+This example shows how to send cost estimates to Slack using Infracost Azure Pipelines tasks.
 
 Slack message blocks have a 3000 char limit so the Infracost CLI automatically truncates the middle of slack-message output formats.
 

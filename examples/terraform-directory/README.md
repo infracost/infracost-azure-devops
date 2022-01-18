@@ -1,6 +1,6 @@
 # Terraform directory
 
-This example shows how to run Infracost Azure DevOps tasks with a Terraform project containing HCL code.
+This example shows how to run Infracost Azure Pipelines tasks with a Terraform project containing HCL code.
 
 [//]: <> (BEGIN EXAMPLE)
 ```yml
