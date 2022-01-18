@@ -1,12 +1,12 @@
-# Infracost Azure DevOps integration
+# Infracost Azure Pipelines integration
 
-This project provides an Azure DevOps task for Infracost along with examples of how you can use it to to see cloud cost estimates for Terraform in pull requests 💰
+This project provides Azure Pipeline tasks for Infracost along with examples of how you can use it to to see cloud cost estimates for Terraform in pull requests 💰
 
 <img src="screenshot.png" width="700px" alt="Example screenshot" />
 
 ## Quick start
 
-The Azure DevOps Infracost tasks can be used with either Azure Repos (only git is supported) or GitHub repos. The following steps assume a simple Terraform directory is being used, we recommend you use a more relevant [example](#examples) if required.
+The Azure Pipelines Infracost tasks can be used with either Azure Repos (only git is supported) or GitHub repos. The following steps assume a simple Terraform directory is being used, we recommend you use a more relevant [example](#examples) if required.
 
 1. In the Azure DevOps Marketplace, Add the [Terraform installer task](https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks) to your organization by clicking 'Get it free', selecting your organization and clicking Install. If you do not have permission to install the task, you can submit a request to your organization's admin who will get emailed the details of the request.
 
@@ -20,7 +20,7 @@ The Azure DevOps Infracost tasks can be used with either Azure Repos (only git i
 
 ## Azure Repos Quick start
 
-1. Enable pull request build triggers. Without this, Azure DevOps Pipelines do not trigger builds with the pull request ID, thus comments cannot be posted by the integration.
+1. Enable pull request build triggers. Without this, Azure Pipelines do not trigger builds with the pull request ID, thus comments cannot be posted by the integration.
 
     a. From your Azure DevOps organization, click on your project > Project Settings > Repositories > your repository
 
@@ -30,7 +30,7 @@ The Azure DevOps Infracost tasks can be used with either Azure Repos (only git i
 
     d. Select your 'Build pipeline', leave 'Path filter' blank, set 'Trigger' to Automatic, and 'Policy requirement' to Optional (you can also use Required but we don't recommend it).
 
-2. Enable DevOps Pipelines to post pull request comments
+2. Enable Azure Pipelines to post pull request comments
 
     a. From your Azure DevOps organization, click on your project > Project Settings > Repositories > your repository
 
@@ -48,7 +48,7 @@ The Azure DevOps Infracost tasks can be used with either Azure Repos (only git i
 4.  Add the following to the `azure-pipelines.yml` file:
 
     ```yaml
-    # The Azure DevOps docs (https://docs.microsoft.com/en-us/azure/devops/pipelines/process/tasks) describe other options.
+    # The Azure Pipelines docs (https://docs.microsoft.com/en-us/azure/devops/pipelines/process/tasks) describe other options.
     # Running on pull requests to `master` (or your default branch) is a good default.
     pr:
       - master
@@ -118,7 +118,7 @@ The Azure DevOps Infracost tasks can be used with either Azure Repos (only git i
 
 ## GitHub Repos Quick Start
 
-1. Create a GitHub token (such as Personal Access Token) that can be used by the Azure DevOps Pipeline to post comments. The token needs to have `repo` scope so it can post comments.
+1. Create a GitHub token (such as Personal Access Token) that can be used by the pipeline to post comments. The token needs to have `repo` scope so it can post comments.
 
 2. Add secret variables: from your Azure DevOps organization, click on your project > Pipelines > your pipeline > Edit > Variables, and click the + sign to add variables for the following":
 
@@ -133,7 +133,7 @@ The Azure DevOps Infracost tasks can be used with either Azure Repos (only git i
 3.  Add the following to the `azure-pipelines.yml` file:
 
     ```yaml
-    # The Azure DevOps docs (https://docs.microsoft.com/en-us/azure/devops/pipelines/process/tasks) describe other options.
+    # The Azure Pipelines docs (https://docs.microsoft.com/en-us/azure/devops/pipelines/process/tasks) describe other options.
     # Running on pull requests to `master` (or your default branch) is a good default.
     pr:
       - master
@@ -210,7 +210,7 @@ The [examples](examples) directory demonstrates how these actions can be used in
   - [Terragrunt](examples/terragrunt): a Terragrunt project
   - [Terraform Cloud/Enterprise](examples/terraform-cloud-enterprise): a Terraform project using Terraform Cloud/Enterprise
   - [Multi-project using config file](examples/multi-project/README.md#using-an-infracost-config-file): multiple Terraform projects using the Infracost [config file](https://www.infracost.io/docs/multi_project/config_file)
-  - [Multi-project using build matrix](examples/multi-project/README.md#using-azure-devops-pipeline-matrix-strategy): multiple Terraform projects using Azure DevOps Pipeline matrix strategy
+  - [Multi-project using build matrix](examples/multi-project/README.md#using-azure-devops-pipeline-matrix-strategy): multiple Terraform projects using the Azure pipelines matrix strategy
   - [Multi-Terraform workspace](examples/multi-terraform-workspace): multiple Terraform workspaces using the Infracost [config file](https://www.infracost.io/docs/multi_project/config_file)
   - [Private Terraform module](examples/private-terraform-module/README.md): a Terraform project using a private Terraform module
   - [Slack](examples/slack): send cost estimates to Slack

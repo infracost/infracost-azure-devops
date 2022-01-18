@@ -2,7 +2,7 @@
 
 This example shows how to write cost policies with HashiCorp's [Sentinel](https://www.hashicorp.com/sentinel). For simplicity, this example evaluates policies with the Sentinel CLI (a.k.a. Sentinel Simulator). The point of this example is to show how a policy could be written against the Infracost JSON format, not how to run Sentinel, since that's tied to HashiCorp's cloud platform.
 
-When the policy checks pass, the Azure Devops pipeline step called "Check Policies" passes and outputs `Policy check passed.` in the task logs. When the policy checks fail, that step fails and the task logs show the Sentinel output indicating failing policies.
+When the policy checks pass, the pipeline step called "Check Policies" passes and outputs `Policy check passed.` in the task logs. When the policy checks fail, that step fails and the task logs show the Sentinel output indicating failing policies.
 
 Create a policy file (e.g. `policy.policy) that checks a global parameter 'breakdown' containing the Infracost JSON:
 ```policy

@@ -2,7 +2,7 @@
 
 This example shows how to set cost policies using [Open Policy Agent](https://www.openpolicyagent.org/).  For simplicity, this is based off the terraform-plan-json example, which does not require Terraform to be installed.
 
-When the policy checks pass, the Azure DevOps pipeline step called "Check Policies" passes and outputs `Policy check passed.` in the task logs. When the policy checks fail, that step fails and the task logs show the details of the failing policies.
+When the policy checks pass, the pipeline step called "Check Policies" passes and outputs `Policy check passed.` in the task logs. When the policy checks fail, that step fails and the task logs show the details of the failing policies.
 
 Create a policy file (e.g. `policy.rego`) that checks the Infracost JSON:
 ```rego
