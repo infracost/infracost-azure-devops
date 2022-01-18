@@ -43,6 +43,6 @@ jobs:
         inputs:
           githubToken: $(githubToken)
           path: /tmp/infracost.json
-          behavior: update # Create a single comment and update it. See https://github.com/infracost/actions/tree/master/overview.md#infracostcomment-task for other options
+          behavior: update # Create a single comment and update it. See https://github.com/infracost/infracost-azure-devops#infracostcomment for other options
 ```
 [//]: <> (END EXAMPLE)

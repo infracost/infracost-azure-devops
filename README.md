@@ -84,7 +84,7 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
             displayName: Terraform show
             workingDirectory: $(TF_ROOT)
 
-          # Install the Infracost CLI, see https://github.com/infracost/actions/tree/master/overview.md#infracostsetup-task
+          # Install the Infracost CLI, see https://github.com/infracost/infracost-azure-devops#infracostsetup
           # for other inputs such as version, and pricingApiEndpoint (for self-hosted users).
           - task: InfracostSetup@0
             displayName: Setup Infracost
@@ -97,7 +97,7 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
           - bash: infracost breakdown --path=$(TF_ROOT)/plan.json --format=json --out-file=/tmp/infracost.json
             displayName: Run Infracost
 
-          # See https://github.com/infracost/actions/tree/master/overview.md#infracostcomment-task for other options
+          # See https://github.com/infracost/infracost-azure-devops#infracostcomment for other options
           - task: InfracostComment@0
             displayName: Post Infracost comment
             inputs:
@@ -168,7 +168,7 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
             displayName: Terraform show
             workingDirectory: $(TF_ROOT)
 
-          # Install the Infracost CLI, see https://github.com/infracost/actions/tree/master/tasks/setup/overview.md
+          # Install the Infracost CLI, see https://github.com/infracost/infracost-azure-devops#infracostsetup
           # for other inputs such as version, and pricingApiEndpoint (for self-hosted users).
           - task: InfracostSetup@0
             displayName: Setup Infracost
@@ -181,7 +181,7 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
           - bash: infracost breakdown --path=$(TF_ROOT)/plan.json --format=json --out-file=/tmp/infracost.json
             displayName: Run Infracost
 
-          # See https://github.com/infracost/infracost-azure-devops/tree/master/tasks/comment/overview.md for other options
+          # See https://github.com/infracost/infracost-azure-devops#infracostcomment for other options
           - task: InfracostComment@0
             displayName: Post Infracost comment
             inputs:
@@ -223,10 +223,52 @@ Cost policy examples:
 
 ## Tasks
 
-* We recommend you use the above quick start guide and examples, which combine the following individual actions:
+We recommend you use the above quick start guide and examples, which combine the following individual actions.
 
-- [InfracostSetup](overview.md#infracostsetup-task): installs and configures Infracost CLI.
-- [InfracostComment](overview.md#infracostcomment-task): adds comments to GitHub pull requests and commits, or Azure Repos pull requests.
+### InfracostSetup
+
+This task installs and configures the Infracost CLI.
+
+```yml
+steps:
+  - task: InfracostSetup@v0
+    inputs:
+      apiKey: $(infracostApiKey)
+```
+
+It accepts the following inputs:
+
+- `apiKey`: Required. Your Infracost API key. It can be retrieved by running `infracost configure get api_key`. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
+- `version`: Optional, defaults to `0.9.x`. [SemVer ranges](https://www.npmjs.com/package/semver#ranges) are supported, so instead of a [full version](https://github.com/infracost/infracost/releases) string, you can use `0.9.x`. This enables you to automatically get the latest backward compatible changes in the 0.9 release (e.g. new resources or bug fixes).
+- `currency`: Optional. Convert output from USD to your preferred [ISO 4217 currency](https://en.wikipedia.org/wiki/ISO_4217#Active_codes), e.g. EUR, BRL or INR.
+- `pricingApiEndpoint`: Optional. For [self-hosted](https://www.infracost.io/docs/cloud_pricing_api/self_hosted) users, endpoint of the Cloud Pricing API, e.g. https://cloud-pricing-api.
+- `enableDashboard`: Optional, defaults to `false`. Enables [Infracost dashboard features](https://www.infracost.io/docs/features/share_links), not supported for self-hosted Cloud Pricing API.
+
+### InfracostComment
+
+This task adds comments to GitHub pull requests and commits, or Azure Repos pull requests.
+
+```yml
+steps:
+  - task: InfracostComment@v0
+    inputs:
+      githubToken: $(githubToken)
+      path: /tmp/infracost.json
+      behavior: update
+```
+
+It accepts the following inputs:
+
+- `path`: Required. The path to the `infracost breakdown` JSON that will be passed to `infracost output`. For multiple paths, pass a glob pattern (e.g. "infracost_*.json", glob needs quotes) or a JSON array of paths.
+- `githubToken`: GitHub access token. Required if repository provider is GitHub.
+- `azureReposToken`: Azure Repos access token. Required if repository provider is Azure Repos.
+- `behavior`: Optional, defaults to `update`. The behavior to use when posting cost estimate comments. Must be one of the following:
+  - `update`: Create a single comment and update it on changes. This is the "quietest" option. The Azure DevOps Repos/GitHub comments UI shows what/when changed when the comment is updated. Pull request followers will only be notified on the comment create (not updates), and the comment will stay at the same location in the comment history.
+  - `delete-and-new`: Delete previous cost estimate comments and create a new one. Pull request followers will be notified on each comment.
+  - `hide-and-new`: Minimize previous cost estimate comments and create a new one. Pull request followers will be notified on each comment.
+  - `new`: Create a new cost estimate comment. Pull request followers will be notified on each comment.
+- `targetType`: Optional. Which objects should be commented on, either `pull-request` or `commit`. The `commit` option is available only for GitHub repositories.
+- `tag`: Optional. Customize the comment tag. This is added to the comment as a markdown comment (hidden) to detect the previously posted comments. This is useful if you have multiple pipelines that post comments to the same pull request or commit.
 
 ## Contributing
 
