@@ -9,7 +9,7 @@
       "id": "Microsoft.VisualStudio.Services"
     }
   ],
-  "description": "Tasks for setting up Infracost in your Azure DevOps Pipelines and showing cloud cost estimates for Terraform in pull requests.",
+  "description": "Tasks for setting up Infracost in your Azure Pipelines and showing cloud cost estimates for Terraform in pull requests.",
   "tags": [
     "AWS",
     "Azure DevOps Extensions",

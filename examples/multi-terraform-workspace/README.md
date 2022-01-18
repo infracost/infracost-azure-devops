@@ -1,6 +1,6 @@
 # Multi-Terraform workspace
 
-This example shows how to run Infracost in an Azure DevOps pipeline against a Terraform project that uses multiple workspaces using an [Infracost config file](https://www.infracost.io/docs/multi_project/config_file).
+This example shows how to run Infracost in Azure Pipelines against a Terraform project that uses multiple workspaces using an [Infracost config file](https://www.infracost.io/docs/multi_project/config_file).
 
 [//]: <> (BEGIN EXAMPLE)
 ```yml

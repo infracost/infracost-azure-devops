@@ -23,7 +23,7 @@ function extractAllExamples(examplesDir) {
     }
 
     console.log(
-      `Generating Azure DevOps Pipeline job for ${examplesDir}/${dir}`
+      `Generating Azure Pipelines job for ${examplesDir}/${dir}`
     );
 
     const filename = `${examplesDir}/${dir}/README.md`;
