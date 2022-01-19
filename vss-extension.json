@@ -2,7 +2,7 @@
   "manifestVersion": 1,
   "id": "infracost-tasks",
   "name": "Infracost Tasks",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "publisher": "Infracost",
   "targets": [
     {
