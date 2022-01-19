@@ -2,7 +2,7 @@
 
 This project provides Azure Pipeline tasks for Infracost along with examples of how you can use it to to see cloud cost estimates for Terraform in pull requests 💰
 
-<img src="screenshot.png" width="700px" alt="Example screenshot" />
+<img src="https://github.com/infracost/infracost-azure-devops/blob/master/screenshot.png?raw=true" width="700px" alt="Example screenshot" />
 
 ## Quick start
 
@@ -204,24 +204,24 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
 
 ## Examples
 
-The [examples](examples) directory demonstrates how these actions can be used in different workflows, including:
-  - [Terraform directory](examples/terraform-directory): a Terraform directory containing HCL code
-  - [Terraform plan JSON](examples/terraform-plan-json): a Terraform plan JSON file
-  - [Terragrunt](examples/terragrunt): a Terragrunt project
-  - [Terraform Cloud/Enterprise](examples/terraform-cloud-enterprise): a Terraform project using Terraform Cloud/Enterprise
-  - [Multi-project using config file](examples/multi-project/README.md#using-an-infracost-config-file): multiple Terraform projects using the Infracost [config file](https://www.infracost.io/docs/multi_project/config_file)
-  - [Multi-project using build matrix](examples/multi-project/README.md#using-azure-devops-pipeline-matrix-strategy): multiple Terraform projects using the Azure pipelines matrix strategy
-  - [Multi-Terraform workspace](examples/multi-terraform-workspace): multiple Terraform workspaces using the Infracost [config file](https://www.infracost.io/docs/multi_project/config_file)
-  - [Private Terraform module](examples/private-terraform-module/README.md): a Terraform project using a private Terraform module
-  - [Slack](examples/slack): send cost estimates to Slack
+The [examples](https://github.com/infracost/infracost-azure-devops/tree/master/examples) directory demonstrates how these actions can be used in different workflows, including:
+  - [Terraform directory](https://github.com/infracost/infracost-azure-devops/tree/master/examples/terraform-directory): a Terraform directory containing HCL code
+  - [Terraform plan JSON](https://github.com/infracost/infracost-azure-devops/tree/master/examples/terraform-plan-json): a Terraform plan JSON file
+  - [Terragrunt](https://github.com/infracost/infracost-azure-devops/tree/master/examples/terragrunt): a Terragrunt project
+  - [Terraform Cloud/Enterprise](https://github.com/infracost/infracost-azure-devops/tree/master/examples/terraform-cloud-enterprise): a Terraform project using Terraform Cloud/Enterprise
+  - [Multi-project using config file](https://github.com/infracost/infracost-azure-devops/tree/master/examples/multi-project/README.md#using-an-infracost-config-file): multiple Terraform projects using the Infracost [config file](https://www.infracost.io/docs/multi_project/config_file)
+  - [Multi-project using build matrix](https://github.com/infracost/infracost-azure-devops/tree/master/examples/multi-project/README.md#using-azure-devops-pipeline-matrix-strategy): multiple Terraform projects using the Azure pipelines matrix strategy
+  - [Multi-Terraform workspace](https://github.com/infracost/infracost-azure-devops/tree/master/examples/multi-terraform-workspace): multiple Terraform workspaces using the Infracost [config file](https://www.infracost.io/docs/multi_project/config_file)
+  - [Private Terraform module](https://github.com/infracost/infracost-azure-devops/tree/master/examples/private-terraform-module/README.md): a Terraform project using a private Terraform module
+  - [Slack](https://github.com/infracost/infracost-azure-devops/tree/master/examples/slack): send cost estimates to Slack
 
 ### Cost policy examples
 
-- [OPA](examples/opa): check Infracost cost estimates against policies using Open Policy Agent
-- [Conftest](examples/conftest): check Infracost cost estimates against policies using Conftest
-- [Sentinel](examples/sentinel): check Infracost cost estimates against policies using HashiCorp Sentinel
+- [OPA](https://github.com/infracost/infracost-azure-devops/tree/master/examples/opa): check Infracost cost estimates against policies using Open Policy Agent
+- [Conftest](https://github.com/infracost/infracost-azure-devops/tree/master/examples/conftest): check Infracost cost estimates against policies using Conftest
+- [Sentinel](https://github.com/infracost/infracost-azure-devops/tree/master/examples/sentinel): check Infracost cost estimates against policies using HashiCorp Sentinel
 
-If you do not use the above tools, you can still set [thresholds](examples/thresholds) using bash and [jq](https://stedolan.github.io/jq/) so notifications or pull request comments are only sent when cost thresholds are exceeded.
+If you do not use the above tools, you can still set [thresholds](https://github.com/infracost/infracost-azure-devops/tree/master/examples/thresholds) using bash and [jq](https://stedolan.github.io/jq/) so notifications or pull request comments are only sent when cost thresholds are exceeded.
 
 ## Tasks
 
@@ -274,7 +274,7 @@ It accepts the following inputs:
 
 ## Contributing
 
-Issues and pull requests are welcome! For development details, see the [contributing](CONTRIBUTING.md) guide. For major changes, including interface changes, please open an issue first to discuss what you would like to change. [Join our community Slack channel](https://www.infracost.io/community-chat), we are a friendly bunch and happy to help you get started :)
+Issues and pull requests are welcome! For development details, see the [contributing](https://github.com/infracost/infracost-azure-devops/blob/master/CONTRIBUTING.md) guide. For major changes, including interface changes, please open an issue first to discuss what you would like to change. [Join our community Slack channel](https://www.infracost.io/community-chat), we are a friendly bunch and happy to help you get started :)
 
 ## License
 
