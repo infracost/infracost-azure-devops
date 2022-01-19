@@ -215,11 +215,13 @@ The [examples](examples) directory demonstrates how these actions can be used in
   - [Private Terraform module](examples/private-terraform-module/README.md): a Terraform project using a private Terraform module
   - [Slack](examples/slack): send cost estimates to Slack
 
-Cost policy examples:
-- [Thresholds](examples/thresholds): only post a comment when cost thresholds are exceeded
-- [Conftest](examples/conftest): check Infracost cost estimates against policies using Conftest
+### Cost policy examples
+
 - [OPA](examples/opa): check Infracost cost estimates against policies using Open Policy Agent
-- [Sentinel](examples/sentinel): check Infracost cost estimates against policies using HashiCorp's Sentinel
+- [Conftest](examples/conftest): check Infracost cost estimates against policies using Conftest
+- [Sentinel](examples/sentinel): check Infracost cost estimates against policies using HashiCorp Sentinel
+
+If you do not use the above tools, you can still set [thresholds](examples/thresholds) using bash and [jq](https://stedolan.github.io/jq/) so notifications or pull request comments are only sent when cost thresholds are exceeded.
 
 ## Tasks
 
