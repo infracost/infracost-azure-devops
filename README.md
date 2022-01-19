@@ -209,10 +209,10 @@ The [examples](https://github.com/infracost/infracost-azure-devops/tree/master/e
   - [Terraform plan JSON](https://github.com/infracost/infracost-azure-devops/tree/master/examples/terraform-plan-json): a Terraform plan JSON file
   - [Terragrunt](https://github.com/infracost/infracost-azure-devops/tree/master/examples/terragrunt): a Terragrunt project
   - [Terraform Cloud/Enterprise](https://github.com/infracost/infracost-azure-devops/tree/master/examples/terraform-cloud-enterprise): a Terraform project using Terraform Cloud/Enterprise
-  - [Multi-project using config file](https://github.com/infracost/infracost-azure-devops/tree/master/examples/multi-project/README.md#using-an-infracost-config-file): multiple Terraform projects using the Infracost [config file](https://www.infracost.io/docs/multi_project/config_file)
-  - [Multi-project using build matrix](https://github.com/infracost/infracost-azure-devops/tree/master/examples/multi-project/README.md#using-azure-devops-pipeline-matrix-strategy): multiple Terraform projects using the Azure pipelines matrix strategy
+  - [Multi-project using config file](https://github.com/infracost/infracost-azure-devops/blob/master/examples/multi-project/README.md#using-an-infracost-config-file): multiple Terraform projects using the Infracost [config file](https://www.infracost.io/docs/multi_project/config_file)
+  - [Multi-project using build matrix](https://github.com/infracost/infracost-azure-devops/blob/master/examples/multi-project/README.md#using-azure-pipelines-matrix-strategy): multiple Terraform projects using the Azure pipelines matrix strategy
   - [Multi-Terraform workspace](https://github.com/infracost/infracost-azure-devops/tree/master/examples/multi-terraform-workspace): multiple Terraform workspaces using the Infracost [config file](https://www.infracost.io/docs/multi_project/config_file)
-  - [Private Terraform module](https://github.com/infracost/infracost-azure-devops/tree/master/examples/private-terraform-module/README.md): a Terraform project using a private Terraform module
+  - [Private Terraform module](https://github.com/infracost/infracost-azure-devops/tree/master/examples/private-terraform-module): a Terraform project using a private Terraform module
   - [Slack](https://github.com/infracost/infracost-azure-devops/tree/master/examples/slack): send cost estimates to Slack
 
 ### Cost policy examples
