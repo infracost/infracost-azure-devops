@@ -106,7 +106,6 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
               # Choose the commenting behavior, 'update' is a good default:
               behavior: update # Create a single comment and update it. The "quietest" option.
               # behavior: delete-and-new # Delete previous comments and create a new one.
-              # behavior: hide-and-new # Minimize previous comments and create a new one.
               # behavior: new # Create a new cost estimate comment on every push.
     ```
 
@@ -267,7 +266,7 @@ It accepts the following inputs:
 - `behavior`: Optional, defaults to `update`. The behavior to use when posting cost estimate comments. Must be one of the following:
   - `update`: Create a single comment and update it on changes. This is the "quietest" option. The Azure DevOps Repos/GitHub comments UI shows what/when changed when the comment is updated. Pull request followers will only be notified on the comment create (not updates), and the comment will stay at the same location in the comment history.
   - `delete-and-new`: Delete previous cost estimate comments and create a new one. Pull request followers will be notified on each comment.
-  - `hide-and-new`: Minimize previous cost estimate comments and create a new one. Pull request followers will be notified on each comment.
+  - `hide-and-new`: Minimize previous cost estimate comments and create a new one. Pull request followers will be notified on each comment. This behavior is available only for GitHub repositories.
   - `new`: Create a new cost estimate comment. Pull request followers will be notified on each comment.
 - `targetType`: Optional. Which objects should be commented on, either `pull-request` or `commit`. The `commit` option is available only for GitHub repositories.
 - `tag`: Optional. Customize the comment tag. This is added to the comment as a markdown comment (hidden) to detect the previously posted comments. This is useful if you have multiple pipelines that post comments to the same pull request or commit.
