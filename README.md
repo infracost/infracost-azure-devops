@@ -10,7 +10,7 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
 
 1. In the Azure DevOps Marketplace, Add the [Terraform installer task](https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks) to your organization by clicking 'Get it free', selecting your organization and clicking Install. If you do not have permission to install the task, you can submit a request to your organization's admin who will get emailed the details of the request.
 
-2. Repeat step 1 for the [Infracost tasks](TODO: add link).
+2. Repeat step 1 for the [Infracost tasks](https://marketplace.visualstudio.com/items?itemName=Infracost.infracost-tasks).
 
 3. Retrieve your Infracost API key by running `infracost configure get api_key`. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
 
