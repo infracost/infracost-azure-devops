@@ -44,7 +44,7 @@
       "label": "Pricing API Endpoint",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "For self-hosted (https://www.infracost.io/docs/cloud_pricing_api/self_hosted) users, endpoint of the Cloud Pricing API, e.g. https://cloud-pricing-api."
+      "helpMarkDown": "**Only needed for self-hosted users** (https://www.infracost.io/docs/cloud_pricing_api/self_hosted), endpoint of the Cloud Pricing API, e.g. https://cloud-pricing-api."
     },
     {
       "name": "enableDashboard",
