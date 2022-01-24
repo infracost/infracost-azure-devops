@@ -20,7 +20,7 @@
       "label": "Path",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "The path to the `infracost breakdown` JSON that will be passed to `infracost output`. For multiple paths, pass a glob pattern (e.g. \"infracost_*.json\", glob needs quotes) or a JSON array of paths."
+      "helpMarkDown": "The path to the JSON file generated from a `infracost breakdown` using the `--format=json` and `--out` flags. For multiple paths, pass a glob pattern (e.g. \"infracost_*.json\", glob needs quotes) or a JSON array of paths."
     },
     {
       "name": "githubToken",
