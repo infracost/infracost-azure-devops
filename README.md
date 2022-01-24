@@ -4,6 +4,19 @@ This project provides Azure Pipeline tasks for Infracost along with examples of 
 
 <img src="https://github.com/infracost/infracost-azure-devops/blob/master/screenshot.png?raw=true" width="700px" alt="Example screenshot" />
 
+## Table of contents
+
+* [Quick start](#quick-start)
+  + [Azure Repos Quick start](#azure-repos-quick-start)
+  + [GitHub Repos Quick Start](#github-repos-quick-start)
+* [Examples](#examples)
+  + [Cost policy examples](#cost-policy-examples)
+* [Tasks](#tasks)
+  + [InfracostSetup](#infracostsetup)
+  + [InfracostComment](#infracostcomment)
+* [Contributing](#contributing)
+* [License](#license)
+
 ## Quick start
 
 The Azure Pipelines Infracost tasks can be used with either Azure Repos (only git is supported) or GitHub repos. The following steps assume a simple Terraform directory is being used, we recommend you use a more relevant [example](#examples) if required.
@@ -18,7 +31,8 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
 
 5. If you are using a GitHub repository follow the [GitHub Repos quick start](#github-repos-quick-start)
 
-## Azure Repos Quick start
+
+### Azure Repos Quick start
 
 1. Enable pull request build triggers. Without this, Azure Pipelines do not trigger builds with the pull request ID, thus comments cannot be posted by the integration.
 
@@ -115,7 +129,7 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
 
     If there are issues, you can enable the 'Enable system diagnostics' check box when running the pipeline manually or for more options see [this page](https://docs.microsoft.com/en-us/azure/devops/pipelines/troubleshooting/review-logs).
 
-## GitHub Repos Quick Start
+### GitHub Repos Quick Start
 
 1. Create a GitHub token (such as Personal Access Token) that can be used by the pipeline to post comments. The token needs to have `repo` scope so it can post comments.
 
