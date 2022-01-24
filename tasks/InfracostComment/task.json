@@ -28,7 +28,7 @@
       "label": "Github Token",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "GitHub access token. Required if repository provider is GitHub."
+      "helpMarkDown": "GitHub access token. **Required if repository provider is GitHub.**"
     },
     {
       "name": "azureReposToken",
@@ -36,7 +36,7 @@
       "label": "Azure Repos Token",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Azure Repos system access token. Required if repository provider is Azure Repos."
+      "helpMarkDown": "Azure Repos system access token. **Required if repository provider is Azure Repos.**"
     },
     {
       "name": "behavior",
