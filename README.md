@@ -9,6 +9,9 @@ This project provides Azure Pipeline tasks for Infracost along with examples of 
 * [Quick start](#quick-start)
   + [Azure Repos Quick start](#azure-repos-quick-start)
   + [GitHub Repos Quick Start](#github-repos-quick-start)
+  * [Troubleshooting/Common Problems](#troubleshooting-common-problems)
+    + [503 error when posting to Azure Devops Repo](#503-error-when-posting-to-azure-devops-repo)
+    + [InfracostComment errors with a cannot detect a current environment](#infracostcomment-errors-with-a-cannot-detect-a-current-environment)
 * [Examples](#examples)
   + [Cost policy examples](#cost-policy-examples)
 * [Tasks](#tasks)
@@ -213,6 +216,18 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
 4. 🎉 That's it! Send a new pull request to change something in Terraform that costs money. You should see a pull request comment that gets updated, e.g. the 📉 and 📈 emojis will update as changes are pushed!
 
 If there are issues, you can enable the 'Enable system diagnostics' check box when running the pipeline manually or for more options see [this page](https://docs.microsoft.com/en-us/azure/devops/pipelines/troubleshooting/review-logs).
+
+### Troubleshooting/Common Problems
+
+#### 503 error when posting to Azure Devops Repo
+If you receive a 503 error when running the `InfracostComment` task in your pipeline:
+![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/503.png)
+This is normally because the build agent does not have permissions to post to the Azure Devops Repo. Make sure step 3 (Enable Azure Pipelines to post pull request comments) of the [#azure-repos-quick-start](Azure Repos Quick start) is complete. 
+
+#### InfracostComment cannot detect current environment
+![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/unable-to-detect.png)
+If using `InfracostComment` with Azure DevOps Repos we require that this task is run in response to a PR trigger. Make sure you've setup step 2 (Enable pull request build triggers) of the [#azure-repos-quick-start](Azure Repos Quick start) is complete.
+Then make sure your pipelines are being triggered by PR events and nothing else. 
 
 ## Examples
 
