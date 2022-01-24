@@ -22,45 +22,19 @@ This project provides Azure Pipeline tasks for Infracost along with examples of 
 The Azure Pipelines Infracost tasks can be used with either Azure Repos (only git is supported) or GitHub repos. The following steps assume a simple Terraform directory is being used, we recommend you use a more relevant [example](#examples) if required.
 
 1. In the Azure DevOps Marketplace, Add the [Terraform installer task](https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks) to your organization by clicking 'Get it free', selecting your organization and clicking Install. If you do not have permission to install the task, you can submit a request to your organization's admin who will get emailed the details of the request.
-
 2. Repeat step 1 for the [Infracost tasks](https://marketplace.visualstudio.com/items?itemName=Infracost.infracost-tasks).
-
 3. Retrieve your Infracost API key by running `infracost configure get api_key`. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
-
 4. If you are using an Azure Repos repositories follow the [Azure Repos quick start](#azure-repos-quick-start). Currently this only supports Git repositories.
-
 5. If you are using a GitHub repository follow the [GitHub Repos quick start](#github-repos-quick-start)
 
 
 ### Azure Repos Quick start
 
-1. Enable pull request build triggers. Without this, Azure Pipelines do not trigger builds with the pull request ID, thus comments cannot be posted by the integration.
-
-    a. From your Azure DevOps organization, click on your project > Project Settings > Repositories > your repository
-
-    b. Select the Policies tab and under the Branch Policies select on your default branch (master or main)
-
-    c. Scroll to Build Validation and click + sign to add one if you don't have one already
-
-    d. Select your 'Build pipeline', leave 'Path filter' blank, set 'Trigger' to Automatic, and 'Policy requirement' to Optional (you can also use Required but we don't recommend it).
-
-2. Enable Azure Pipelines to post pull request comments
-
-    a. From your Azure DevOps organization, click on your project > Project Settings > Repositories > your repository
-
-    b. Click on the Securities tab, scroll down to Users and click on the '[project name] Build Service ([org name])' user, and set the 'Contribute to pull requests' to Allow.
-
-3. Add secret variables: from your Azure DevOps organization, click on your project > Pipelines > your pipeline > Edit > Variables, and click the + sign to add variables for the following. Also tick the 'Keep this value secret' option.
-
-    - `infracostApiKey`: with your Infracost API key as the value, and select 'Keep this value secret'.
-    - Any cloud provider credentials you need for running `terraform init` and `terraform plan`:
-      - **Terraform Cloud/Enterprise users**: the [Terraform docs](https://www.terraform.io/cli/config/config-file#credentials-1) explain how to configure credentials for this using a config file, or you can pass the credentials as environment variables directly to Infracost as in [this example](examples/terraform-cloud-enterprise).
-      - **AWS users**: the [Terraform docs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#environment-variables) explain the environment variables to set for this.
-      - **Azure users**: the [Terraform docs](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_client_secret) explain the options.
-      - **Google users**: the [Terraform docs](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/provider_reference#full-reference) explain the options, e.g. using `GOOGLE_CREDENTIALS`.
-
-4.  Add the following to the `azure-pipelines.yml` file:
-
+1. Create a new pipeline selecting 
+   1. "Azure Repos Git" when prompted in the **"Connect"** stage
+   2. Select the appropriate repo you wish to integrate Infracost with in the **"Select"** stage
+   3. Choose "Starter Pipeline" in the **"Configure"** stage
+   4. Replace the Starter Pipeline yaml with the following:
     ```yaml
     # The Azure Pipelines docs (https://docs.microsoft.com/en-us/azure/devops/pipelines/process/tasks) describe other options.
     # Running on pull requests to `master` (or your default branch) is a good default.
@@ -123,12 +97,36 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
               # behavior: delete-and-new # Delete previous comments and create a new one.
               # behavior: new # Create a new cost estimate comment on every push.
     ```
+   5. select "Save" from the "Save and run" dropdown and add the appropriate commit message
+2. Enable pull request build triggers. **Without this, Azure Pipelines do not trigger builds with the pull request ID**, thus comments cannot be posted by the integration.
+    1. From your Azure DevOps organization, click on your project > Project Settings > Repositories
+   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/repository-settings.png)
+    2. Select the repository that your created the pipeline for in step 1
+   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/filter-repositories.png)
+    3. Select the Policies tab and under the Branch Policies select on your default branch (master or main)
+   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/branch-policy.png)
+    4. Scroll to Build Validation and click + sign to add one if you don't have one already
+   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/build-validation.png))
+    5. Set your 'Build pipeline' to the pipeline you created in step 1, leave 'Path filter' blank, set 'Trigger' to Automatic, and 'Policy requirement' to Optional (you can also use Required but we don't recommend it).
+   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/build-policy.png)
+3. Enable Azure Pipelines to post pull request comments
+    1. From your Azure DevOps organization, click on your project > Project Settings > Repositories > your repository
+   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/filter-repositories.png)
+    2. Click on the Securities tab, scroll down to Users and click on the '[project name] Build Service ([org name])' user, and set the 'Contribute to pull requests' to Allow.
+   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/contribute-to-prs.png)
 
-5. Click 'Save and run'
+4Add secret variables: from your Azure DevOps organization, click on your project > Pipelines > your pipeline > Edit > Variables, and click the + sign to add variables for the following. Also tick the 'Keep this value secret' option.
 
-6. 🎉 That's it! Send a new pull request to change something in Terraform that costs money. You should see a pull request comment that gets updated, e.g. the 📉 and 📈 emojis will update as changes are pushed!
+    - `infracostApiKey`: with your Infracost API key as the value, and select 'Keep this value secret'.
+    - Any cloud provider credentials you need for running `terraform init` and `terraform plan`:
+      - **Terraform Cloud/Enterprise users**: the [Terraform docs](https://www.terraform.io/cli/config/config-file#credentials-1) explain how to configure credentials for this using a config file, or you can pass the credentials as environment variables directly to Infracost as in [this example](examples/terraform-cloud-enterprise).
+      - **AWS users**: the [Terraform docs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#environment-variables) explain the environment variables to set for this.
+      - **Azure users**: the [Terraform docs](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_client_secret) explain the options.
+      - **Google users**: the [Terraform docs](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/provider_reference#full-reference) explain the options, e.g. using `GOOGLE_CREDENTIALS`.
 
-    If there are issues, you can enable the 'Enable system diagnostics' check box when running the pipeline manually or for more options see [this page](https://docs.microsoft.com/en-us/azure/devops/pipelines/troubleshooting/review-logs).
+5🎉 That's it! Send a new pull request to change something in Terraform that costs money. You should see a pull request comment that gets updated, e.g. the 📉 and 📈 emojis will update as changes are pushed!
+
+If there are issues, you can enable the 'Enable system diagnostics' check box when running the pipeline manually or for more options see [this page](https://docs.microsoft.com/en-us/azure/devops/pipelines/troubleshooting/review-logs).
 
 ### GitHub Repos Quick Start
 
