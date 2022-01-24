@@ -68,7 +68,8 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
       - master
 
     variables:
-      TF_ROOT: PATH/TO/TERRAFORM/CODE # Update this!
+      - name: TF_ROOT
+        value: PATH/TO/TERRAFORM/CODE # Update this!
 
     jobs:
       - job: infracost
@@ -152,7 +153,8 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
       - master
 
     variables:
-      TF_ROOT: PATH/TO/TERRAFORM/CODE # Update this!
+      - name: TF_ROOT
+        value: PATH/TO/TERRAFORM/CODE # Update this!
 
     jobs:
       - job: infracost
