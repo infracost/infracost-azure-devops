@@ -222,11 +222,11 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
 #### 403 error when posting to Azure Repo
 If you receive a 403 error when running the `InfracostComment` task in your pipeline:
 ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/403.png)
-This is normally because the build agent does not have permissions to post to the Azure Repo. Make sure step 3 (Enable Azure Pipelines to post pull request comments) of the [#azure-repos-quick-start](Azure Repos Quick start) is complete. 
+This is normally because the build agent does not have permissions to post to the Azure Repo. Make sure step 3 (Enable Azure Pipelines to post pull request comments) of the [Azure Repos Quick start](#azure-repos-quick-start) is complete. 
 
 #### InfracostComment cannot detect current environment
 ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/unable-to-detect.png)
-If using `InfracostComment` with Azure Repos we require that this task is run in response to a PR trigger. Make sure you've completed step 2 (Enable pull request build triggers) of the [#azure-repos-quick-start](Azure Repos Quick start).
+If using `InfracostComment` with Azure Repos we require that this task is run in response to a PR trigger. Make sure you've completed step 2 (Enable pull request build triggers) of the [Azure Repos Quick start](#azure-repos-quick-start).
 Then make sure your pipelines are being triggered by PR events and nothing else. 
 
 ## Examples
