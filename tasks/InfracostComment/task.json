@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 15
+    "Patch": 16
   },
   "instanceNameFormat": "InfracostComment $(version)",
   "inputs": [
@@ -20,7 +20,7 @@
       "label": "Path",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "The path to the `infracost breakdown` JSON that will be passed to `infracost output`. For multiple paths, pass a glob pattern (e.g. \"infracost_*.json\", glob needs quotes) or a JSON array of paths."
+      "helpMarkDown": "The path to the JSON file generated from a `infracost breakdown` using the `--format=json` and `--out` flags. For multiple paths, pass a glob pattern (e.g. \"infracost_*.json\", glob needs quotes) or a JSON array of paths."
     },
     {
       "name": "githubToken",
@@ -28,7 +28,7 @@
       "label": "Github Token",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "GitHub access token. Required if repository provider is GitHub."
+      "helpMarkDown": "GitHub access token. **Required if repository provider is GitHub.**"
     },
     {
       "name": "azureReposToken",
@@ -36,7 +36,7 @@
       "label": "Azure Repos Token",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Azure Repos system access token. Required if repository provider is Azure Repos."
+      "helpMarkDown": "Azure Repos system access token. **Required if repository provider is Azure Repos.**"
     },
     {
       "name": "behavior",
