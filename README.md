@@ -10,7 +10,7 @@ This project provides Azure Pipeline tasks for Infracost along with examples of 
   + [Azure Repos Quick start](#azure-repos-quick-start)
   + [GitHub Repos Quick Start](#github-repos-quick-start)
   * [Troubleshooting/Common Problems](#troubleshooting-common-problems)
-    + [503 error when posting to Azure Devops Repo](#503-error-when-posting-to-azure-devops-repo)
+    + [503 error when posting to Azure Repo](#503-error-when-posting-to-azure-repo)
     + [InfracostComment errors with a cannot detect a current environment](#infracostcomment-errors-with-a-cannot-detect-a-current-environment)
 * [Examples](#examples)
   + [Cost policy examples](#cost-policy-examples)
@@ -219,14 +219,14 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
 
 ### Troubleshooting/Common Problems
 
-#### 503 error when posting to Azure Devops Repo
-If you receive a 503 error when running the `InfracostComment` task in your pipeline:
-![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/503.png)
-This is normally because the build agent does not have permissions to post to the Azure Devops Repo. Make sure step 3 (Enable Azure Pipelines to post pull request comments) of the [#azure-repos-quick-start](Azure Repos Quick start) is complete. 
+#### 403 error when posting to Azure Repo
+If you receive a 403 error when running the `InfracostComment` task in your pipeline:
+![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/403.png)
+This is normally because the build agent does not have permissions to post to the Azure Repo. Make sure step 3 (Enable Azure Pipelines to post pull request comments) of the [#azure-repos-quick-start](Azure Repos Quick start) is complete. 
 
 #### InfracostComment cannot detect current environment
 ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/unable-to-detect.png)
-If using `InfracostComment` with Azure DevOps Repos we require that this task is run in response to a PR trigger. Make sure you've setup step 2 (Enable pull request build triggers) of the [#azure-repos-quick-start](Azure Repos Quick start) is complete.
+If using `InfracostComment` with Azure Repos we require that this task is run in response to a PR trigger. Make sure you've completed step 2 (Enable pull request build triggers) of the [#azure-repos-quick-start](Azure Repos Quick start).
 Then make sure your pipelines are being triggered by PR events and nothing else. 
 
 ## Examples
