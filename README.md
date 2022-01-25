@@ -9,9 +9,9 @@ This project provides Azure Pipeline tasks for Infracost along with examples of 
 * [Quick start](#quick-start)
   + [Azure Repos Quick start](#azure-repos-quick-start)
   + [GitHub Repos Quick Start](#github-repos-quick-start)
-  * [Troubleshooting/Common Problems](#troubleshooting-common-problems)
-    + [503 error when posting to Azure Repo](#503-error-when-posting-to-azure-repo)
-    + [InfracostComment errors with a cannot detect a current environment](#infracostcomment-errors-with-a-cannot-detect-a-current-environment)
+  * [Troubleshooting](#troubleshooting)
+    + [403 error when posting to Azure Repo](#403-error-when-posting-to-azure-repo)
+    + [InfracostComment cannot detect current environment](#infracostcomment-cannot-detect-current-environment)
 * [Examples](#examples)
   + [Cost policy examples](#cost-policy-examples)
 * [Tasks](#tasks)
@@ -103,20 +103,20 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
    5. select "Save" from the "Save and run" dropdown and add the appropriate commit message
 2. Enable pull request build triggers. **Without this, Azure Pipelines do not trigger builds with the pull request ID**, thus comments cannot be posted by the integration.
     1. From your Azure DevOps organization, click on your project > Project Settings > Repositories
-   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/repository-settings.png)
+   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/repository-settings.png?raw=true)
     2. Select the repository that your created the pipeline for in step 1
-   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/filter-repositories.png)
+   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/filter-repositories.png?raw=true)
     3. Select the Policies tab and under the Branch Policies select on your default branch (master or main)
-   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/branch-policy.png)
+   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/branch-policy.png?raw=true)
     4. Scroll to Build Validation and click + sign to add one if you don't have one already
-   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/build-validation.png))
+   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/build-validation.png?raw=true)
     5. Set your 'Build pipeline' to the pipeline you created in step 1, leave 'Path filter' blank, set 'Trigger' to Automatic, and 'Policy requirement' to Optional (you can also use Required but we don't recommend it).
-   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/build-policy.png)
+   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/build-policy.png?raw=true)
 3. Enable Azure Pipelines to post pull request comments
     1. From your Azure DevOps organization, click on your project > Project Settings > Repositories > your repository
-   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/filter-repositories.png)
+   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/filter-repositories.png?raw=true)
     2. Click on the Securities tab, scroll down to Users and click on the '[project name] Build Service ([org name])' user, and set the 'Contribute to pull requests' to Allow.
-   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/contribute-to-prs.png)
+   ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/contribute-to-prs.png?raw=true)
 
 4. Add secret variables: from your Azure DevOps organization, click on your project > Pipelines > your pipeline > Edit > Variables, and click the + sign to add variables for the following. Also tick the 'Keep this value secret' option.
 
@@ -217,15 +217,15 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
 
 If there are issues, you can enable the 'Enable system diagnostics' check box when running the pipeline manually or for more options see [this page](https://docs.microsoft.com/en-us/azure/devops/pipelines/troubleshooting/review-logs).
 
-### Troubleshooting/Common Problems
+### Troubleshooting
 
 #### 403 error when posting to Azure Repo
 If you receive a 403 error when running the `InfracostComment` task in your pipeline:
-![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/403.png)
+![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/403.png?raw=true)
 This is normally because the build agent does not have permissions to post to the Azure Repo. Make sure step 3 (Enable Azure Pipelines to post pull request comments) of the [Azure Repos Quick start](#azure-repos-quick-start) is complete. 
 
 #### InfracostComment cannot detect current environment
-![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/unable-to-detect.png)
+![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/unable-to-detect.png?raw=true)
 If using `InfracostComment` with Azure Repos we require that this task is run in response to a PR trigger. Make sure you've completed step 2 (Enable pull request build triggers) of the [Azure Repos Quick start](#azure-repos-quick-start).
 Then make sure your pipelines are being triggered by PR events and nothing else. 
 
