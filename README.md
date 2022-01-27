@@ -102,7 +102,7 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
     ```
    5. select "Save" from the "Save and run" dropdown and add the appropriate commit message
 2. Enable pull request build triggers. **Without this, Azure Pipelines do not trigger builds with the pull request ID**, thus comments cannot be posted by the integration.
-    1. From your Azure DevOps organization, click on your project > Project Settings > Repositories
+    1. From your Azure DevOps organization, click on **your project** > Project Settings > Repositories
    ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/repository-settings.png?raw=true)
     2. Select the repository that your created the pipeline for in step 1
    ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/filter-repositories.png?raw=true)
@@ -113,7 +113,7 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
     5. Set your 'Build pipeline' to the pipeline you created in step 1, leave 'Path filter' blank, set 'Trigger' to Automatic, and 'Policy requirement' to Optional (you can also use Required but we don't recommend it).
    ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/build-policy.png?raw=true)
 3. Enable Azure Pipelines to post pull request comments
-    1. From your Azure DevOps organization, click on your project > Project Settings > Repositories > your repository
+    1. From your Azure DevOps organization, click on your project > Project Settings > Repositories > your repository.
    ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/filter-repositories.png?raw=true)
     2. Click on the Securities tab, scroll down to Users and click on the '[project name] Build Service ([org name])' user, and set the 'Contribute to pull requests' to Allow.
    ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/contribute-to-prs.png?raw=true)
@@ -192,7 +192,7 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
             - task: InfracostComment@0
               displayName: Post Infracost comment
               inputs:
-                githubToken: $(githubToken) # Required to post comments
+                githubToken: $(githubToken) # Required to post comments, created in the next step
                 path: /tmp/infracost.json
                 # Choose the commenting behavior, 'update' is a good default:
                 behavior: update # Create a single comment and update it. The "quietest" option.
@@ -203,7 +203,7 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
                 # targetType: pull-request
       ```
    5. select "Save" from the "Save and run" dropdown and add the appropriate commit message
-2. Create a GitHub token (such as Personal Access Token) that can be used by the pipeline to post comments. The token needs to have `repo` scope so it can post comments.
+2. Create a GitHub token (such as [Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)) that can be used by the pipeline to post comments. The token needs to have `repo` scope so it can post comments.
 3. Add secret variables to the pipeline you created in step 1. From your Azure DevOps organization, click on your project > Pipelines > your pipeline > Edit > Variables, and click the + sign to add variables for the following:
 
     - `infracostApiKey`: with your Infracost API key as the value, and select 'Keep this value secret'.
@@ -226,8 +226,8 @@ This is normally because the build agent does not have permissions to post to th
 
 #### InfracostComment cannot detect current environment
 ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/unable-to-detect.png?raw=true)
-If using `InfracostComment` with Azure Repos we require that this task is run in response to a PR trigger. Make sure you've completed step 2 (Enable pull request build triggers) of the [Azure Repos Quick start](#azure-repos-quick-start).
-Then make sure your pipelines are being triggered by PR events and nothing else. 
+If using `InfracostComment` with Azure Repos we require that this task is triggered by a pull request. Make sure you've completed step 2 (Enable pull request build triggers) of the [Azure Repos Quick start](#azure-repos-quick-start).
+Then make sure your pipelines are being triggered by pull request events and nothing else.
 
 ## Examples
 
