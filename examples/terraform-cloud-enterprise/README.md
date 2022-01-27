@@ -1,6 +1,6 @@
 # Terraform Cloud/Enterprise
 
-This example shows how to run Infracost in Azure Pipelines with Terraform Cloud and Terraform Enterprise. It assumes you have set a pipeline secret variable for the Terraform Cloud token (`tfcToken`). This token is used by the Infracost CLI run a speculative plan and fetch the plan JSON from Terraform Cloud to generate the cost estimate comment.
+This example shows how to run Infracost in Azure Pipelines with Terraform Cloud and Terraform Enterprise. It assumes you have set a pipeline secret variable for the Terraform Cloud token (`tfcToken`). This token is used by the Infracost CLI to run a speculative plan and fetch the plan JSON from Terraform Cloud to generate the cost estimate comment.
 
 
 [//]: <> (BEGIN EXAMPLE)
