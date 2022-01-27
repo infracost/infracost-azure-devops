@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 17
+    "Patch": 18
   },
   "instanceNameFormat": "InfracostComment $(version)",
   "inputs": [
