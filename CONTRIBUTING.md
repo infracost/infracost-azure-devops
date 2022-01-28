@@ -70,7 +70,7 @@ in a live Azure environment before merging into master.
 
 ## Releases
 
-One of the Infracost team members should follow these steps to release this repo.
+One of the Infracost team members should follow these steps to release this repo. We only create tags, not GitHub releases, as part of the release process as the GH releases aren't needed yet.
 
 1. Bump the version in [vss-extension.json](./vss-extension.json) (following semantic versioning).
 2. Update the task versions in [InfacostSetup](./tasks/InfracostSetup/task.json) & [InfracostComment](./tasks/InfracostComment/task.json) to the same version as in step 1.
