@@ -26,7 +26,7 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
 
 1. In the Azure DevOps Marketplace, Add the [Terraform installer task](https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks) to your organization by clicking 'Get it free', selecting your organization and clicking Install. If you do not have permission to install the task, you can submit a request to your organization's admin who will get emailed the details of the request.
 2. Repeat step 1 for the [Infracost tasks](https://marketplace.visualstudio.com/items?itemName=Infracost.infracost-tasks).
-3. Retrieve your Infracost API key by running `infracost configure get api_key`. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
+3. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
 4. If you are using an Azure Repos repositories follow the [Azure Repos quick start](#azure-repos-quick-start). Currently this only supports Git repositories.
 5. If you are using a GitHub repository follow the [GitHub Repos quick start](#github-repos-quick-start)
 
@@ -267,7 +267,7 @@ steps:
 
 It accepts the following inputs:
 
-- `apiKey`: Required. Your Infracost API key. It can be retrieved by running `infracost configure get api_key`. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
+- `apiKey`: Required. Your Infracost API key. It can be retrieved by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
 - `version`: Optional, defaults to `0.9.x`. [SemVer ranges](https://www.npmjs.com/package/semver#ranges) are supported, so instead of a [full version](https://github.com/infracost/infracost/releases) string, you can use `0.9.x`. This enables you to automatically get the latest backward compatible changes in the 0.9 release (e.g. new resources or bug fixes).
 - `currency`: Optional. Convert output from USD to your preferred [ISO 4217 currency](https://en.wikipedia.org/wiki/ISO_4217#Active_codes), e.g. EUR, BRL or INR.
 - `pricingApiEndpoint`: Optional. For [self-hosted](https://www.infracost.io/docs/cloud_pricing_api/self_hosted) users, endpoint of the Cloud Pricing API, e.g. https://cloud-pricing-api.
