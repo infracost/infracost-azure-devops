@@ -4,6 +4,8 @@ This project provides Azure Pipeline tasks for Infracost along with examples of 
 
 <img src="https://github.com/infracost/infracost-azure-devops/blob/master/screenshot.png?raw=true" width="700px" alt="Example screenshot" />
 
+Follow our [migration guide](https://www.infracost.io/docs/guides/azure_devops_migration/) if you used our old version of this repo.
+
 ## Table of contents
 
 * [Quick start](#quick-start)
