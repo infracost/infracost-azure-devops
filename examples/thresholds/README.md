@@ -51,8 +51,15 @@ jobs:
           echo "##vso[task.setvariable variable=costChange;]${cost_change}"
         displayName: Calculate Cost Change
 
-      - task: InfracostComment@0
-        displayName: Post the comment
+      - bash: |
+          # Create a single comment and update it. See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options
+          infracost comment github \
+            --path /tmp/infracost.json \
+            --github-token $(githubToken) \
+            --pull-request $(System.PullRequest.PullRequestNumber) \
+            --repo $(Build.Repository.Name) \
+            --behavior update
+        displayName: Post Infracost Comment
         # Setup the conditions for the task to comment on the pipeline. We use the lt expression (less than):
         # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/expressions?view=azure-devops#lt
         # as azure automatically casts the RIGHT parameter to the type of the LEFT. Variables set in
@@ -63,9 +70,5 @@ jobs:
         # condition: lt(1, variables.percentChange) # Only comment if cost increased by more than 1%
         # condition: lt(100, variables.absoluteCostChange) # Only comment if cost changed by more than plus or minus $100
         # condition: lt(100, variables.costChange) # Only comment if cost increased by more than $100
-        inputs:
-          githubToken: $(githubToken)
-          path: /tmp/infracost.json
-          behavior: update # Create a single comment and update it. See https://github.com/infracost/infracost-azure-devops#infracostcomment for other options
 ```
 [//]: <> (END EXAMPLE)

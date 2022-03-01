@@ -18,7 +18,7 @@ Follow our [migration guide](https://www.infracost.io/docs/guides/azure_devops_m
   + [Cost policy examples](#cost-policy-examples)
 * [Tasks](#tasks)
   + [InfracostSetup](#infracostsetup)
-  + [InfracostComment](#infracostcomment)
+  + [InfracostComment (deprecated)](#infracostcomment)
 * [Contributing](#contributing)
 * [License](#license)
 

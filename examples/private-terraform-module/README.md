@@ -38,11 +38,13 @@ jobs:
         # IMPORTANT: add any required secrets to setup cloud credentials so Terraform can run
         # env:
 
-      - task: InfracostComment@0
-        displayName: Post the comment
-        inputs:
-          githubToken: $(githubToken)
-          path: /tmp/infracost.json
-          behavior: update # Create a single comment and update it. See https://github.com/infracost/infracost-azure-devops#infracostcomment for other options
+      - bash: |
+          infracost comment github \
+            --path /tmp/infracost.json \
+            --github-token $(githubToken) \
+            --pull-request $(System.PullRequest.PullRequestNumber) \
+            --repo $(Build.Repository.Name) \
+            --behavior update
+        displayName: Post Infracost Comment
 ```
 [//]: <> (END EXAMPLE)
