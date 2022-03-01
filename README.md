@@ -1,6 +1,6 @@
 # Infracost Azure Pipelines integration
 
-This project provides Azure Pipeline tasks for Infracost along with examples of how you can use it to to see cloud cost estimates for Terraform in pull requests 💰
+This project provides Azure Pipeline tasks for Infracost along with examples of how you can use it to see cloud cost estimates for Terraform in pull requests 💰
 
 <img src="https://github.com/infracost/infracost-azure-devops/blob/master/screenshot.png?raw=true" width="700px" alt="Example screenshot" />
 
@@ -91,16 +91,15 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
           - bash: infracost breakdown --path=$(TF_ROOT)/plan.json --format=json --out-file=/tmp/infracost.json
             displayName: Run Infracost
 
-          # See https://github.com/infracost/infracost-azure-devops#infracostcomment for other options
-          - task: InfracostComment@0
+          # Adds a cost estimate comment to a Azure Repos pull request.
+          - bash: |
+              infracost comment azure-repos \
+                 --path /tmp/infracost.json \
+                 --azure-repos-token $(System.AccessToken) \
+                 --pull-request $(System.PullRequest.PullRequestNumber) \
+                 --repo-url $(Build.Repository.Uri) \
+                 --behavior update
             displayName: Post Infracost comment
-            inputs:
-              azureReposToken: $(System.AccessToken) # Do not change this, it's used to post comments
-              path: /tmp/infracost.json
-              # Choose the commenting behavior, 'update' is a good default:
-              behavior: update # Create a single comment and update it. The "quietest" option.
-              # behavior: delete-and-new # Delete previous comments and create a new one.
-              # behavior: new # Create a new cost estimate comment on every push.
     ```
    5. select "Save" from the "Save and run" dropdown and add the appropriate commit message
 2. Enable pull request build triggers. **Without this, Azure Pipelines do not trigger builds with the pull request ID**, thus comments cannot be posted by the integration.
@@ -190,19 +189,15 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
             - bash: infracost breakdown --path=$(TF_ROOT)/plan.json --format=json --out-file=/tmp/infracost.json
               displayName: Run Infracost
 
-            # See https://github.com/infracost/infracost-azure-devops#infracostcomment for other options
-            - task: InfracostComment@0
-              displayName: Post Infracost comment
-              inputs:
-                githubToken: $(githubToken) # Required to post comments, created in the next step
-                path: /tmp/infracost.json
-                # Choose the commenting behavior, 'update' is a good default:
-                behavior: update # Create a single comment and update it. The "quietest" option.
-                # behavior: delete-and-new # Delete previous comments and create a new one.
-                # behavior: hide-and-new # Minimize previous comments and create a new one.
-                # behavior: new # Create a new cost estimate comment on every push.
-                # Limit the object that should be commented on, either merge-request or commit
-                # targetType: pull-request
+          # Adds a cost estimate comment to a GitHub pull request.
+          - bash: |
+              infracost comment github \
+                 --path /tmp/infracost.json \
+                 --github-token $(githubToken) \
+                 --pull-request $(System.PullRequest.PullRequestNumber) \
+                 --repo $(Build.Repository.Name) \
+                 --behavior update
+            displayName: Post Infracost comment
       ```
    5. select "Save" from the "Save and run" dropdown and add the appropriate commit message
 2. Create a GitHub token (such as [Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)) that can be used by the pipeline to post comments. The token needs to have `repo` scope so it can post comments. If you are using SAML single sign-on, you must first [authorize the token](https://docs.github.com/en/enterprise-cloud@latest/authentication/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on).
@@ -276,6 +271,10 @@ It accepts the following inputs:
 - `enableDashboard`: Optional, defaults to `false`. Enables [Infracost dashboard features](https://www.infracost.io/docs/features/share_links), not supported for self-hosted Cloud Pricing API.
 
 ### InfracostComment
+
+> **THIS TASK IS DEPRECATED**
+>
+> This task will soon be removed, please use `infracost comment` directly.
 
 This task adds comments to GitHub pull requests and commits, or Azure Repos pull requests.
 
