@@ -32,11 +32,14 @@ jobs:
           PROD_AWS_ACCESS_KEY_ID: $(exampleProdAwsAccessKeyId)
           PROD_AWS_SECRET_ACCESS_KEY: $(exampleProdAwsSecretAccessKey)
 
-      - task: InfracostComment@0
-        displayName: Post the comment
-        inputs:
-          githubToken: $(githubToken)
-          path: /tmp/infracost.json
-          behavior: update # Create a single comment and update it. See https://github.com/infracost/infracost-azure-devops#infracostcomment for other options
+      - bash: |
+          # Create a single comment and update it. See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options
+          infracost comment github \
+            --path /tmp/infracost.json \
+            --github-token $(githubToken) \
+            --pull-request $(System.PullRequest.PullRequestNumber) \
+            --repo $(Build.Repository.Name) \
+            --behavior update
+        displayName: Post Infracost Comment
 ```
 [//]: <> (END EXAMPLE)

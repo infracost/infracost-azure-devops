@@ -71,14 +71,21 @@ function fixupExamples(examples) {
       const steps = [];
 
       for (const step of job.steps) {
-        if (step.task && step.task.startsWith('InfracostComment')) {
+        if (step.displayName && step.displayName.toLowerCase() === 'post infracost comment') {
           const goldenFilePath = `./testdata/${job.job}_comment_golden.md`;
-          step.inputs['dryRun'] = true
+          const commentArgs = step.bash
+            .replace(/\\/g, '')
+            .split('\n')
+            .map(s => s.trim())
+            .filter(e => !e.startsWith('#') && e !== '')
+
+          commentArgs.push('--dry-run true', '> infracost-comment.md')
+          step.bash = commentArgs.join(' \\\n');
 
           steps.push(
             step,
             {
-              bash: `diff ${goldenFilePath} infracost-comment.md`,
+              bash: `diff -y ${goldenFilePath} infracost-comment.md`,
               displayName: 'Check the comment',
             },
           );
@@ -91,7 +98,7 @@ function fixupExamples(examples) {
 
           steps.push(
             {
-              bash: `diff ${goldenFilePath} /tmp/slack-message.json`,
+              bash: `diff -y <(jq --sort-keys . ${goldenFilePath}) <(jq --sort-keys . /tmp/slack-message.json)`,
               displayName: 'Check the Slack message',
             },
           );

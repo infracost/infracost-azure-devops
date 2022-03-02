@@ -37,7 +37,7 @@ jobs:
 [//]: <> (END EXAMPLE)
 ````
 
-The script replaces any `InfracostComment` tasks with steps to generate and test the content of the comment using golden files from the [./testdata](./testdata) directory.
+The script replaces any task with `displayName` = `Post Infracost Comment` with steps to generate and test the content of the comment using golden files from the [./testdata](./testdata) directory.
 
 All the examples are then added to the  Azure Pipeline definition [examples-test.yml](./.azure/pipelines/examples-test.yml) as separate jobs.
 
@@ -73,7 +73,7 @@ in a live Azure environment before merging into master.
 One of the Infracost team members should follow these steps to release this repo. We only create tags, not GitHub releases, as part of the release process as the GH releases aren't needed yet.
 
 1. Bump the version in [vss-extension.json](./vss-extension.json) (following semantic versioning).
-2. Update the task versions in [InfacostSetup](./tasks/InfracostSetup/task.json) & [InfracostComment](./tasks/InfracostComment/task.json) to the same version as in step 1.
+2. Update the task versions in [InfacostSetup](./tasks/InfracostSetup/task.json) to the same version as in step 1.
 3. Create a PR with these changes and merge them in after approval.
 4. `git checkout master && git pull origin master`.
 5. `git tag vX.Y.Z && git push origin vX.Y.Z` using the same version as in step 1.

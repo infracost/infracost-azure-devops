@@ -9,9 +9,10 @@
   "author": "Infracost",
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 18
+    "Minor": 2,
+    "Patch": 0
   },
+  "deprecated": true,
   "instanceNameFormat": "InfracostComment $(version)",
   "inputs": [
     {
