@@ -39,6 +39,7 @@ jobs:
         # env:
 
       - bash: |
+          # Create a single comment and update it. See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options
           infracost comment github \
             --path /tmp/infracost.json \
             --github-token $(githubToken) \

@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 18
+    "Patch": 0
   },
   "deprecated": true,
   "instanceNameFormat": "InfracostComment $(version)",

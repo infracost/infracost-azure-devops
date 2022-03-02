@@ -36,6 +36,7 @@ jobs:
           PROD_AWS_SECRET_ACCESS_KEY: $(exampleProdAwsSecretAccessKey)
 
       - bash: |
+          # Create a single comment and update it. See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options
           infracost comment github \
           --path /tmp/infracost.json \
           --github-token $(githubToken) \
@@ -114,13 +115,9 @@ jobs:
           apiKey: $(infracostApiKey)
 
       - bash: |
-          infracost output --path="infracost_jsons/*.json" --format=json --out-file=/tmp/infracost_combined.json
-        displayName: Combine the results
-
-      - bash: |
           # Create a single comment and update it. See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options
           infracost comment github \
-          --path /tmp/infracost_combined.json \
+          --path infracost_jsons/*.json \
           --github-token $(githubToken) \
           --pull-request $(System.PullRequest.PullRequestNumber) \
           --repo $(Build.Repository.Name) \
