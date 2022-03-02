@@ -117,7 +117,7 @@ jobs:
       - bash: |
           # Create a single comment and update it. See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options
           infracost comment github \
-          --path infracost_jsons/*.json \
+          --path "infracost_jsons/*.json" \
           --github-token $(githubToken) \
           --pull-request $(System.PullRequest.PullRequestNumber) \
           --repo $(Build.Repository.Name) \

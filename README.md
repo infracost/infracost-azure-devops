@@ -94,8 +94,8 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
           - bash: |
               infracost comment azure-repos \
                  --path /tmp/infracost.json \
-                 --azure-repos-token $(System.AccessToken) \
-                 --pull-request $(System.PullRequest.PullRequestNumber) \
+                 --azure-access-token $(System.AccessToken) \
+                 --pull-request $(System.PullRequest.PullRequestId) \
                  --repo-url $(Build.Repository.Uri) \
                  --behavior update
             displayName: Post Infracost comment
