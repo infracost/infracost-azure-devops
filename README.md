@@ -241,13 +241,15 @@ The [examples](https://github.com/infracost/infracost-azure-devops/tree/master/e
   - [Private Terraform module](https://github.com/infracost/infracost-azure-devops/tree/master/examples/private-terraform-module): a Terraform project using a private Terraform module
   - [Slack](https://github.com/infracost/infracost-azure-devops/tree/master/examples/slack): send cost estimates to Slack
 
-### Cost policy examples
+### Cost policies
 
-- [OPA](https://github.com/infracost/infracost-azure-devops/tree/master/examples/opa): check Infracost cost estimates against policies using Open Policy Agent
-- [Conftest](https://github.com/infracost/infracost-azure-devops/tree/master/examples/conftest): check Infracost cost estimates against policies using Conftest
-- [Sentinel](https://github.com/infracost/infracost-azure-devops/tree/master/examples/sentinel): check Infracost cost estimates against policies using HashiCorp Sentinel
+Use fine-grained policies to set guardrails against cost estimates **before resources are launched**. Infracost PR comments have native support for cost policies written using Open Policy Agent:
 
-If you do not use the above tools, you can still set [thresholds](https://github.com/infracost/infracost-azure-devops/tree/master/examples/thresholds) using bash and [jq](https://stedolan.github.io/jq/) so notifications or pull request comments are only sent when cost thresholds are exceeded.
+![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/policy-passing-github.png)
+
+Integrate cost policies now [following our docs guide](https://www.infracost.io/docs/features/cost_policies/).
+
+Infracost cost estimates can also be configured to work against policies written in [Hashicorp Sentinel](https://github.com/infracost/infracost-azure-devops/tree/master/examples/sentinel).
 
 ## Tasks
 

@@ -12,9 +12,7 @@ All examples post a single comment on merge requests, which gets updated as more
 - [Slack](slack): send cost estimates to Slack
 
 Cost policy examples:
-- [Thresholds](thresholds): only post a comment when cost thresholds are exceeded
-- [Conftest](conftest): check Infracost cost estimates against policies using Conftest
-- [OPA](opa): check Infracost cost estimates against policies using Open Policy Agent
+- [OPA](https://www.infracost.io/docs/features/cost_policies/): check Infracost cost estimates against policies using Open Policy Agent
 - [Sentinel](sentinel): check Infracost cost estimates against policies using Hashicorp's Sentinel
 
 See the [contributing](../CONTRIBUTING.md) guide if you'd like to add an example.
