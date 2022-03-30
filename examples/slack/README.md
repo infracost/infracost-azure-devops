@@ -38,7 +38,7 @@ jobs:
             --behavior update
         displayName: Post Infracost Comment
 
-      - bash: infracost output --path /tmp/infracost.json --format slack-message --show-skipped --out-file /tmp/slack-message.json
+      - bash: infracost output --path /tmp/infracost.json --format slack-message --show-skipped --out-file /tmp/slack_message.json
         displayName: Generate Slack message
 
       - bash: |
@@ -49,7 +49,7 @@ jobs:
             exit 0
           fi
 
-          curl -X POST -H "Content-type: application/json" -d @/tmp/slack-message.json $SLACK_WEBHOOK_URL
+          curl -X POST -H "Content-type: application/json" -d @/tmp/slack_message.json $SLACK_WEBHOOK_URL
         displayName: Send cost estimate to Slack
         env:
           SLACK_WEBHOOK_URL: $(slackWebhookUrl)
