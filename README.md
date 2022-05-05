@@ -86,6 +86,8 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
 
           # Run Infracost and generate the JSON output, the following docs might be useful:
           # Multi-project/workspaces: https://www.infracost.io/docs/features/config_file
+          # Combine Infracost JSON files: https://www.infracost.io/docs/features/cli_commands/#combined-output-formats
+          # Environment variables: https://www.infracost.io/docs/integrations/environment_variables/
           - bash: infracost breakdown --path=$(TF_ROOT)/plan.json --format=json --out-file=/tmp/infracost.json
             displayName: Run Infracost
 
@@ -184,6 +186,8 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
 
             # Run Infracost and generate the JSON output, the following docs might be useful:
             # Multi-project/workspaces: https://www.infracost.io/docs/features/config_file
+            # Combine Infracost JSON files: https://www.infracost.io/docs/features/cli_commands/#combined-output-formats
+            # Environment variables: https://www.infracost.io/docs/integrations/environment_variables/
             - bash: infracost breakdown --path=$(TF_ROOT)/plan.json --format=json --out-file=/tmp/infracost.json
               displayName: Run Infracost
 
