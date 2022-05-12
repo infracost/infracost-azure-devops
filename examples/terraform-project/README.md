@@ -1,6 +1,6 @@
-# Private Terraform module
+# Terraform/Terragrunt project (single or multi)
 
-This example shows how to run Infracost in Azure Pipelines with a Terraform project that uses a private Terraform module. This requires a secret to be added to your GitHub repository called `GIT_SSH_KEY` containing a private key so that Infracost can access the private repository.
+This example shows how to run Infracost in Azure Pipelines with multiple Terraform/Terragrunt projects, both single projects or mono-repos that contain multiple projects.
 
 [//]: <> (BEGIN EXAMPLE)
 ```yml
@@ -8,14 +8,14 @@ pr:
   - master
 
 jobs:
-  - job: private_terraform_module
-    displayName: Private Terraform module
+  - job: terraform_project
+    displayName: Terraform project
     pool:
       vmImage: ubuntu-latest
 
     variables:
       - name: TF_ROOT
-        value: examples/private-terraform-module/code
+        value: examples/terraform-project/code
 
     steps:
       - task: InfracostSetup@0
@@ -23,16 +23,6 @@ jobs:
         inputs:
           apiKey: $(infracostApiKey)
           version: v0.10.0-beta.1
-
-      # Add your git SSH key so Infracost can checkout the private modules
-      - bash: |
-          mkdir -p .ssh
-          echo "$(echo $GIT_SSH_KEY_BASE_64 | base64 -d)" > .ssh/git_ssh_key
-          chmod 400 .ssh/git_ssh_key
-          echo "##vso[task.setvariable variable=GIT_SSH_COMMAND;]ssh -i $(pwd)/.ssh/git_ssh_key -o 'StrictHostKeyChecking=no'"
-        displayName: Add GIT_SSH_KEY
-        env:
-          GIT_SSH_KEY_BASE_64: $(gitSshKeyBase64)
 
       # Checkout the branch you want Infracost to compare costs against. This example is using the
       # target PR branch.
@@ -45,10 +35,20 @@ jobs:
       # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
       - bash: infracost breakdown --path=/tmp/base/$(TF_ROOT) --format=json --out-file=/tmp/infracost-base.json
         displayName: Generate Infracost cost estimate baseline
+        # If you're using Terraform Cloud/Enterprise and have variables stored on there
+        # you can specify the following to automatically retrieve the variables:
+        # env:
+        #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
+        #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
 
       # Generate an Infracost diff and save it to a JSON file.
       - bash: infracost diff --path=$(TF_ROOT) --format=json --compare-to /tmp/infracost-base.json --out-file=/tmp/infracost.json
         displayName: Generate Infracost diff
+        # If you're using Terraform Cloud/Enterprise and have variables stored on there
+        # you can specify the following to automatically retrieve the variables:
+        # env:
+        #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
+        #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
 
       # Posts a comment to the PR using the 'update' behavior.
       # This creates a single comment and updates it. The "quietest" option.

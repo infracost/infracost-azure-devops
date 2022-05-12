@@ -9,7 +9,7 @@
   </thead>
   <tbody>
     <tr>
-      <td>infracost/infracost-azure-devop...erraform-cloud-enterprise/code</td>
+      <td>infracost/infracost-azure-devop...loud-enterprise/code/plan.json</td>
       <td align="right">$0</td>
       <td align="right">$743</td>
       <td>+$743</td>
@@ -21,7 +21,7 @@
 <summary><strong>Infracost output</strong></summary>
 
 ```
-Project: infracost/infracost-azure-devops/examples/terraform-cloud-enterprise/code
+Project: infracost/infracost-azure-devops/examples/plan-json/terraform-cloud-enterprise/code/plan.json
 
 + aws_instance.web_app
   +$743
@@ -53,7 +53,7 @@ Project: infracost/infracost-azure-devops/examples/terraform-cloud-enterprise/co
       Monthly cost depends on usage
         +$0.0000166667 per GB-seconds
 
-Monthly cost change for infracost/infracost-azure-devops/examples/terraform-cloud-enterprise/code
+Monthly cost change for infracost/infracost-azure-devops/examples/plan-json/terraform-cloud-enterprise/code/plan.json
 Amount:  +$743 ($0.00 → $743)
 
 ──────────────────────────────────

@@ -26,15 +26,14 @@ Follow our [migration guide](https://www.infracost.io/docs/guides/azure_devops_m
 
 The Azure Pipelines Infracost tasks can be used with either Azure Repos (only git is supported) or GitHub repos. The following steps assume a simple Terraform directory is being used, we recommend you use a more relevant [example](#examples) if required.
 
-1. In the Azure DevOps Marketplace, Add the [Terraform installer task](https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks) to your organization by clicking 'Get it free', selecting your organization and clicking Install. If you do not have permission to install the task, you can submit a request to your organization's admin who will get emailed the details of the request.
-2. Repeat step 1 for the [Infracost tasks](https://marketplace.visualstudio.com/items?itemName=Infracost.infracost-tasks).
-3. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
-4. If you are using an Azure Repos repositories follow the [Azure Repos quick start](#azure-repos-quick-start). Currently this only supports Git repositories.
-5. If you are using a GitHub repository follow the [GitHub Repos quick start](#github-repos-quick-start)
+1. In the Azure DevOps Marketplace, Add the  [Infracost tasks](https://marketplace.visualstudio.com/items?itemName=Infracost.infracost-tasks) to your organization by clicking 'Get it free', selecting your organization and clicking Install. If you do not have permission to install the task, you can submit a request to your organization's admin who will get emailed the details of the request.
+2. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
+3. If you are using an Azure Repos repositories follow the [Azure Repos quick start](#azure-repos-quick-start). Currently this only supports Git repositories.
+4. If you are using a GitHub repository follow the [GitHub Repos quick start](#github-repos-quick-start)
 
 ### Azure Repos Quick start
 
-1. Create a new pipeline, selecting 
+1. Create a new pipeline, selecting
    1. **Azure Repos Git** when prompted in the **"Connect"** stage
    2. Select the appropriate repo you wish to integrate Infracost with in the **"Select"** stage
    3. Choose "Starter Pipeline" in the **"Configure"** stage
@@ -56,42 +55,46 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
           vmImage: ubuntu-latest
 
         steps:
-            # Typically the Infracost actions will be used in conjunction with the Terraform tool installer task.
-            # If this task is not available you can add it to your org from https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks.
-            # Subsequent steps can run Terraform commands as bash tasks. Alternatively, the Terraform tasks
-            # can be used, but we recommend bash tasks since they are simpler.
-          - task: TerraformInstaller@0
-            displayName: Install Terraform
-
-          # IMPORTANT: add any required steps here to setup cloud credentials so Terraform can run
-
-          - bash: terraform init
-            displayName: Terraform init
-            workingDirectory: $(TF_ROOT)
-
-          - bash: terraform plan -out tfplan.binary
-            displayName: Terraform plan
-            workingDirectory: $(TF_ROOT)
-
-          - bash: terraform show -json tfplan.binary > plan.json
-            displayName: Terraform show
-            workingDirectory: $(TF_ROOT)
-
           # Install the Infracost CLI, see https://github.com/infracost/infracost-azure-devops#infracostsetup
           # for other inputs such as version, and pricingApiEndpoint (for self-hosted users).
           - task: InfracostSetup@0
             displayName: Setup Infracost
             inputs:
               apiKey: $(infracostApiKey)
+              version: v0.10.0-beta.1
 
-          # Run Infracost and generate the JSON output, the following docs might be useful:
-          # Multi-project/workspaces: https://www.infracost.io/docs/features/config_file
-          # Combine Infracost JSON files: https://www.infracost.io/docs/features/cli_commands/#combined-output-formats
-          # Environment variables: https://www.infracost.io/docs/integrations/environment_variables/
-          - bash: infracost breakdown --path=$(TF_ROOT)/plan.json --format=json --out-file=/tmp/infracost.json
-            displayName: Run Infracost
+          # Checkout the branch you want Infracost to compare costs against. This example is using the
+          # target PR branch.
+          - bash: |
+              branch=$(System.PullRequest.TargetBranch)
+              branch=${branch#refs/heads/}
+              git clone $(Build.Repository.Uri) --branch ${branch} --single-branch /tmp/base
+            displayName: Checkout base branch
 
-          # Add a cost estimate comment to a Azure Repos pull request.
+          # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
+          - bash: infracost breakdown --path=$(TF_ROOT) --format=json --out-file=/tmp/infracost-base.json
+            displayName: Generate Infracost cost estimate baseline
+            # If you're using Terraform Cloud/Enterprise and have variables stored on there
+            # you can specify the following to automatically retrieve the variables:
+            # env:
+            #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
+            #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
+
+          # Generate an Infracost diff and save it to a JSON file.
+          - bash: infracost diff --path=$(TF_ROOT) --format=json --compare-to /tmp/infracost-base.json --out-file=/tmp/infracost.json
+            displayName: Generate Infracost diff
+            # If you're using Terraform Cloud/Enterprise and have variables stored on there
+            # you can specify the following to automatically retrieve the variables:
+            # env:
+            #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
+            #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
+
+          # Posts a comment to the PR using the 'update' behavior.
+          # This creates a single comment and updates it. The "quietest" option.
+          # The other valid behaviors are:
+          #   delete-and-new - Delete previous comments and create a new one.
+          #   new - Create a new cost estimate comment on every push.
+          # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
           - bash: |
               infracost comment azure-repos \
                  --path /tmp/infracost.json \
@@ -122,11 +125,6 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
 4. Add secret variables: from your Azure DevOps organization, click on your project > Pipelines > your pipeline > Edit > Variables, and click the + sign to add variables for the following. Also tick the 'Keep this value secret' option.
 
     - `infracostApiKey`: with your Infracost API key as the value, and select 'Keep this value secret'.
-    - Any cloud provider credentials you need for running `terraform init` and `terraform plan`:
-      - **Terraform Cloud/Enterprise users**: the [Terraform docs](https://www.terraform.io/cli/config/config-file#credentials-1) explain how to configure credentials for this using a config file, or you can pass the credentials as environment variables directly to Infracost as in [this example](examples/terraform-cloud-enterprise).
-      - **AWS users**: the [Terraform docs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#environment-variables) explain the environment variables to set for this.
-      - **Azure users**: the [Terraform docs](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_client_secret) explain the options.
-      - **Google users**: the [Terraform docs](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/provider_reference#full-reference) explain the options, e.g. using `GOOGLE_CREDENTIALS`.
 
 5. 🎉 That's it! Send a new pull request to change something in Terraform that costs money. You should see a pull request comment that gets updated, e.g. the 📉 and 📈 emojis will update as changes are pushed!
 6. Follow [the docs](https://www.infracost.io/usage-file) if you'd also like to show cost for of usage-based resources such as AWS Lambda or S3. The usage for these resources are fetched from CloudWatch/cloud APIs and used to calculate an estimate.
@@ -157,41 +155,48 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
             vmImage: ubuntu-latest
 
           steps:
-              # Typically the Infracost actions will be used in conjunction with the Terraform tool installer task
-              # If this task is not available you can add it to your org from https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks.
-              # Subsequent steps can run Terraform commands as they would in the shell.
-            - task: TerraformInstaller@0
-              displayName: Install Terraform
-
-            # IMPORTANT: add any required steps here to setup cloud credentials so Terraform can run
-
-            - bash: terraform init
-              displayName: Terraform init
-              workingDirectory: $(TF_ROOT)
-
-            - bash: terraform plan -out tfplan.binary
-              displayName: Terraform plan
-              workingDirectory: $(TF_ROOT)
-
-            - bash: terraform show -json tfplan.binary > plan.json
-              displayName: Terraform show
-              workingDirectory: $(TF_ROOT)
-
             # Install the Infracost CLI, see https://github.com/infracost/infracost-azure-devops#infracostsetup
             # for other inputs such as version, and pricingApiEndpoint (for self-hosted users).
             - task: InfracostSetup@0
               displayName: Setup Infracost
               inputs:
                 apiKey: $(infracostApiKey)
+                version: v0.10.0-beta.1
 
-            # Run Infracost and generate the JSON output, the following docs might be useful:
-            # Multi-project/workspaces: https://www.infracost.io/docs/features/config_file
-            # Combine Infracost JSON files: https://www.infracost.io/docs/features/cli_commands/#combined-output-formats
-            # Environment variables: https://www.infracost.io/docs/integrations/environment_variables/
-            - bash: infracost breakdown --path=$(TF_ROOT)/plan.json --format=json --out-file=/tmp/infracost.json
-              displayName: Run Infracost
+            # Checkout the branch you want Infracost to compare costs against. This example is using the
+            # target PR branch.
+            - bash: |
+                branch=$(System.PullRequest.TargetBranch)
+                branch=${branch#refs/heads/}
+                git clone $(Build.Repository.Uri) --branch ${branch} --single-branch /tmp/base
+              displayName: Checkout base branch
 
-          # Add a cost estimate comment to a GitHub pull request.
+
+            # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
+            - bash: infracost breakdown --path=$(TF_ROOT) --format=json --out-file=/tmp/infracost-base.json
+              displayName: Generate Infracost cost estimate baseline
+            # If you're using Terraform Cloud/Enterprise and have variables stored on there
+            # you can specify the following to automatically retrieve the variables:
+            # env:
+            #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
+            #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
+
+            # Generate an Infracost diff and save it to a JSON file.
+            - bash: infracost diff --path=$(TF_ROOT) --format=json --compare-to /tmp/infracost-base.json --out-file=/tmp/infracost.json
+              displayName: Generate Infracost diff
+            # If you're using Terraform Cloud/Enterprise and have variables stored on there
+            # you can specify the following to automatically retrieve the variables:
+            # env:
+            #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
+            #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
+
+          # Posts a comment to the PR using the 'update' behavior.
+          # This creates a single comment and updates it. The "quietest" option.
+          # The other valid behaviors are:
+          #   delete-and-new - Delete previous comments and create a new one.
+          #   hide-and-new - Minimize previous comments and create a new one.
+          #   new - Create a new cost estimate comment on every push.
+          # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
           - bash: |
               infracost comment github \
                  --path /tmp/infracost.json \
@@ -207,11 +212,6 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
 
     - `infracostApiKey`: with your Infracost API key as the value, and select 'Keep this value secret'.
     - `githubToken` with your GitHub access token as the value, and select 'Keep this value secret'.
-    - Any cloud provider credentials you need for running `terraform init` and `terraform plan`:
-      - **Terraform Cloud/Enterprise users**: the [Terraform docs](https://www.terraform.io/cli/config/config-file#credentials-1) explain how to configure credentials for this using a config file, or you can pass the credentials as environment variables directly to Infracost as in [this example](examples/terraform-cloud-enterprise).
-      - **AWS users**: the [Terraform docs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#environment-variables) explain the environment variables to set for this.
-      - **Azure users**: the [Terraform docs](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_client_secret) explain the options.
-      - **Google users**: the [Terraform docs](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/provider_reference#full-reference) explain the options, e.g. using `GOOGLE_CREDENTIALS`.
 4. 🎉 That's it! Send a new pull request to change something in Terraform that costs money. You should see a pull request comment that gets updated, e.g. the 📉 and 📈 emojis will update as changes are pushed!
 5. Follow [the docs](https://www.infracost.io/usage-file) if you'd also like to show cost for of usage-based resources such as AWS Lambda or S3. The usage for these resources are fetched from CloudWatch/cloud APIs and used to calculate an estimate.
 
@@ -226,7 +226,7 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
 #### 403 error when posting to Azure Repo
 If you receive a 403 error when running the `InfracostComment` task in your pipeline:
 ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/403.png?raw=true)
-This is normally because the build agent does not have permissions to post to the Azure Repo. Make sure step 3 (Enable Azure Pipelines to post pull request comments) of the [Azure Repos Quick start](#azure-repos-quick-start) is complete. 
+This is normally because the build agent does not have permissions to post to the Azure Repo. Make sure step 3 (Enable Azure Pipelines to post pull request comments) of the [Azure Repos Quick start](#azure-repos-quick-start) is complete.
 
 #### InfracostComment cannot detect current environment
 ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/unable-to-detect.png?raw=true)
@@ -235,16 +235,13 @@ Then make sure your pipelines are being triggered by pull request events and not
 
 ## Examples
 
-The [examples](https://github.com/infracost/infracost-azure-devops/tree/master/examples) directory demonstrates how these actions can be used in different workflows, including:
-  - [Terraform directory](https://github.com/infracost/infracost-azure-devops/tree/master/examples/terraform-directory): a Terraform directory containing HCL code
-  - [Terraform plan JSON](https://github.com/infracost/infracost-azure-devops/tree/master/examples/terraform-plan-json): a Terraform plan JSON file
-  - [Terragrunt](https://github.com/infracost/infracost-azure-devops/tree/master/examples/terragrunt): a Terragrunt project
-  - [Terraform Cloud/Enterprise](https://github.com/infracost/infracost-azure-devops/tree/master/examples/terraform-cloud-enterprise): a Terraform project using Terraform Cloud/Enterprise
-  - [Multi-project using config file](https://github.com/infracost/infracost-azure-devops/blob/master/examples/multi-project/README.md#using-an-infracost-config-file): multiple Terraform projects using the Infracost [config file](https://www.infracost.io/docs/multi_project/config_file)
-  - [Multi-project using build matrix](https://github.com/infracost/infracost-azure-devops/blob/master/examples/multi-project/README.md#using-azure-pipelines-matrix-strategy): multiple Terraform projects using the Azure pipelines matrix strategy
-  - [Multi-Terraform workspace](https://github.com/infracost/infracost-azure-devops/tree/master/examples/multi-terraform-workspace): multiple Terraform workspaces using the Infracost [config file](https://www.infracost.io/docs/multi_project/config_file)
+The [examples](https://github.com/infracost/infracost-azure-devops/tree/master/examples) directory demonstrates how these actions can be used for different projects. They all work by using the default Infracost CLI option that parses HCL, thus a Terraform Plan JSON is not needed.
+  - [Terraform/Terragrunt projects (single or multi)](https://github.com/infracost/infracost-azure-devops/tree/master/examples/terraform-project): a repository containing one or more (e.g. mono repos) Terraform or Terragrunt projects
+  - [Multi-projects using a config file](https://github.com/infracost/infracost-azure-devops/tree/master/examples/multi-project-config-file): repository containing multiple Terraform projects that need different inputs, i.e. variable files or Terraform workspaces
   - [Private Terraform module](https://github.com/infracost/infracost-azure-devops/tree/master/examples/private-terraform-module): a Terraform project using a private Terraform module
   - [Slack](https://github.com/infracost/infracost-azure-devops/tree/master/examples/slack): send cost estimates to Slack
+
+For advanced use cases where the estimate needs to be generated from Terraform plan JSON files, see the [plan JSON examples here](https://github.com/infracost/infracost-azure-devops/tree/master/examples#plan-json-examples).
 
 ### Cost policies
 

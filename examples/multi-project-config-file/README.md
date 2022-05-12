@@ -1,6 +1,6 @@
-# Private Terraform module
+# Multi-project using config file
 
-This example shows how to run Infracost in Azure Pipelines with a Terraform project that uses a private Terraform module. This requires a secret to be added to your GitHub repository called `GIT_SSH_KEY` containing a private key so that Infracost can access the private repository.
+This example shows how to run Infracost in Azure Pipelines with multiple Terraform projects using a config file. The [config file]((https://www.infracost.io/docs/config_file/)) can be used to specify variable files or the Terraform workspaces for different projects.
 
 [//]: <> (BEGIN EXAMPLE)
 ```yml
@@ -8,14 +8,14 @@ pr:
   - master
 
 jobs:
-  - job: private_terraform_module
-    displayName: Private Terraform module
+  - job: multi_project_config_file
+    displayName: Multi-project config file
     pool:
       vmImage: ubuntu-latest
 
     variables:
       - name: TF_ROOT
-        value: examples/private-terraform-module/code
+        value: examples/multi-project-config-file/code
 
     steps:
       - task: InfracostSetup@0
@@ -23,16 +23,6 @@ jobs:
         inputs:
           apiKey: $(infracostApiKey)
           version: v0.10.0-beta.1
-
-      # Add your git SSH key so Infracost can checkout the private modules
-      - bash: |
-          mkdir -p .ssh
-          echo "$(echo $GIT_SSH_KEY_BASE_64 | base64 -d)" > .ssh/git_ssh_key
-          chmod 400 .ssh/git_ssh_key
-          echo "##vso[task.setvariable variable=GIT_SSH_COMMAND;]ssh -i $(pwd)/.ssh/git_ssh_key -o 'StrictHostKeyChecking=no'"
-        displayName: Add GIT_SSH_KEY
-        env:
-          GIT_SSH_KEY_BASE_64: $(gitSshKeyBase64)
 
       # Checkout the branch you want Infracost to compare costs against. This example is using the
       # target PR branch.
@@ -43,11 +33,10 @@ jobs:
         displayName: Checkout base branch
 
       # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
-      - bash: infracost breakdown --path=/tmp/base/$(TF_ROOT) --format=json --out-file=/tmp/infracost-base.json
+      - bash: infracost breakdown --config-file=/tmp/base/$(TF_ROOT)/infracost.yml --format=json --out-file=/tmp/infracost-base.json
         displayName: Generate Infracost cost estimate baseline
 
-      # Generate an Infracost diff and save it to a JSON file.
-      - bash: infracost diff --path=$(TF_ROOT) --format=json --compare-to /tmp/infracost-base.json --out-file=/tmp/infracost.json
+      - bash: infracost diff --config-file=$(TF_ROOT)/infracost.yml --format=json --compare-to /tmp/infracost-base.json --out-file=/tmp/infracost.json
         displayName: Generate Infracost diff
 
       # Posts a comment to the PR using the 'update' behavior.

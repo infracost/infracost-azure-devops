@@ -1,12 +1,10 @@
 # Slack Example
 
-This example shows how to send cost estimates to Slack using Infracost Azure Pipelines tasks.
+This example shows how to send cost estimates to Slack by combining the Infracost GitHub Action with the official [slackapi/slack-github-action](https://github.com/slackapi/slack-github-action) repo.
 
-Slack message blocks have a 3000 char limit so the Infracost CLI automatically truncates the middle of slack-message output formats.
+Slack message blocks have a 3000 char limit so the Infracost CLI automatically truncates the middle of `slack-message` output formats.
 
-For simplicity, this is based off the terraform-plan-json example, which does not require Terraform to be installed.
-
-<img src=".github/assets/slack-message.png" alt="Example screenshot" />
+<img src="/.github/assets/slack-message.png" alt="Example screenshot" />
 
 [//]: <> (BEGIN EXAMPLE)
 ```yml
@@ -19,17 +17,41 @@ jobs:
     pool:
       vmImage: ubuntu-latest
 
+    variables:
+      - name: TF_ROOT
+        value: examples/terraform-project/code
+
     steps:
       - task: InfracostSetup@0
         displayName: Setup Infracost
         inputs:
           apiKey: $(infracostApiKey)
+          version: v0.10.0-beta.1
 
-      - bash: infracost breakdown --path examples/slack/code/plan.json --format json --out-file /tmp/infracost.json
-        displayName: Run Infracost
-
+      # Checkout the branch you want Infracost to compare costs against. This example is using the
+      # target PR branch.
       - bash: |
-          # Create a single comment and update it. See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options
+          branch=$(System.PullRequest.TargetBranch)
+          branch=${branch#refs/heads/}
+          git clone $(Build.Repository.Uri) --branch ${branch} --single-branch /tmp/base
+        displayName: Checkout base branch
+
+      # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
+      - bash: infracost breakdown --path=/tmp/base/$(TF_ROOT) --format=json --out-file=/tmp/infracost-base.json
+        displayName: Generate Infracost cost estimate baseline
+
+      # Generate an Infracost diff and save it to a JSON file.
+      - bash: infracost diff --path=$(TF_ROOT) --format=json --compare-to /tmp/infracost-base.json --out-file=/tmp/infracost.json
+        displayName: Generate Infracost diff
+
+      # Posts a comment to the PR using the 'update' behavior.
+      # This creates a single comment and updates it. The "quietest" option.
+      # The other valid behaviors are:
+      #   delete-and-new - Delete previous comments and create a new one.
+      #   hide-and-new - Minimize previous comments and create a new one.
+      #   new - Create a new cost estimate comment on every push.
+      # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
+      - bash: |
           infracost comment github \
             --path /tmp/infracost.json \
             --github-token $(githubToken) \
