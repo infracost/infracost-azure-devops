@@ -29,11 +29,14 @@ jobs:
       - bash: |
           branch=$(System.PullRequest.TargetBranch)
           branch=${branch#refs/heads/}
-          git clone $(Build.Repository.Uri) --branch ${branch} --single-branch /tmp/base
+          git clone $(Build.Repository.Uri) --branch=${branch} --single-branch /tmp/base
         displayName: Checkout base branch
 
       # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
-      - bash: infracost breakdown --path=/tmp/base/$(TF_ROOT) --format=json --out-file=/tmp/infracost-base.json
+      - bash: |
+          infracost breakdown --path=/tmp/base/$(TF_ROOT) \
+                              --format=json \
+                              --out-file=/tmp/infracost-base.json
         displayName: Generate Infracost cost estimate baseline
         # If you're using Terraform Cloud/Enterprise and have variables stored on there
         # you can specify the following to automatically retrieve the variables:
@@ -42,7 +45,11 @@ jobs:
         #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
 
       # Generate an Infracost diff and save it to a JSON file.
-      - bash: infracost diff --path=$(TF_ROOT) --format=json --compare-to /tmp/infracost-base.json --out-file=/tmp/infracost.json
+      - bash: |
+          infracost diff --path=$(TF_ROOT) \
+                         --format=json \
+                         --compare-to=/tmp/infracost-base.json \
+                         --out-file=/tmp/infracost.json
         displayName: Generate Infracost diff
         # If you're using Terraform Cloud/Enterprise and have variables stored on there
         # you can specify the following to automatically retrieve the variables:
@@ -58,12 +65,11 @@ jobs:
       #   new - Create a new cost estimate comment on every push.
       # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
       - bash: |
-          infracost comment github \
-            --path /tmp/infracost.json \
-            --github-token $(githubToken) \
-            --pull-request $(System.PullRequest.PullRequestNumber) \
-            --repo $(Build.Repository.Name) \
-            --behavior update
+          infracost comment github --path=/tmp/infracost.json \
+                                   --github-token=$(githubToken) \
+                                   --pull-request=$(System.PullRequest.PullRequestNumber) \
+                                   --repo=$(Build.Repository.Name) \
+                                   --behavior=update
         displayName: Post Infracost Comment
 ```
 [//]: <> (END EXAMPLE)

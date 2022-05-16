@@ -41,7 +41,7 @@ async function generateOutput(path: string, format: string, behavior: string): P
       throw error;
     }
   }
-  const pathArgs = pathList.map(path => `--path ${path}`);
+  const pathArgs = pathList.map(path => `-path=${path}`);
 
   setEnvVariable('INFRACOST_CI_POST_CONDITION', behavior);
 
@@ -50,8 +50,8 @@ async function generateOutput(path: string, format: string, behavior: string): P
     [
       'output',
       ...pathArgs,
-      `--format ${format}`,
-      `--out-file ${outputFile}`,
+      `--format=${format}`,
+      `--out-file=${outputFile}`,
       '--show-skipped',
     ].join(' '),
   );

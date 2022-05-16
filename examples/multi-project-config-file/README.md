@@ -29,14 +29,21 @@ jobs:
       - bash: |
           branch=$(System.PullRequest.TargetBranch)
           branch=${branch#refs/heads/}
-          git clone $(Build.Repository.Uri) --branch ${branch} --single-branch /tmp/base
+          git clone $(Build.Repository.Uri) --branch=${branch} --single-branch /tmp/base
         displayName: Checkout base branch
 
       # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
-      - bash: infracost breakdown --config-file=/tmp/base/$(TF_ROOT)/infracost.yml --format=json --out-file=/tmp/infracost-base.json
+      - bash: |
+          infracost breakdown --config-file=/tmp/base/$(TF_ROOT)/infracost.yml \
+                              --format=json \
+                              --out-file=/tmp/infracost-base.json
         displayName: Generate Infracost cost estimate baseline
 
-      - bash: infracost diff --config-file=$(TF_ROOT)/infracost.yml --format=json --compare-to /tmp/infracost-base.json --out-file=/tmp/infracost.json
+      - bash: |
+          infracost diff --config-file=$(TF_ROOT)/infracost.yml \
+                         --format=json \
+                         --compare-to=/tmp/infracost-base.json \
+                         --out-file=/tmp/infracost.json
         displayName: Generate Infracost diff
 
       # Posts a comment to the PR using the 'update' behavior.
@@ -47,12 +54,11 @@ jobs:
       #   new - Create a new cost estimate comment on every push.
       # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
       - bash: |
-          infracost comment github \
-            --path /tmp/infracost.json \
-            --github-token $(githubToken) \
-            --pull-request $(System.PullRequest.PullRequestNumber) \
-            --repo $(Build.Repository.Name) \
-            --behavior update
+          infracost comment github --path=/tmp/infracost.json \
+                                   --github-token=$(githubToken) \
+                                   --pull-request=$(System.PullRequest.PullRequestNumber) \
+                                   --repo=$(Build.Repository.Name) \
+                                   --behavior=update
         displayName: Post Infracost Comment
 ```
 [//]: <> (END EXAMPLE)

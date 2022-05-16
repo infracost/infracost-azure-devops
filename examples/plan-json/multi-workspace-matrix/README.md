@@ -38,7 +38,7 @@ jobs:
         workingDirectory: $(TF_ROOT)
 
       - bash: |
-          terraform plan -out $(WORKSPACE)-plan.cache -var-file=$(WORKSPACE).tfvars
+          terraform plan -out=$(WORKSPACE)-plan.cache -var-file=$(WORKSPACE).tfvars
           terraform show -json $(WORKSPACE)-plan.cache > $(WORKSPACE)-plan.json
         env:
           TF_WORKSPACE: $(WORKSPACE)
@@ -52,7 +52,10 @@ jobs:
           version: v0.10.0-beta.1
 
       # Generate an Infracost diff and save it to a JSON file.
-      - bash: infracost diff --path=$(TF_ROOT)/$(WORKSPACE)-plan.json --format=json --out-file=/tmp/infracost_$(WORKSPACE).json
+      - bash: |
+          infracost diff --path=$(TF_ROOT)/$(WORKSPACE)-plan.json \
+                         --format=json \
+                         --out-file=/tmp/infracost_$(WORKSPACE).json
         displayName: Generate Infracost diff
         env:
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
@@ -93,12 +96,11 @@ jobs:
       #   new - Create a new cost estimate comment on every push.
       # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
       - bash: |
-          infracost comment github \
-          --path "infracost_workspace_jsons/*.json" \
-          --github-token $(githubToken) \
-          --pull-request $(System.PullRequest.PullRequestNumber) \
-          --repo $(Build.Repository.Name) \
-          --behavior update
+          infracost comment github --path="infracost_workspace_jsons/*.json" \
+                                  --github-token=$(githubToken) \
+                                  --pull-request=$(System.PullRequest.PullRequestNumber) \
+                                  --repo=$(Build.Repository.Name) \
+                                  --behavior=update
         displayName: Post Infracost Comment
 ```
 [//]: <> (END EXAMPLE)

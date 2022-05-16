@@ -34,7 +34,7 @@ jobs:
       # Generate plan JSON files for all Terragrunt modules and
       # add them to an Infracost config file
       - bash: |
-          terragrunt run-all --terragrunt-ignore-external-dependencies plan -out plan.cache
+          terragrunt run-all --terragrunt-ignore-external-dependencies plan -out=plan.cache
 
           # Find the plan files
           plans=($(find . -name plan.cache | tr '\n' ' '))
@@ -71,7 +71,10 @@ jobs:
           version: v0.10.0-beta.1
 
       # Generate an Infracost diff and save it to a JSON file.
-      - bash: infracost diff --config-file=$(TF_ROOT)/infracost.yml --format=json --out-file=/tmp/infracost.json
+      - bash: |
+          infracost diff --config-file=$(TF_ROOT)/infracost.yml \
+                         --format=json \
+                         --out-file=/tmp/infracost.json
         displayName: Generate Infracost diff
 
       # Posts a comment to the PR using the 'update' behavior.
@@ -82,12 +85,11 @@ jobs:
       #   new - Create a new cost estimate comment on every push.
       # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
       - bash: |
-          infracost comment github \
-            --path /tmp/infracost.json \
-            --github-token $(githubToken) \
-            --pull-request $(System.PullRequest.PullRequestNumber) \
-            --repo $(Build.Repository.Name) \
-            --behavior update
+          infracost comment github --path=/tmp/infracost.json \
+                                   --github-token=$(githubToken) \
+                                   --pull-request=$(System.PullRequest.PullRequestNumber) \
+                                   --repo=$(Build.Repository.Name) \
+                                   --behavior=update
         displayName: Post Infracost Comment
 ```
 [//]: <> (END EXAMPLE)

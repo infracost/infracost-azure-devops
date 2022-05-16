@@ -88,7 +88,7 @@ function fixupExamples(examples) {
           const goldenFilePath = `./testdata/${job.job}_comment_golden.md`;
           const commentArgs = step.bash
             .replace(/\\/g, '')
-            .replace(/--pull-request \$\(System\.PullRequest\.PullRequestNumber\)/g, '--pull-request 1')
+            .replace(/--pull-request=\$\(System\.PullRequest\.PullRequestNumber\)/g, '--pull-request=1')
             .split('\n')
             .map(s => s.trim())
             .filter(e => !e.startsWith('#') && e !== '')

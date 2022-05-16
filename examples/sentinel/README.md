@@ -95,16 +95,22 @@ jobs:
       - bash: |
           branch=$(System.PullRequest.TargetBranch)
           branch=${branch#refs/heads/}
-          git clone $(Build.Repository.Uri) --branch ${branch} --single-branch /tmp/base
+          git clone $(Build.Repository.Uri) --branch=${branch} --single-branch /tmp/base
         displayName: Checkout base branch
 
       # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
-      - bash: infracost breakdown --path=/tmp/base/$(TF_ROOT) --format=json --out-file=/tmp/infracost-base.json
+      - bash: |
+          infracost breakdown --path=/tmp/base/$(TF_ROOT) \
+                              --format=json \
+                              --out-file=/tmp/infracost-base.json
         displayName: Generate Infracost cost estimate baseline
 
       # Generate an Infracost diff and save it to a JSON file.
-      - bash: infracost diff --path=$(TF_ROOT) --format=json --compare-to /tmp/infracost-base.json --out-file=/tmp/infracost.json
-        displayName: Generate Infracost diff
+      - bash: |
+          infracost diff --path=$(TF_ROOT) \
+                         --format=json \
+                         --compare-to=/tmp/infracost-base.json \
+                         --out-file=/tmp/infracost.json
 
       - bash: sentinel apply -global breakdown="$(cat /tmp/infracost.json)" examples/sentinel/policy/policy.policy | tee /tmp/sentinel.out
         displayName: Run Sentinel

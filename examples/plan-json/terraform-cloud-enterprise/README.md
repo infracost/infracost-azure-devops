@@ -61,7 +61,10 @@ jobs:
           version: v0.10.0-beta.1
 
       # Generate an Infracost diff and save it to a JSON file.
-      - bash: infracost diff --path $(TF_ROOT)/plan.json --format=json --out-file=/tmp/infracost.json
+      - bash: |
+          infracost diff --path=$(TF_ROOT)/plan.json \
+                         --format=json \
+                         --out-file=/tmp/infracost.json
         displayName: Generate Infracost diff
 
       # Posts a comment to the PR using the 'update' behavior.
@@ -72,12 +75,11 @@ jobs:
       #   new - Create a new cost estimate comment on every push.
       # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
       - bash: |
-          infracost comment github \
-            --path /tmp/infracost.json \
-            --github-token $(githubToken) \
-            --pull-request $(System.PullRequest.PullRequestNumber) \
-            --repo $(Build.Repository.Name) \
-            --behavior update
+          infracost comment github --path=/tmp/infracost.json \
+                                   --github-token=$(githubToken) \
+                                   --pull-request=$(System.PullRequest.PullRequestNumber) \
+                                   --repo=$(Build.Repository.Name) \
+                                   --behavior=update
         displayName: Post Infracost Comment
 ```
 [//]: <> (END EXAMPLE)

@@ -37,23 +37,23 @@ export default function setupRunner(opts: MockHelperOptions): MockRun.TaskMockRu
     }},
   });
 
-  const paths = pathItems.map((p) => `--path ${p}`).join(' ');
+  const paths = pathItems.map((p) => `-path=${p}`).join(' ');
 
   const stubbedCommands: MockAnswer.TaskLibAnswers = <MockAnswer.TaskLibAnswers>{
     "which": { "infracost": "infracost" },
     "checkPath": { "infracost": true },
     "exec": {
-      [`infracost output ${paths} --format github-comment --out-file infracost-comment.md --show-skipped`]: {
+      [`infracost output ${paths} --format=github-comment --out-file=infracost-comment.md --show-skipped`]: {
         "code": 0,
         "stdout": "[mock infracost] output github-comment",
         "stderr": "",
       },
-      [`infracost output ${paths} --format azure-repos-comment --out-file infracost-comment.md --show-skipped`]: {
+      [`infracost output ${paths} --format=azure-repos-comment --out-file=infracost-comment.md --show-skipped`]: {
         "code": 0,
         "stdout": "[mock infracost] output azure-devops-comment",
         "stderr": "",
       },
-      [`infracost output --path invalid --format github-comment --out-file infracost-comment.md --show-skipped`]: {
+      [`infracost output --path=invalid --format=github-comment --out-file=infracost-comment.md --show-skipped`]: {
         "code": 42,
         "stdout": "[mock infracost] output error",
         "stderr": "",
