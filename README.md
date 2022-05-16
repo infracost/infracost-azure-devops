@@ -13,12 +13,10 @@ Follow our [migration guide](https://www.infracost.io/docs/guides/azure_devops_m
   + [GitHub Repos Quick Start](#github-repos-quick-start)
   * [Troubleshooting](#troubleshooting)
     + [403 error when posting to Azure Repo](#403-error-when-posting-to-azure-repo)
-    + [InfracostComment cannot detect current environment](#infracostcomment-cannot-detect-current-environment)
 * [Examples](#examples)
   + [Cost policy examples](#cost-policy-examples)
 * [Tasks](#tasks)
   + [InfracostSetup](#infracostsetup)
-  + [InfracostComment (deprecated)](#infracostcomment)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -229,19 +227,10 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
 
 ### Troubleshooting
 
-> **InfracostComment TASK IS DEPRECATED**
->
-> The task will soon be removed, please use `infracost comment` directly.
-
 #### 403 error when posting to Azure Repo
-If you receive a 403 error when running the `InfracostComment` task in your pipeline:
+If you receive a 403 error when running the `infracost comment` command in your pipeline:
 ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/403.png?raw=true)
 This is normally because the build agent does not have permissions to post to the Azure Repo. Make sure step 3 (Enable Azure Pipelines to post pull request comments) of the [Azure Repos Quick start](#azure-repos-quick-start) is complete.
-
-#### InfracostComment cannot detect current environment
-![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/unable-to-detect.png?raw=true)
-If using `InfracostComment` with Azure Repos we require that this task is triggered by a pull request. Make sure you've completed step 2 (Enable pull request build triggers) of the [Azure Repos Quick start](#azure-repos-quick-start).
-Then make sure your pipelines are being triggered by pull request events and nothing else.
 
 ## Examples
 
@@ -283,36 +272,6 @@ It accepts the following inputs:
 - `currency`: Optional. Convert output from USD to your preferred [ISO 4217 currency](https://en.wikipedia.org/wiki/ISO_4217#Active_codes), e.g. EUR, BRL or INR.
 - `pricingApiEndpoint`: Optional. For [self-hosted](https://www.infracost.io/docs/cloud_pricing_api/self_hosted) users, endpoint of the Cloud Pricing API, e.g. https://cloud-pricing-api.
 - `enableDashboard`: Optional, defaults to `false`. Enables [Infracost dashboard features](https://www.infracost.io/docs/features/share_links), not supported for self-hosted Cloud Pricing API.
-
-### InfracostComment
-
-> **THIS TASK IS DEPRECATED**
->
-> This task will soon be removed, please use `infracost comment` directly.
-
-This task adds comments to GitHub pull requests and commits, or Azure Repos pull requests.
-
-```yml
-steps:
-  - task: InfracostComment@v0
-    inputs:
-      githubToken: $(githubToken)
-      path: /tmp/infracost.json
-      behavior: update
-```
-
-It accepts the following inputs:
-
-- `path`: Required. The path to the `infracost breakdown` JSON that will be passed to `infracost output`. For multiple paths, pass a glob pattern (e.g. "infracost_*.json", glob needs quotes) or a JSON array of paths.
-- `githubToken`: GitHub access token. Required if repository provider is GitHub.
-- `azureReposToken`: Azure Repos access token. Required if repository provider is Azure Repos.
-- `behavior`: Optional, defaults to `update`. The behavior to use when posting cost estimate comments. Must be one of the following:
-  - `update`: Create a single comment and update it on changes. This is the "quietest" option. The Azure DevOps Repos/GitHub comments UI shows what/when changed when the comment is updated. Pull request followers will only be notified on the comment create (not updates), and the comment will stay at the same location in the comment history.
-  - `delete-and-new`: Delete previous cost estimate comments and create a new one. Pull request followers will be notified on each comment.
-  - `hide-and-new`: Minimize previous cost estimate comments and create a new one. Pull request followers will be notified on each comment. This behavior is available only for GitHub repositories.
-  - `new`: Create a new cost estimate comment. Pull request followers will be notified on each comment.
-- `targetType`: Optional. Which objects should be commented on, either `pull-request` or `commit`. The `commit` option is available only for GitHub repositories.
-- `tag`: Optional. Customize the comment tag. This is added to the comment as a markdown comment (hidden) to detect the previously posted comments. This is useful if you have multiple pipelines that post comments to the same pull request or commit.
 
 ## Contributing
 

@@ -53,7 +53,7 @@ function extractAllExamples(examplesDir) {
  */
 
 /**
- * fixupExamples modifies the examples by replacing the InfracostComment task
+ * fixupExamples modifies the examples by replacing the `infracost comment` step
  * with a step that checks comment contents
  *
  * @param {Pipeline[]} examples
