@@ -45,7 +45,7 @@ jobs:
         displayName: Terraform plan
         workingDirectory: $(TF_ROOT)
 
-      - task: InfracostSetup@1
+      - task: InfracostSetup@0
         displayName: Setup Infracost
         inputs:
           apiKey: $(infracostApiKey)
@@ -82,7 +82,7 @@ jobs:
           artifactName: infracost_workspace_jsons
           downloadPath: '$(System.DefaultWorkingDirectory)'
 
-      - task: InfracostSetup@1
+      - task: InfracostSetup@0
         displayName: Setup Infracost
         inputs:
           apiKey: $(infracostApiKey)
