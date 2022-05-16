@@ -28,8 +28,7 @@ jobs:
           apiKey: $(infracostApiKey)
           version: v0.10.0-beta.1
 
-      # Checkout the branch you want Infracost to compare costs against. This example is using the
-      # target PR branch.
+      # Clone the base branch of the pull request (e.g. main/master) into a temp directory.
       - bash: |
           branch=$(System.PullRequest.TargetBranch)
           branch=${branch#refs/heads/}
