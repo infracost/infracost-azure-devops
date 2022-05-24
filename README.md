@@ -55,7 +55,7 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
         steps:
           # Install the Infracost CLI, see https://github.com/infracost/infracost-azure-devops#infracostsetup
           # for other inputs such as version, and pricingApiEndpoint (for self-hosted users).
-          - task: InfracostSetup@1
+          - task: InfracostSetup@0
             displayName: Setup Infracost
             inputs:
               apiKey: $(infracostApiKey)
@@ -159,7 +159,7 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
           steps:
             # Install the Infracost CLI, see https://github.com/infracost/infracost-azure-devops#infracostsetup
             # for other inputs such as version, and pricingApiEndpoint (for self-hosted users).
-            - task: InfracostSetup@1
+            - task: InfracostSetup@0
               displayName: Setup Infracost
               inputs:
                 apiKey: $(infracostApiKey)
