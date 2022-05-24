@@ -40,9 +40,6 @@
   "files": [
     {
       "path": "tasks/InfracostSetup"
-    },
-    {
-      "path": "tasks/InfracostComment"
     }
   ],
   "content": {
@@ -83,16 +80,6 @@
       ],
       "properties": {
         "name": "tasks/InfracostSetup"
-      }
-    },
-    {
-      "id": "infracost-comment-task",
-      "type": "ms.vss-distributed-task.task",
-      "targets": [
-        "ms.vss-distributed-task.tasks"
-      ],
-      "properties": {
-        "name": "tasks/InfracostComment"
       }
     }
   ]

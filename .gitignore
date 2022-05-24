@@ -1,7 +1,22 @@
-node_modules/
+# Infracost cache
+.infracost-cache
+.infracost
+infracost-comment.md
+
+# Terraform
+.terraform*
+
+# Terragrunt
+.terragrunt*
+
+# Editor
 *.vsix
 .idea/
-.DS_STORE
 .taskkey
-infracost-comment.md
 .vscode
+
+# Node
+node_modules/
+
+# Mac OSX
+.DS_STORE

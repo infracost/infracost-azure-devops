@@ -22,22 +22,18 @@ function extractAllExamples(examplesDir) {
       continue;
     }
 
-    console.log(
-      `Generating Azure Pipelines job for ${examplesDir}/${dir}`
-    );
-
     const filename = `${examplesDir}/${dir}/README.md`;
 
-    try {
-      if (!fs.existsSync(filename)) {
-        console.error(`Skipping ${dir} since no README.md file was found`);
-        continue;
+    if (fs.existsSync(filename)) {
+      console.error(`Found README.md file in ${dir} was found, extracting examples`);
+      try {
+        examples.push(...extractExamples(filename));
+      } catch(err) {
+        console.error(`Error reading YAML file ${filename}: ${err}`);
       }
-
-      examples.push(...extractExamples(filename));
-    } catch (err) {
-      console.error(`Error reading YAML file ${filename}: ${err}`);
     }
+
+    examples.push(...extractAllExamples(`${examplesDir}/${dir}`));
   }
 
   return examples;
@@ -57,7 +53,7 @@ function extractAllExamples(examplesDir) {
  */
 
 /**
- * fixupExamples modifies the examples by replacing the InfracostComment task
+ * fixupExamples modifies the examples by replacing the `infracost comment` step
  * with a step that checks comment contents
  *
  * @param {Pipeline[]} examples
@@ -71,11 +67,28 @@ function fixupExamples(examples) {
       const steps = [];
 
       for (const step of job.steps) {
-        if (step.displayName && step.displayName.toLowerCase() === 'post infracost comment') {
+
+        if (step.displayName && step.displayName.toLowerCase() === 'checkout base branch') {
+          step.bash = 'git clone . /tmp/base';
+
+          steps.push(step);
+        } else if (step.displayName && step.displayName.toLowerCase() === 'generate infracost diff') {
+          steps.push(
+            {
+              bash: `find examples -type f  -name '*.tf' -o -name '*.hcl' -o -name '*.tfvars'  | xargs sed -i 's/m5\.4xlarge/m5\.8xlarge/g'`,
+              displayName: 'Replace m5 instance',
+            },
+            {
+              bash: `find examples -type f  -name '*.tf' -o -name '*.hcl' -o -name '*.tfvars'  | xargs sed -i 's/t2\.micro/t2\.medium/g'`,
+              displayName: 'Replace t2 instance',
+            },
+            step,
+          );
+        } else if (step.displayName && step.displayName.toLowerCase() === 'post infracost comment') {
           const goldenFilePath = `./testdata/${job.job}_comment_golden.md`;
           const commentArgs = step.bash
             .replace(/\\/g, '')
-            .replace(/--pull-request \$\(System\.PullRequest\.PullRequestNumber\)/g, '--pull-request 1')
+            .replace(/--pull-request=\$\(System\.PullRequest\.PullRequestNumber\)/g, '--pull-request=1')
             .split('\n')
             .map(s => s.trim())
             .filter(e => !e.startsWith('#') && e !== '')
@@ -90,11 +103,7 @@ function fixupExamples(examples) {
               displayName: 'Check the comment',
             },
           );
-
-          continue;
-        }
-
-        if  (step.displayName && step.displayName === 'Send cost estimate to Slack') {
+        } else if (step.displayName && step.displayName === 'Send cost estimate to Slack') {
           const goldenFilePath = `./testdata/${job.job}_slack_message_golden.json`;
 
           steps.push(
@@ -103,14 +112,9 @@ function fixupExamples(examples) {
               displayName: 'Check the Slack message',
             },
           );
-
-          continue
+        } else {
+          steps.push(step);
         }
-
-
-        steps.push({
-          ...step,
-        })
       }
 
       job.steps = steps;

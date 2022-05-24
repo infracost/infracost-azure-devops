@@ -8,8 +8,8 @@
   "category": "Utility",
   "author": "Infracost",
   "version": {
-    "Major": 0,
-    "Minor": 2,
+    "Major": 1,
+    "Minor": 0,
     "Patch": 0
   },
   "instanceNameFormat": "InfracostSetup $(version)",
@@ -26,9 +26,9 @@
       "name": "version",
       "type": "string",
       "label": "Version",
-      "defaultValue": "0.9.x",
+      "defaultValue": "0.10.x",
       "required": false,
-      "helpMarkDown": "Version of Infracost CLI to install. SemVer ranges (https://www.npmjs.com/package/semver#ranges) are supported.\n    required: false\n    default: 0.9.x"
+      "helpMarkDown": "Version of Infracost CLI to install. SemVer ranges (https://www.npmjs.com/package/semver#ranges) are supported.\n    required: false\n    default: 0.10.x"
     },
     {
       "name": "currency",

@@ -1,10 +1,6 @@
-# Slack Example
+# Terraform/Terragrunt project (single or multi)
 
-This example shows how to send cost estimates to Slack by combining the Infracost GitHub Action with the official [slackapi/slack-github-action](https://github.com/slackapi/slack-github-action) repo.
-
-Slack message blocks have a 3000 char limit so the Infracost CLI automatically truncates the middle of `slack-message` output formats.
-
-<img src="/.github/assets/slack-message.png" alt="Example screenshot" />
+This example shows how to run Infracost in Azure Pipelines with multiple Terraform/Terragrunt projects, both single projects or mono-repos that contain multiple projects.
 
 [//]: <> (BEGIN EXAMPLE)
 ```yml
@@ -12,8 +8,8 @@ pr:
   - master
 
 jobs:
-  - job: slack
-    displayName: Slack
+  - job: terraform_project
+    displayName: Terraform project
     pool:
       vmImage: ubuntu-latest
 
@@ -40,6 +36,11 @@ jobs:
                               --format=json \
                               --out-file=/tmp/infracost-base.json
         displayName: Generate Infracost cost estimate baseline
+        # If you're using Terraform Cloud/Enterprise and have variables stored on there
+        # you can specify the following to automatically retrieve the variables:
+        # env:
+        #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
+        #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
 
       # Generate an Infracost diff and save it to a JSON file.
       - bash: |
@@ -48,6 +49,11 @@ jobs:
                          --compare-to=/tmp/infracost-base.json \
                          --out-file=/tmp/infracost.json
         displayName: Generate Infracost diff
+        # If you're using Terraform Cloud/Enterprise and have variables stored on there
+        # you can specify the following to automatically retrieve the variables:
+        # env:
+        #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
+        #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
 
       # Posts a comment to the PR using the 'update' behavior.
       # This creates a single comment and updates it. The "quietest" option.
@@ -63,21 +69,5 @@ jobs:
                                    --repo=$(Build.Repository.Name) \
                                    --behavior=update
         displayName: Post Infracost Comment
-
-      - bash: infracost output --path=/tmp/infracost.json --format=slack-message --show-skipped --out-file=/tmp/slack_message.json
-        displayName: Generate Slack message
-
-      - bash: |
-          # Skip posting to Slack if there's no cost change
-          cost_change=$(cat /tmp/infracost.json | jq -r "(.diffTotalMonthlyCost // 0) | tonumber")
-          if [ "$cost_change" = "0" ]; then
-            echo "Not posting to Slack since cost change is zero"
-            exit 0
-          fi
-
-          curl -X POST -H "Content-type: application/json" -d @/tmp/slack_message.json $SLACK_WEBHOOK_URL
-        displayName: Send cost estimate to Slack
-        env:
-          SLACK_WEBHOOK_URL: $(slackWebhookUrl)
 ```
 [//]: <> (END EXAMPLE)

@@ -1,10 +1,6 @@
-# Slack Example
+# Multi-project using config file
 
-This example shows how to send cost estimates to Slack by combining the Infracost GitHub Action with the official [slackapi/slack-github-action](https://github.com/slackapi/slack-github-action) repo.
-
-Slack message blocks have a 3000 char limit so the Infracost CLI automatically truncates the middle of `slack-message` output formats.
-
-<img src="/.github/assets/slack-message.png" alt="Example screenshot" />
+This example shows how to run Infracost in Azure Pipelines with multiple Terraform projects using a config file. The [config file]((https://www.infracost.io/docs/config_file/)) can be used to specify variable files or the Terraform workspaces for different projects.
 
 [//]: <> (BEGIN EXAMPLE)
 ```yml
@@ -12,14 +8,14 @@ pr:
   - master
 
 jobs:
-  - job: slack
-    displayName: Slack
+  - job: multi_project_config_file
+    displayName: Multi-project config file
     pool:
       vmImage: ubuntu-latest
 
     variables:
       - name: TF_ROOT
-        value: examples/terraform-project/code
+        value: examples/multi-project-config-file/code
 
     steps:
       - task: InfracostSetup@0
@@ -36,14 +32,13 @@ jobs:
 
       # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
       - bash: |
-          infracost breakdown --path=/tmp/base/$(TF_ROOT) \
+          infracost breakdown --config-file=/tmp/base/$(TF_ROOT)/infracost.yml \
                               --format=json \
                               --out-file=/tmp/infracost-base.json
         displayName: Generate Infracost cost estimate baseline
 
-      # Generate an Infracost diff and save it to a JSON file.
       - bash: |
-          infracost diff --path=$(TF_ROOT) \
+          infracost diff --config-file=$(TF_ROOT)/infracost.yml \
                          --format=json \
                          --compare-to=/tmp/infracost-base.json \
                          --out-file=/tmp/infracost.json
@@ -63,21 +58,5 @@ jobs:
                                    --repo=$(Build.Repository.Name) \
                                    --behavior=update
         displayName: Post Infracost Comment
-
-      - bash: infracost output --path=/tmp/infracost.json --format=slack-message --show-skipped --out-file=/tmp/slack_message.json
-        displayName: Generate Slack message
-
-      - bash: |
-          # Skip posting to Slack if there's no cost change
-          cost_change=$(cat /tmp/infracost.json | jq -r "(.diffTotalMonthlyCost // 0) | tonumber")
-          if [ "$cost_change" = "0" ]; then
-            echo "Not posting to Slack since cost change is zero"
-            exit 0
-          fi
-
-          curl -X POST -H "Content-type: application/json" -d @/tmp/slack_message.json $SLACK_WEBHOOK_URL
-        displayName: Send cost estimate to Slack
-        env:
-          SLACK_WEBHOOK_URL: $(slackWebhookUrl)
 ```
 [//]: <> (END EXAMPLE)
