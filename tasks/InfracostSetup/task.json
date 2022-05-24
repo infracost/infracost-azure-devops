@@ -29,7 +29,7 @@
       "defaultValue": "0.10.x",
       "required": false,
       "helpMarkDown": "Version of Infracost CLI to install. SemVer ranges (https://www.npmjs.com/package/semver#ranges) are supported.\n    required: false\n    default: 0.10.x"
-    }
+    },
     {
       "name": "currency",
       "type": "string",
