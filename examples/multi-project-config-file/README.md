@@ -32,7 +32,8 @@ jobs:
 
       # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
       - bash: |
-          infracost breakdown --config-file=/tmp/base/$(TF_ROOT)/infracost.yml \
+          cd /tmp/base
+          infracost breakdown --config-file=$(TF_ROOT)/infracost.yml \
                               --format=json \
                               --out-file=/tmp/infracost-base.json
         displayName: Generate Infracost cost estimate baseline
