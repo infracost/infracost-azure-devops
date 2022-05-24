@@ -18,7 +18,7 @@ jobs:
         value: examples/multi-project-config-file/code
 
     steps:
-      - task: InfracostSetup@0
+      - task: InfracostSetup@1
         displayName: Setup Infracost
         inputs:
           apiKey: $(infracostApiKey)
