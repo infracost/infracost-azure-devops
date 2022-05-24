@@ -22,7 +22,6 @@ jobs:
         displayName: Setup Infracost
         inputs:
           apiKey: $(infracostApiKey)
-          version: v0.10.0-beta.1
 
       # Add your git SSH key so Infracost can checkout the private modules
       - bash: |

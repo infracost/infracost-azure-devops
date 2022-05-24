@@ -49,7 +49,6 @@ jobs:
         displayName: Setup Infracost
         inputs:
           apiKey: $(infracostApiKey)
-          version: v0.10.0-beta.1
 
       # Generate an Infracost diff and save it to a JSON file.
       - bash: |
@@ -86,7 +85,6 @@ jobs:
         displayName: Setup Infracost
         inputs:
           apiKey: $(infracostApiKey)
-          version: v0.10.0-beta.1
 
       # Posts a comment to the PR using the 'update' behavior.
       # This creates a single comment and updates it. The "quietest" option.

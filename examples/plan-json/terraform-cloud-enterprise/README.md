@@ -58,7 +58,6 @@ jobs:
         displayName: Setup Infracost
         inputs:
           apiKey: $(infracostApiKey)
-          version: v0.10.0-beta.1
 
       # Generate an Infracost diff and save it to a JSON file.
       - bash: |

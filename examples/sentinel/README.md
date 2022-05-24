@@ -77,7 +77,6 @@ jobs:
         displayName: Setup Infracost
         inputs:
           apiKey: $(infracostApiKey)
-          version: v0.10.0-beta.1
 
       - bash: |
           INSTALL_LOCATION="$(Build.SourcesDirectory)/sentinel"

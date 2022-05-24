@@ -22,7 +22,6 @@ jobs:
         displayName: Setup Infracost
         inputs:
           apiKey: $(infracostApiKey)
-          version: v0.10.0-beta.1
 
       # Clone the base branch of the pull request (e.g. main/master) into a temp directory.
       - bash: |
