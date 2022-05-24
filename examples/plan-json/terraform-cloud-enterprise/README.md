@@ -54,7 +54,7 @@ jobs:
         displayName: Retrieve plan JSONs
         workingDirectory: $(TF_ROOT)
 
-      - task: InfracostSetup@0
+      - task: InfracostSetup@1
         displayName: Setup Infracost
         inputs:
           apiKey: $(infracostApiKey)
