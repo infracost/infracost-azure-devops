@@ -39,6 +39,7 @@ jobs:
         displayName: Generate Infracost cost estimate baseline
 
       - bash: |
+          cd -
           infracost diff --config-file=$(TF_ROOT)/infracost.yml \
                          --format=json \
                          --compare-to=/tmp/infracost-base.json \
