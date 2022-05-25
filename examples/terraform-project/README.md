@@ -16,8 +16,23 @@ jobs:
     variables:
       - name: TF_ROOT
         value: examples/terraform-project/code
-
+      # If you use private modules you'll need this env variable to use 
+      # the same ssh-agent socket value across all steps. 
+      - name: SSH_AUTH_SOCK
+        value: /tmp/ssh_agent.sock
     steps:
+      # If you use private modules, add a base 64 encoded secret
+      # called gitSshKeyBase64 with your private key, so Infracost can access
+      # private repositories (similar to how Terraform/Terragrunt does).
+      # - bash: |
+      #     ssh-agent -a $(SSH_AUTH_SOCK)
+      #     mkdir -p ~/.ssh
+      #     echo "$(echo $GIT_SSH_KEY_BASE_64 | base64 -d)" | tr -d '\r' | ssh-add -
+      #     ssh-keyscan github.com >> ~/.ssh/known_hosts
+      #   displayName: Add GIT_SSH_KEY
+      #   env:
+      #     GIT_SSH_KEY_BASE_64: $(gitSshKeyBase64)
+       
       - task: InfracostSetup@1
         displayName: Setup Infracost
         inputs:

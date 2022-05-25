@@ -45,6 +45,10 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
     variables:
       - name: TF_ROOT
         value: PATH/TO/TERRAFORM/CODE # Update this!
+      # If you use private modules you'll need this env variable to use 
+      # the same ssh-agent socket value across all steps. 
+      - name: SSH_AUTH_SOCK
+        value: /tmp/ssh_agent.sock
 
     jobs:
       - job: infracost
@@ -53,6 +57,18 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
           vmImage: ubuntu-latest
 
         steps:
+          # If you use private modules, add a base 64 encoded secret
+          # called gitSshKeyBase64 with your private key, so Infracost can access
+          # private repositories (similar to how Terraform/Terragrunt does).
+          # - bash: |
+          #     ssh-agent -a $(SSH_AUTH_SOCK)
+          #     mkdir -p ~/.ssh
+          #     echo "$(echo $GIT_SSH_KEY_BASE_64 | base64 -d)" | tr -d '\r' | ssh-add -
+          #     ssh-keyscan github.com >> ~/.ssh/known_hosts
+          #   displayName: Add GIT_SSH_KEY
+          #   env:
+          #     GIT_SSH_KEY_BASE_64: $(gitSshKeyBase64)
+   
           # Install the Infracost CLI, see https://github.com/infracost/infracost-azure-devops#infracostsetup
           # for other inputs such as version, and pricingApiEndpoint (for self-hosted users).
           - task: InfracostSetup@1
@@ -149,6 +165,10 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
       variables:
         - name: TF_ROOT
           value: PATH/TO/TERRAFORM/CODE # Update this!
+        # If you use private modules you'll need this env variable to use 
+        # the same ssh-agent socket value across all steps. 
+        - name: SSH_AUTH_SOCK
+          value: /tmp/ssh_agent.sock
 
       jobs:
         - job: infracost
@@ -157,6 +177,18 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
             vmImage: ubuntu-latest
 
           steps:
+           # If you use private modules, add a base 64 encoded secret
+           # called gitSshKeyBase64 with your private key, so Infracost can access
+           # private repositories (similar to how Terraform/Terragrunt does).
+           # - bash: |
+           #     ssh-agent -a $(SSH_AUTH_SOCK)
+           #     mkdir -p ~/.ssh
+           #     echo "$(echo $GIT_SSH_KEY_BASE_64 | base64 -d)" | tr -d '\r' | ssh-add -
+           #     ssh-keyscan github.com >> ~/.ssh/known_hosts
+           #   displayName: Add GIT_SSH_KEY
+           #   env:
+           #     GIT_SSH_KEY_BASE_64: $(gitSshKeyBase64)
+      
             # Install the Infracost CLI, see https://github.com/infracost/infracost-azure-devops#infracostsetup
             # for other inputs such as version, and pricingApiEndpoint (for self-hosted users).
             - task: InfracostSetup@1
@@ -235,7 +267,6 @@ This is normally because the build agent does not have permissions to post to th
 The [examples](https://github.com/infracost/infracost-azure-devops/tree/master/examples) directory demonstrates how these actions can be used for different projects. They all work by using the default Infracost CLI option that parses HCL, thus a Terraform Plan JSON is not needed.
   - [Terraform/Terragrunt projects (single or multi)](https://github.com/infracost/infracost-azure-devops/tree/master/examples/terraform-project): a repository containing one or more (e.g. mono repos) Terraform or Terragrunt projects
   - [Multi-projects using a config file](https://github.com/infracost/infracost-azure-devops/tree/master/examples/multi-project-config-file): repository containing multiple Terraform projects that need different inputs, i.e. variable files or Terraform workspaces
-  - [Private Terraform module](https://github.com/infracost/infracost-azure-devops/tree/master/examples/private-terraform-module): a Terraform project using a private Terraform module
   - [Slack](https://github.com/infracost/infracost-azure-devops/tree/master/examples/slack): send cost estimates to Slack
 
 For advanced use cases where the estimate needs to be generated from Terraform plan JSON files, see the [plan JSON examples here](https://github.com/infracost/infracost-azure-devops/tree/master/examples#plan-json-examples).
