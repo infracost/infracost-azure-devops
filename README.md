@@ -64,7 +64,8 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
           #     ssh-agent -a $(SSH_AUTH_SOCK)
           #     mkdir -p ~/.ssh
           #     echo "$(echo $GIT_SSH_KEY_BASE_64 | base64 -d)" | tr -d '\r' | ssh-add -
-          #     ssh-keyscan github.com >> ~/.ssh/known_hosts
+          #     # Update this to github.com, gitlab.com, bitbucket.org, ssh.dev.azure.com or your source control server's domain
+          #     ssh-keyscan ssh.dev.azure.com >> ~/.ssh/known_hosts
           #   displayName: Add GIT_SSH_KEY
           #   env:
           #     GIT_SSH_KEY_BASE_64: $(gitSshKeyBase64)
@@ -184,6 +185,7 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
            #     ssh-agent -a $(SSH_AUTH_SOCK)
            #     mkdir -p ~/.ssh
            #     echo "$(echo $GIT_SSH_KEY_BASE_64 | base64 -d)" | tr -d '\r' | ssh-add -
+           #     # Update this to github.com, gitlab.com, bitbucket.org, ssh.dev.azure.com or your source control server's domain
            #     ssh-keyscan github.com >> ~/.ssh/known_hosts
            #   displayName: Add GIT_SSH_KEY
            #   env:
