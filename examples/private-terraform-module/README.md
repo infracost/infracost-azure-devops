@@ -12,11 +12,12 @@ jobs:
     displayName: Private Terraform module
     pool:
       vmImage: ubuntu-latest
-
+      
     variables:
       - name: TF_ROOT
         value: examples/private-terraform-module/code
-
+      - name: SSH_AUTH_SOCK
+        value: /tmp/ssh_agent.sock
     steps:
       - task: InfracostSetup@1
         displayName: Setup Infracost
@@ -25,10 +26,10 @@ jobs:
 
       # Add your git SSH key so Infracost can checkout the private modules
       - bash: |
-          mkdir -p .ssh
-          echo "$(echo $GIT_SSH_KEY_BASE_64 | base64 -d)" > .ssh/git_ssh_key
-          chmod 400 .ssh/git_ssh_key
-          echo "##vso[task.setvariable variable=GIT_SSH_COMMAND;]ssh -i $(pwd)/.ssh/git_ssh_key -o 'StrictHostKeyChecking=no'"
+          ssh-agent -a $(SSH_AUTH_SOCK)
+          mkdir -p ~/.ssh
+          echo "$(echo $GIT_SSH_KEY_BASE_64 | base64 -d)" | tr -d '\r' | ssh-add -
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
         displayName: Add GIT_SSH_KEY
         env:
           GIT_SSH_KEY_BASE_64: $(gitSshKeyBase64)

@@ -6,7 +6,6 @@ This example shows how to run Infracost in Azure Pipelines with multiple Terrafo
 ```yml
 pr:
   - master
-
 jobs:
   - job: terraform_project
     displayName: Terraform project
