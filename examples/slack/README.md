@@ -33,6 +33,7 @@ jobs:
       #     ssh-agent -a $(SSH_AUTH_SOCK)
       #     mkdir -p ~/.ssh
       #     echo "$(echo $GIT_SSH_KEY_BASE_64 | base64 -d)" | tr -d '\r' | ssh-add -
+      #     # Update this to github.com, gitlab.com, bitbucket.org, ssh.dev.azure.com or your source control server's domain
       #     ssh-keyscan github.com >> ~/.ssh/known_hosts
       #   displayName: Add GIT_SSH_KEY
       #   env:
