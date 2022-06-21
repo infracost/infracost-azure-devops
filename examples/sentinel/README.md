@@ -93,7 +93,8 @@ jobs:
       - bash: |
           branch=$(System.PullRequest.TargetBranch)
           branch=${branch#refs/heads/}
-          git clone $(Build.Repository.Uri) --branch=${branch} --single-branch /tmp/base
+          # uncomment the --config section if using a private git repository
+          git clone ${repouri} --branch=${branch} --single-branch /tmp/base # --config http.extraheader="AUTHORIZATION: bearer $(System.AccessToken)"
         displayName: Checkout base branch
 
       # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
