@@ -93,6 +93,7 @@ jobs:
       - bash: |
           branch=$(System.PullRequest.TargetBranch)
           branch=${branch#refs/heads/}
+          # Try adding the following to git clone if you're having issues cloning a private repo: --config http.extraheader="AUTHORIZATION: bearer $(System.AccessToken)"
           git clone $(Build.Repository.Uri) --branch=${branch} --single-branch /tmp/base
         displayName: Checkout base branch
 
