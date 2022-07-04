@@ -279,6 +279,7 @@ Try the following steps:
       env:
         SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     ```
+3. If you're using the "Limit job authorization scope to current project for non-release pipelines" option in Azure Repos, see [this article](https://www.linkedin.com/pulse/azure-pipelines-infracost-dreaded-403-error-pete-mallam/): this changes the Build Service Identity that will be performing the task. So rather than the usual Build Service for the project, you are now using a Build Service for the Organization.
 
 ## Examples
 
