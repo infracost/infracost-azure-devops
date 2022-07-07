@@ -93,8 +93,11 @@ jobs:
       #   hide-and-new - Minimize previous comments and create a new one.
       #   new - Create a new cost estimate comment on every push.
       # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
+      # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
+      #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
+      #   contain any cloud credentials or secrets.
       - bash: |
-          infracost comment github --path="infracost_workspace_jsons/*.json" \
+          INFRACOST_ENABLE_CLOUD​=true infracost comment github --path="infracost_workspace_jsons/*.json" \
                                   --github-token=$(githubToken) \
                                   --pull-request=$(System.PullRequest.PullRequestNumber) \
                                   --repo=$(Build.Repository.Name) \
