@@ -20,7 +20,7 @@
       "label": "API Key",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Your Infracost API key. It can be retrieved by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, download Infracost (https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key."
+      "helpMarkDown": "Your Infracost API key. It can be retrieved by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, download Infracost (https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key."
     },
     {
       "name": "version",
