@@ -25,9 +25,10 @@ Follow our [migration guide](https://www.infracost.io/docs/guides/azure_devops_m
 The Azure Pipelines Infracost tasks can be used with either Azure Repos (only git is supported) or GitHub repos. The following steps assume a simple Terraform directory is being used, we recommend you use a more relevant [example](#examples) if required.
 
 1. In the Azure DevOps Marketplace, Add the  [Infracost tasks](https://marketplace.visualstudio.com/items?itemName=Infracost.infracost-tasks) to your organization by clicking 'Get it free', selecting your organization and clicking Install. If you do not have permission to install the task, you can submit a request to your organization's admin who will get emailed the details of the request.
-2. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
-3. If you are using an Azure Repos repositories follow the [Azure Repos quick start](#azure-repos-quick-start). Currently this only supports Git repositories.
-4. If you are using a GitHub repository follow the [GitHub Repos quick start](#github-repos-quick-start)
+2. If you haven't done so already, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
+3. Retrieve your Infracost API key by running `infracost configure get api_key`.
+4. If you are using an Azure Repos repositories follow the [Azure Repos quick start](#azure-repos-quick-start). Currently this only supports Git repositories.
+5. If you are using a GitHub repository follow the [GitHub Repos quick start](#github-repos-quick-start)
 
 ### Azure Repos Quick start
 
@@ -104,8 +105,8 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
                              --compare-to=/tmp/infracost-base.json \
                              --out-file=/tmp/infracost.json
             displayName: Generate Infracost diff
-            # If you're using Terraform Cloud/Enterprise and have variables stored on there
-            # you can specify the following to automatically retrieve the variables:
+            # If you're using Terraform Cloud/Enterprise and have variables or private modules stored
+            # on there, specify the following to automatically retrieve the variables:
             # env:
             #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
             #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
@@ -116,12 +117,15 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
           #   delete-and-new - Delete previous comments and create a new one.
           #   new - Create a new cost estimate comment on every push.
           # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
+          # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
+          #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
+          #   contain any cloud credentials or secrets.
           - bash: |
-              infracost comment azure-repos --path=/tmp/infracost.json \
-                                            --azure-access-token=$(System.AccessToken) \
-                                            --pull-request=$(System.PullRequest.PullRequestId) \
-                                            --repo-url=$(Build.Repository.Uri) \
-                                            --behavior=update
+               INFRACOST_ENABLE_CLOUD​=true infracost comment azure-repos --path=/tmp/infracost.json \
+                                                                          --azure-access-token=$(System.AccessToken) \
+                                                                          --pull-request=$(System.PullRequest.PullRequestId) \
+                                                                          --repo-url=$(Build.Repository.Uri) \
+                                                                          --behavior=update
             displayName: Post Infracost comment
     ```
    5. select "Save" from the "Save and run" dropdown and add the appropriate commit message
@@ -147,7 +151,13 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
     - `infracostApiKey`: with your Infracost API key as the value, and select 'Keep this value secret'.
 
 5. 🎉 That's it! Send a new pull request to change something in Terraform that costs money. You should see a pull request comment that gets updated, e.g. the 📉 and 📈 emojis will update as changes are pushed!
-6. Follow [the docs](https://www.infracost.io/usage-file) if you'd also like to show cost for of usage-based resources such as AWS Lambda or S3. The usage for these resources are fetched from CloudWatch/cloud APIs and used to calculate an estimate.
+
+    <img src=".azure/assets/azure-pr-comment.png" alt="Example pull request" width="90%" />
+
+6. To see the test pull request costs in Infracost Cloud, [log in](https://dashboard.infracost.io/) > switch to your organization > Projects. To learn more, see [our docs](https://www.infracost.io/docs/infracost_cloud/get_started/).
+
+    <img src=".azure/assets/infracost-cloud-runs.png" alt="Infracost Cloud gives team leads, managers and FinOps practitioners to have visibility across all cost estimates in CI/CD" width="90%" />
+7. Follow [the docs](https://www.infracost.io/usage-file) if you'd also like to show cost for of usage-based resources such as AWS Lambda or S3. The usage for these resources are fetched from CloudWatch/cloud APIs and used to calculate an estimate.
 
 If there are issues, you can enable the 'Enable system diagnostics' check box when running the pipeline manually or for more options see [this page](https://docs.microsoft.com/en-us/azure/devops/pipelines/troubleshooting/review-logs).
 
@@ -213,8 +223,8 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
                                     --format=json \
                                     --out-file=/tmp/infracost-base.json
               displayName: Generate Infracost cost estimate baseline
-            # If you're using Terraform Cloud/Enterprise and have variables stored on there
-            # you can specify the following to automatically retrieve the variables:
+            # If you're using Terraform Cloud/Enterprise and have variables or private modules stored
+            # on there, specify the following to automatically retrieve the variables:
             # env:
             #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
             #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
@@ -226,8 +236,8 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
                                --compare-to=/tmp/infracost-base.json \
                                --out-file=/tmp/infracost.json
               displayName: Generate Infracost diff
-            # If you're using Terraform Cloud/Enterprise and have variables stored on there
-            # you can specify the following to automatically retrieve the variables:
+            # If you're using Terraform Cloud/Enterprise and have variables or private modules stored
+            # on there, specify the following to automatically retrieve the variables:
             # env:
             #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
             #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
@@ -239,12 +249,15 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
           #   hide-and-new - Minimize previous comments and create a new one.
           #   new - Create a new cost estimate comment on every push.
           # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
+          # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
+          #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
+          #   contain any cloud credentials or secrets.
           - bash: |
-              infracost comment github --path=/tmp/infracost.json \
-                                       --github-token=$(githubToken) \
-                                       --pull-request=$(System.PullRequest.PullRequestNumber) \
-                                       --repo=$(Build.Repository.Name) \
-                                       --behavior=update
+              INFRACOST_ENABLE_CLOUD​=true infracost comment github --path=/tmp/infracost.json \
+                                                                    --github-token=$(githubToken) \
+                                                                    --pull-request=$(System.PullRequest.PullRequestNumber) \
+                                                                    --repo=$(Build.Repository.Name) \
+                                                                    --behavior=update
             displayName: Post Infracost comment
       ```
    5. select "Save" from the "Save and run" dropdown and add the appropriate commit message
@@ -254,7 +267,16 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
     - `infracostApiKey`: with your Infracost API key as the value, and select 'Keep this value secret'.
     - `githubToken` with your GitHub access token as the value, and select 'Keep this value secret'.
 4. 🎉 That's it! Send a new pull request to change something in Terraform that costs money. You should see a pull request comment that gets updated, e.g. the 📉 and 📈 emojis will update as changes are pushed!
-5. Follow [the docs](https://www.infracost.io/usage-file) if you'd also like to show cost for of usage-based resources such as AWS Lambda or S3. The usage for these resources are fetched from CloudWatch/cloud APIs and used to calculate an estimate.
+5. 🎉 That's it! Send a new pull request to change something in Terraform that costs money. You should see a pull request comment that gets updated, e.g. the 📉 and 📈 emojis will update as changes are pushed!
+
+   If there are issues, check the GitHub Actions logs and [this page](https://www.infracost.io/docs/troubleshooting/).
+
+    <img src=".azure/assets/pr-comment.png" alt="Example pull request" width="70%" />
+
+6. To see the test pull request costs in Infracost Cloud, [log in](https://dashboard.infracost.io/) > switch to your organization > Projects. To learn more, see [our docs](https://www.infracost.io/docs/infracost_cloud/get_started/).
+
+    <img src=".azure/assets/infracost-cloud-runs.png" alt="Infracost Cloud gives team leads, managers and FinOps practitioners to have visibility across all cost estimates in CI/CD" width="90%" />
+7. Follow [the docs](https://www.infracost.io/usage-file) if you'd also like to show cost for of usage-based resources such as AWS Lambda or S3. The usage for these resources are fetched from CloudWatch/cloud APIs and used to calculate an estimate.
 
 If there are issues, you can enable the 'Enable system diagnostics' check box when running the pipeline manually or for more options see [this page](https://docs.microsoft.com/en-us/azure/devops/pipelines/troubleshooting/review-logs).
 
@@ -315,7 +337,7 @@ steps:
 
 It accepts the following inputs:
 
-- `apiKey`: Required. Your Infracost API key. It can be retrieved by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
+- `apiKey`: Required. Your Infracost API key. It can be retrieved by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
 - `version`: Optional, defaults to `0.9.x`. [SemVer ranges](https://www.npmjs.com/package/semver#ranges) are supported, so instead of a [full version](https://github.com/infracost/infracost/releases) string, you can use `0.9.x`. This enables you to automatically get the latest backward compatible changes in the 0.9 release (e.g. new resources or bug fixes).
 - `currency`: Optional. Convert output from USD to your preferred [ISO 4217 currency](https://en.wikipedia.org/wiki/ISO_4217#Active_codes), e.g. EUR, BRL or INR.
 - `pricingApiEndpoint`: Optional. For [self-hosted](https://www.infracost.io/docs/cloud_pricing_api/self_hosted) users, endpoint of the Cloud Pricing API, e.g. https://cloud-pricing-api.

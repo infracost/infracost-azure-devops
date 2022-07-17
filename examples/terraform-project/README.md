@@ -52,8 +52,8 @@ jobs:
                               --format=json \
                               --out-file=/tmp/infracost-base.json
         displayName: Generate Infracost cost estimate baseline
-        # If you're using Terraform Cloud/Enterprise and have variables stored on there
-        # you can specify the following to automatically retrieve the variables:
+        # If you're using Terraform Cloud/Enterprise and have variables or private modules stored
+        # on there, specify the following to automatically retrieve the variables:
         # env:
         #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
         #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
@@ -65,8 +65,8 @@ jobs:
                          --compare-to=/tmp/infracost-base.json \
                          --out-file=/tmp/infracost.json
         displayName: Generate Infracost diff
-        # If you're using Terraform Cloud/Enterprise and have variables stored on there
-        # you can specify the following to automatically retrieve the variables:
+        # If you're using Terraform Cloud/Enterprise and have variables or private modules stored
+        # on there, specify the following to automatically retrieve the variables:
         # env:
         #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
         #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
@@ -78,8 +78,11 @@ jobs:
       #   hide-and-new - Minimize previous comments and create a new one.
       #   new - Create a new cost estimate comment on every push.
       # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
+      # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
+      #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
+      #   contain any cloud credentials or secrets.
       - bash: |
-          infracost comment github --path=/tmp/infracost.json \
+          INFRACOST_ENABLE_CLOUD​=true infracost comment github --path=/tmp/infracost.json \
                                    --github-token=$(githubToken) \
                                    --pull-request=$(System.PullRequest.PullRequestNumber) \
                                    --repo=$(Build.Repository.Name) \
