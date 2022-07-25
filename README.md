@@ -50,6 +50,12 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
       # the same ssh-agent socket value across all steps. 
       - name: SSH_AUTH_SOCK
         value: /tmp/ssh_agent.sock
+      # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
+      #   complements the open source CLI by giving teams advanced visibility and controls.
+      #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+      #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
+      - name: INFRACOST_ENABLE_CLOUD
+        value: true
 
     jobs:
       - job: infracost
@@ -117,15 +123,12 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
           #   delete-and-new - Delete previous comments and create a new one.
           #   new - Create a new cost estimate comment on every push.
           # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
-          # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
-          #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
-          #   contain any cloud credentials or secrets.
           - bash: |
-               INFRACOST_ENABLE_CLOUD​=true infracost comment azure-repos --path=/tmp/infracost.json \
-                                                                          --azure-access-token=$(System.AccessToken) \
-                                                                          --pull-request=$(System.PullRequest.PullRequestId) \
-                                                                          --repo-url=$(Build.Repository.Uri) \
-                                                                          --behavior=update
+               infracost comment azure-repos --path=/tmp/infracost.json \
+                                             --azure-access-token=$(System.AccessToken) \
+                                             --pull-request=$(System.PullRequest.PullRequestId) \
+                                             --repo-url=$(Build.Repository.Uri) \
+                                             --behavior=update
             displayName: Post Infracost comment
     ```
    5. select "Save" from the "Save and run" dropdown and add the appropriate commit message
@@ -181,7 +184,12 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
         # the same ssh-agent socket value across all steps. 
         - name: SSH_AUTH_SOCK
           value: /tmp/ssh_agent.sock
-
+        # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
+        #   complements the open source CLI by giving teams advanced visibility and controls.
+        #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+        #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
+        - name: INFRACOST_ENABLE_CLOUD
+          value: true
       jobs:
         - job: infracost
           displayName: Run Infracost
@@ -249,15 +257,12 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
           #   hide-and-new - Minimize previous comments and create a new one.
           #   new - Create a new cost estimate comment on every push.
           # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
-          # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
-          #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
-          #   contain any cloud credentials or secrets.
           - bash: |
-              INFRACOST_ENABLE_CLOUD​=true infracost comment github --path=/tmp/infracost.json \
-                                                                    --github-token=$(githubToken) \
-                                                                    --pull-request=$(System.PullRequest.PullRequestNumber) \
-                                                                    --repo=$(Build.Repository.Name) \
-                                                                    --behavior=update
+              infracost comment github --path=/tmp/infracost.json \
+                                       --github-token=$(githubToken) \
+                                       --pull-request=$(System.PullRequest.PullRequestNumber) \
+                                       --repo=$(Build.Repository.Name) \
+                                       --behavior=update
             displayName: Post Infracost comment
       ```
    5. select "Save" from the "Save and run" dropdown and add the appropriate commit message
