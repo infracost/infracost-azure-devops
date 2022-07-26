@@ -50,6 +50,19 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
       # the same ssh-agent socket value across all steps. 
       - name: SSH_AUTH_SOCK
         value: /tmp/ssh_agent.sock
+      # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
+      #   complements the open source CLI by giving teams advanced visibility and controls.
+      #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+      #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
+      - name: INFRACOST_ENABLE_CLOUD
+        value: true
+      # If you're using Terraform Cloud/Enterprise and have variables stored on there
+      # you can specify the following to automatically retrieve the variables:
+      # env:
+      # - name: INFRACOST_TERRAFORM_CLOUD_TOKEN
+      #   value: $(tfcToken)
+      # - name: INFRACOST_TERRAFORM_CLOUD_HOST
+      #   value: app.terraform.io # Change this if you're using Terraform Enterprise
 
     jobs:
       - job: infracost
@@ -92,11 +105,6 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
                                   --format=json \
                                   --out-file=/tmp/infracost-base.json
             displayName: Generate Infracost cost estimate baseline
-            # If you're using Terraform Cloud/Enterprise and have variables stored on there
-            # you can specify the following to automatically retrieve the variables:
-            # env:
-            #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
-            #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
 
           # Generate an Infracost diff and save it to a JSON file.
           - bash: |
@@ -105,11 +113,6 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
                              --compare-to=/tmp/infracost-base.json \
                              --out-file=/tmp/infracost.json
             displayName: Generate Infracost diff
-            # If you're using Terraform Cloud/Enterprise and have variables or private modules stored
-            # on there, specify the following to automatically retrieve the variables:
-            # env:
-            #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
-            #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
 
           # Posts a comment to the PR using the 'update' behavior.
           # This creates a single comment and updates it. The "quietest" option.
@@ -117,15 +120,12 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
           #   delete-and-new - Delete previous comments and create a new one.
           #   new - Create a new cost estimate comment on every push.
           # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
-          # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
-          #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
-          #   contain any cloud credentials or secrets.
           - bash: |
-               INFRACOST_ENABLE_CLOUD​=true infracost comment azure-repos --path=/tmp/infracost.json \
-                                                                          --azure-access-token=$(System.AccessToken) \
-                                                                          --pull-request=$(System.PullRequest.PullRequestId) \
-                                                                          --repo-url=$(Build.Repository.Uri) \
-                                                                          --behavior=update
+               infracost comment azure-repos --path=/tmp/infracost.json \
+                                             --azure-access-token=$(System.AccessToken) \
+                                             --pull-request=$(System.PullRequest.PullRequestId) \
+                                             --repo-url=$(Build.Repository.Uri) \
+                                             --behavior=update
             displayName: Post Infracost comment
     ```
    5. select "Save" from the "Save and run" dropdown and add the appropriate commit message
@@ -181,7 +181,19 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
         # the same ssh-agent socket value across all steps. 
         - name: SSH_AUTH_SOCK
           value: /tmp/ssh_agent.sock
-
+        # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
+        #   complements the open source CLI by giving teams advanced visibility and controls.
+        #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+        #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
+        - name: INFRACOST_ENABLE_CLOUD
+          value: true
+        # If you're using Terraform Cloud/Enterprise and have variables stored on there
+        # you can specify the following to automatically retrieve the variables:
+        # env:
+        # - name: INFRACOST_TERRAFORM_CLOUD_TOKEN
+        #   value: $(tfcToken)
+        # - name: INFRACOST_TERRAFORM_CLOUD_HOST
+        #   value: app.terraform.io # Change this if you're using Terraform Enterprise
       jobs:
         - job: infracost
           displayName: Run Infracost
@@ -223,11 +235,6 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
                                     --format=json \
                                     --out-file=/tmp/infracost-base.json
               displayName: Generate Infracost cost estimate baseline
-            # If you're using Terraform Cloud/Enterprise and have variables or private modules stored
-            # on there, specify the following to automatically retrieve the variables:
-            # env:
-            #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
-            #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
 
             # Generate an Infracost diff and save it to a JSON file.
             - bash: |
@@ -236,11 +243,6 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
                                --compare-to=/tmp/infracost-base.json \
                                --out-file=/tmp/infracost.json
               displayName: Generate Infracost diff
-            # If you're using Terraform Cloud/Enterprise and have variables or private modules stored
-            # on there, specify the following to automatically retrieve the variables:
-            # env:
-            #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
-            #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
 
           # Posts a comment to the PR using the 'update' behavior.
           # This creates a single comment and updates it. The "quietest" option.
@@ -249,15 +251,12 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
           #   hide-and-new - Minimize previous comments and create a new one.
           #   new - Create a new cost estimate comment on every push.
           # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
-          # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
-          #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
-          #   contain any cloud credentials or secrets.
           - bash: |
-              INFRACOST_ENABLE_CLOUD​=true infracost comment github --path=/tmp/infracost.json \
-                                                                    --github-token=$(githubToken) \
-                                                                    --pull-request=$(System.PullRequest.PullRequestNumber) \
-                                                                    --repo=$(Build.Repository.Name) \
-                                                                    --behavior=update
+              infracost comment github --path=/tmp/infracost.json \
+                                       --github-token=$(githubToken) \
+                                       --pull-request=$(System.PullRequest.PullRequestNumber) \
+                                       --repo=$(Build.Repository.Name) \
+                                       --behavior=update
             displayName: Post Infracost comment
       ```
    5. select "Save" from the "Save and run" dropdown and add the appropriate commit message
