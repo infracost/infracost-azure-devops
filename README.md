@@ -56,6 +56,13 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
       #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
       - name: INFRACOST_ENABLE_CLOUD
         value: true
+      # If you're using Terraform Cloud/Enterprise and have variables stored on there
+      # you can specify the following to automatically retrieve the variables:
+      # env:
+      # - name: INFRACOST_TERRAFORM_CLOUD_TOKEN
+      #   value: $(tfcToken)
+      # - name: INFRACOST_TERRAFORM_CLOUD_HOST
+      #   value: app.terraform.io # Change this if you're using Terraform Enterprise
 
     jobs:
       - job: infracost
@@ -98,11 +105,6 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
                                   --format=json \
                                   --out-file=/tmp/infracost-base.json
             displayName: Generate Infracost cost estimate baseline
-            # If you're using Terraform Cloud/Enterprise and have variables stored on there
-            # you can specify the following to automatically retrieve the variables:
-            # env:
-            #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
-            #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
 
           # Generate an Infracost diff and save it to a JSON file.
           - bash: |
@@ -111,11 +113,6 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
                              --compare-to=/tmp/infracost-base.json \
                              --out-file=/tmp/infracost.json
             displayName: Generate Infracost diff
-            # If you're using Terraform Cloud/Enterprise and have variables or private modules stored
-            # on there, specify the following to automatically retrieve the variables:
-            # env:
-            #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
-            #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
 
           # Posts a comment to the PR using the 'update' behavior.
           # This creates a single comment and updates it. The "quietest" option.
@@ -190,6 +187,13 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
         #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
         - name: INFRACOST_ENABLE_CLOUD
           value: true
+        # If you're using Terraform Cloud/Enterprise and have variables stored on there
+        # you can specify the following to automatically retrieve the variables:
+        # env:
+        # - name: INFRACOST_TERRAFORM_CLOUD_TOKEN
+        #   value: $(tfcToken)
+        # - name: INFRACOST_TERRAFORM_CLOUD_HOST
+        #   value: app.terraform.io # Change this if you're using Terraform Enterprise
       jobs:
         - job: infracost
           displayName: Run Infracost
@@ -231,11 +235,6 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
                                     --format=json \
                                     --out-file=/tmp/infracost-base.json
               displayName: Generate Infracost cost estimate baseline
-            # If you're using Terraform Cloud/Enterprise and have variables or private modules stored
-            # on there, specify the following to automatically retrieve the variables:
-            # env:
-            #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
-            #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
 
             # Generate an Infracost diff and save it to a JSON file.
             - bash: |
@@ -244,11 +243,6 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
                                --compare-to=/tmp/infracost-base.json \
                                --out-file=/tmp/infracost.json
               displayName: Generate Infracost diff
-            # If you're using Terraform Cloud/Enterprise and have variables or private modules stored
-            # on there, specify the following to automatically retrieve the variables:
-            # env:
-            #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
-            #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
 
           # Posts a comment to the PR using the 'update' behavior.
           # This creates a single comment and updates it. The "quietest" option.

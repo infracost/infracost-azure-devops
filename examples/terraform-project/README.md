@@ -25,7 +25,14 @@ jobs:
       #   The cost estimates are transmitted in JSON format and do not contain any cloud 
       #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
       - name: INFRACOST_ENABLE_CLOUD
-        value: true        
+        value: true
+      # If you're using Terraform Cloud/Enterprise and have variables stored on there
+      # you can specify the following to automatically retrieve the variables:
+      # env:
+      # - name: INFRACOST_TERRAFORM_CLOUD_TOKEN
+      #   value: $(tfcToken)
+      # - name: INFRACOST_TERRAFORM_CLOUD_HOST
+      #   value: app.terraform.io # Change this if you're using Terraform Enterprise
         
     steps:
       # If you use private modules, add a base 64 encoded secret
@@ -59,11 +66,6 @@ jobs:
                               --format=json \
                               --out-file=/tmp/infracost-base.json
         displayName: Generate Infracost cost estimate baseline
-        # If you're using Terraform Cloud/Enterprise and have variables or private modules stored
-        # on there, specify the following to automatically retrieve the variables:
-        # env:
-        #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
-        #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
 
       # Generate an Infracost diff and save it to a JSON file.
       - bash: |
@@ -72,11 +74,6 @@ jobs:
                          --compare-to=/tmp/infracost-base.json \
                          --out-file=/tmp/infracost.json
         displayName: Generate Infracost diff
-        # If you're using Terraform Cloud/Enterprise and have variables or private modules stored
-        # on there, specify the following to automatically retrieve the variables:
-        # env:
-        #   INFRACOST_TERRAFORM_CLOUD_TOKEN: $(tfcToken)
-        #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
 
       # Posts a comment to the PR using the 'update' behavior.
       # This creates a single comment and updates it. The "quietest" option.
