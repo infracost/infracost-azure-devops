@@ -101,7 +101,7 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
 
           # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
           - bash: |
-              infracost breakdown --path=$(TF_ROOT) \
+              infracost breakdown --path=/tmp/base/$(TF_ROOT) \
                                   --format=json \
                                   --out-file=/tmp/infracost-base.json
             displayName: Generate Infracost cost estimate baseline
