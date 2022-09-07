@@ -38,21 +38,21 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
    3. Choose "Starter Pipeline" in the **"Configure"** stage
    4. Replace the Starter Pipeline yaml with the following:
     ```yaml
-    # The Azure Pipelines docs (https://docs.microsoft.com/en-us/azure/devops/pipelines/process/tasks) describe other options.
-    # Running on pull requests to `master` (or your default branch) is a good default.
-    pr:
-      - master
+    # You can set up build triggers, as per the Quick Start guide to see comments on all pull
+    # requests to a specific branch.
+    # If you are seeing the build triggered twice you can try uncommenting the below line:
+    # trigger: none
 
     variables:
       - name: TF_ROOT
         value: PATH/TO/TERRAFORM/CODE # Update this!
-      # If you use private modules you'll need this env variable to use 
-      # the same ssh-agent socket value across all steps. 
+      # If you use private modules you'll need this env variable to use
+      # the same ssh-agent socket value across all steps.
       - name: SSH_AUTH_SOCK
         value: /tmp/ssh_agent.sock
       # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
       #   complements the open source CLI by giving teams advanced visibility and controls.
-      #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+      #   The cost estimates are transmitted in JSON format and do not contain any cloud
       #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
       - name: INFRACOST_ENABLE_CLOUD
         value: true
@@ -83,7 +83,7 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
           #   displayName: Add GIT_SSH_KEY
           #   env:
           #     GIT_SSH_KEY_BASE_64: $(gitSshKeyBase64)
-   
+
           # Install the Infracost CLI, see https://github.com/infracost/infracost-azure-devops#infracostsetup
           # for other inputs such as version, and pricingApiEndpoint (for self-hosted users).
           - task: InfracostSetup@1
@@ -177,13 +177,13 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
       variables:
         - name: TF_ROOT
           value: PATH/TO/TERRAFORM/CODE # Update this!
-        # If you use private modules you'll need this env variable to use 
-        # the same ssh-agent socket value across all steps. 
+        # If you use private modules you'll need this env variable to use
+        # the same ssh-agent socket value across all steps.
         - name: SSH_AUTH_SOCK
           value: /tmp/ssh_agent.sock
         # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
         #   complements the open source CLI by giving teams advanced visibility and controls.
-        #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+        #   The cost estimates are transmitted in JSON format and do not contain any cloud
         #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
         - name: INFRACOST_ENABLE_CLOUD
           value: true
@@ -213,7 +213,7 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
            #   displayName: Add GIT_SSH_KEY
            #   env:
            #     GIT_SSH_KEY_BASE_64: $(gitSshKeyBase64)
-      
+
             # Install the Infracost CLI, see https://github.com/infracost/infracost-azure-devops#infracostsetup
             # for other inputs such as version, and pricingApiEndpoint (for self-hosted users).
             - task: InfracostSetup@1

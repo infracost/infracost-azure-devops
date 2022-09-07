@@ -59,9 +59,6 @@ Then use Sentinel to test infrastructure cost changes against the policy.
 
 [//]: <> (BEGIN EXAMPLE)
 ```yml
-pr:
-  - master
-
 jobs:
   - job: sentinel
     displayName: Sentinel
