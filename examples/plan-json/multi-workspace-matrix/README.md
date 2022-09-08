@@ -4,9 +4,6 @@ This example shows how to run Infracost in Azure Pipelines against a Terraform p
 
 [//]: <> (BEGIN EXAMPLE)
 ```yml
-pr:
-  - master
-
 jobs:
   - job: multi_workspace_matrix
     displayName: Multi-workspace matrix
@@ -72,15 +69,15 @@ jobs:
     pool:
       vmImage: ubuntu-latest
     dependsOn: [multi_workspace_matrix]
-    
+
     variables:
       # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
       #   complements the open source CLI by giving teams advanced visibility and controls.
-      #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+      #   The cost estimates are transmitted in JSON format and do not contain any cloud
       #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
       - name: INFRACOST_ENABLE_CLOUD
         value: true
-        
+
     steps:
       - task: DownloadBuildArtifacts@0
         inputs:

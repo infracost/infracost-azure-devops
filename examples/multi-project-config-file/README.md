@@ -4,9 +4,6 @@ This example shows how to run Infracost in Azure Pipelines with multiple Terrafo
 
 [//]: <> (BEGIN EXAMPLE)
 ```yml
-pr:
-  - master
-
 jobs:
   - job: multi_project_config_file
     displayName: Multi-project config file
@@ -16,16 +13,16 @@ jobs:
     variables:
       - name: TF_ROOT
         value: examples/multi-project-config-file/code
-      # If you use private modules you'll need this env variable to use 
-      # the same ssh-agent socket value across all steps. 
+      # If you use private modules you'll need this env variable to use
+      # the same ssh-agent socket value across all steps.
       - name: SSH_AUTH_SOCK
         value: /tmp/ssh_agent.sock
       # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
       #   complements the open source CLI by giving teams advanced visibility and controls.
-      #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+      #   The cost estimates are transmitted in JSON format and do not contain any cloud
       #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
       - name: INFRACOST_ENABLE_CLOUD
-        value: true        
+        value: true
 
     steps:
       # If you use private modules, add a base 64 encoded secret
@@ -40,7 +37,7 @@ jobs:
       #   displayName: Add GIT_SSH_KEY
       #   env:
       #     GIT_SSH_KEY_BASE_64: $(gitSshKeyBase64)
-      
+
       - task: InfracostSetup@1
         displayName: Setup Infracost
         inputs:
