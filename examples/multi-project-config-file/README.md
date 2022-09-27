@@ -17,12 +17,6 @@ jobs:
       # the same ssh-agent socket value across all steps.
       - name: SSH_AUTH_SOCK
         value: /tmp/ssh_agent.sock
-      # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
-      #   complements the open source CLI by giving teams advanced visibility and controls.
-      #   The cost estimates are transmitted in JSON format and do not contain any cloud
-      #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
-      - name: INFRACOST_ENABLE_CLOUD
-        value: true
 
     steps:
       # If you use private modules, add a base 64 encoded secret

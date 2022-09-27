@@ -13,12 +13,6 @@ jobs:
     variables:
       - name: TF_ROOT
         value: examples/plan-json/terragrunt/code
-      # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
-      #   complements the open source CLI by giving teams advanced visibility and controls.
-      #   The cost estimates are transmitted in JSON format and do not contain any cloud
-      #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
-      - name: INFRACOST_ENABLE_CLOUD
-        value: true
 
     steps:
       - task: TerraformInstaller@0  # This can be obtained by installing the Microsoft Terraform extension: https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks
