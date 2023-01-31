@@ -253,13 +253,12 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
     - `infracostApiKey`: with your Infracost API key as the value, and select 'Keep this value secret'.
     - `githubToken` with your GitHub access token as the value, and select 'Keep this value secret'.
 4. 🎉 That's it! Send a new pull request to change something in Terraform that costs money. You should see a pull request comment that gets updated, e.g. the 📉 and 📈 emojis will update as changes are pushed!
-5. 🎉 That's it! Send a new pull request to change something in Terraform that costs money. You should see a pull request comment that gets updated, e.g. the 📉 and 📈 emojis will update as changes are pushed!
 
    If there are issues, check the GitHub Actions logs and [this page](https://www.infracost.io/docs/troubleshooting/).
 
     <img src=".azure/assets/pr-comment.png" alt="Example pull request" width="70%" />
 
-6. [Enable Infracost Cloud](https://dashboard.infracost.io/) and trigger your CI/CD pipeline again. This causes the CLI to send its JSON output to your dashboard; the JSON does not contain any cloud credentials or secrets, see the [FAQ](https://infracost.io/docs/faq/) for more information. This is our SaaS product that builds on top of Infracost open source and enables team leads, managers and FinOps practitioners to see all cost estimates from a central place so they can help guide the team. To learn more, see [our docs](https://www.infracost.io/docs/infracost_cloud/get_started/).
+5. [Enable Infracost Cloud](https://dashboard.infracost.io/) and trigger your CI/CD pipeline again. This causes the CLI to send its JSON output to your dashboard; the JSON does not contain any cloud credentials or secrets, see the [FAQ](https://infracost.io/docs/faq/) for more information. This is our SaaS product that builds on top of Infracost open source and enables team leads, managers and FinOps practitioners to see all cost estimates from a central place so they can help guide the team. To learn more, see [our docs](https://www.infracost.io/docs/infracost_cloud/get_started/).
 
     <img src=".azure/assets/infracost-cloud-dashboard.png" alt="Infracost Cloud gives team leads, managers and FinOps practitioners visibility across all cost estimates in CI/CD" width="90%" />
 
