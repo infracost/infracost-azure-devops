@@ -99,6 +99,10 @@ function fixupExamples(examples) {
           steps.push(
             step,
             {
+              bash: `cat /tmp/infracost_comment.md`,
+              displayName: 'Output the comment',
+            },
+            {
               bash: `diff -y ${goldenFilePath} /tmp/infracost_comment.md`,
               displayName: 'Check the comment',
             },
@@ -108,7 +112,15 @@ function fixupExamples(examples) {
 
           steps.push(
             {
-              bash: `diff -y <(jq --sort-keys . ${goldenFilePath}) <(jq --sort-keys . /tmp/slack_message.json)`,
+              bash: `jq --sort-keys . /tmp/slack_message.json > /tmp/slack_message_formatted.json`,
+              displayName: 'Format the Slack message',
+            },
+            {
+              bash: `cat /tmp/slack_message_formatted.json`,
+              displayName: 'Output the Slack message',
+            },
+            {
+              bash: `diff -y ${goldenFilePath} /tmp/slack_message_formatted.json`,
               displayName: 'Check the Slack message',
             },
           );
