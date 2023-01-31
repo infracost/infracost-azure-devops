@@ -315,7 +315,7 @@ This task installs and configures the Infracost CLI.
 
 ```yml
 steps:
-  - task: InfracostSetup@v0
+  - task: InfracostSetup@v1
     inputs:
       apiKey: $(infracostApiKey)
 ```
