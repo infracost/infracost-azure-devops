@@ -61,7 +61,7 @@ Project: infracost/infracost-azure-devops/examples/plan-json/multi-workspace-mat
       Monthly cost depends on usage
         +$0.20 per 1M requests
 
-    + Duration
+    + Duration (first 6B)
       Monthly cost depends on usage
         +$0.0000166667 per GB-seconds
 
@@ -97,7 +97,7 @@ Project: infracost/infracost-azure-devops/examples/plan-json/multi-workspace-mat
       Monthly cost depends on usage
         +$0.20 per 1M requests
 
-    + Duration
+    + Duration (first 6B)
       Monthly cost depends on usage
         +$0.0000166667 per GB-seconds
 
@@ -115,7 +115,7 @@ Key: ~ changed, + added, - removed
 This comment will be updated when the cost estimate changes.
 
 <sub>
-  Is this comment useful? <a href="https://www.infracost.io/feedback/submit/?value=yes" rel="noopener noreferrer" target="_blank">Yes</a>, <a href="https://www.infracost.io/feedback/submit/?value=no" rel="noopener noreferrer" target="_blank">No</a>
+  Is this comment useful? <a href="https://dashboard.infracost.io/feedback/redirect?runId=&value=yes" rel="noopener noreferrer" target="_blank">Yes</a>, <a href="https://dashboard.infracost.io/feedback/redirect?runId=&value=no" rel="noopener noreferrer" target="_blank">No</a>, <a href="https://dashboard.infracost.io/feedback/redirect?runId=&value=other" rel="noopener noreferrer" target="_blank">Other</a>
 </sub>
 
 Comment not posted to GitHub (--dry-run was specified)
