@@ -225,7 +225,7 @@ interface Release {
  * @param name - the name of the repo
  */
 async function getReleases(user: string, name: string): Promise<Release[]> {
-  const url = `https://api.github.com/repos/${user}/${name}/releases`;
+  const url = `https://www.infracost.io/releases.json`;
 
   const res = await fetch(url);
   const resJson = await res.json()
@@ -260,7 +260,7 @@ function exportEnvVars() {
   if (repoUrl) {
     taskLib.setVariable('INFRACOST_VCS_REPOSITORY_URL', repoUrl);
   }
-  
+
   const logLevel = taskLib.getVariable('System.Debug') === 'true' ? 'debug' : 'info';
   taskLib.setVariable('INFRACOST_LOG_LEVEL', logLevel)
 }
