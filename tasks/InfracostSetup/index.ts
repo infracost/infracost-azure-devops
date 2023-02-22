@@ -225,7 +225,7 @@ interface Release {
  * @param name - the name of the repo
  */
 async function getReleases(user: string, name: string): Promise<Release[]> {
-  const url = `https://api.github.com/repos/${user}/${name}/releases`;
+  const url = `https://www.infracost.io/releases.json`;
 
   const res = await fetch(url);
   const resJson = await res.json()

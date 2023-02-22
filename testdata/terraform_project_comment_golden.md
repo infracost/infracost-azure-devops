@@ -29,6 +29,7 @@
   </tbody>
 </table>
 
+
 <details>
 <summary><strong>Infracost output</strong></summary>
 
