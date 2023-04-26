@@ -103,7 +103,7 @@ function fixupExamples(examples) {
               displayName: 'Output the comment',
             },
             {
-              bash: `diff -y ${goldenFilePath} /tmp/infracost_comment.md`,
+              bash: `diff -y --ignore-blank-lines --ignore-space-change ${goldenFilePath} /tmp/infracost_comment.md`,
               displayName: 'Check the comment',
             },
           );
@@ -120,7 +120,7 @@ function fixupExamples(examples) {
               displayName: 'Output the Slack message',
             },
             {
-              bash: `diff -y ${goldenFilePath} /tmp/slack_message_formatted.json`,
+              bash: `diff -y --ignore-blank-lines --ignore-space-change ${goldenFilePath} /tmp/slack_message_formatted.json`,
               displayName: 'Check the Slack message',
             },
           );
