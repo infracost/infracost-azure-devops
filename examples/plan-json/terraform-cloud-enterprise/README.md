@@ -62,6 +62,9 @@ jobs:
                          --format=json \
                          --out-file=/tmp/infracost.json
         displayName: Generate Infracost diff
+        env:
+          # The SYSTEM_ACCESSTOKEN is used to add the pull request metadata to Infracost's output
+          SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
       # Posts a comment to the PR using the 'update' behavior.
       # This creates a single comment and updates it. The "quietest" option.

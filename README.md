@@ -52,7 +52,6 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
         value: /tmp/ssh_agent.sock
       # If you're using Terraform Cloud/Enterprise and have variables stored on there
       # you can specify the following to automatically retrieve the variables:
-      # env:
       # - name: INFRACOST_TERRAFORM_CLOUD_TOKEN
       #   value: $(tfcToken)
       # - name: INFRACOST_TERRAFORM_CLOUD_HOST
