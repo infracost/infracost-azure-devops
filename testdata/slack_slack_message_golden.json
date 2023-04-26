@@ -4,7 +4,7 @@
       "blocks": [
         {
           "text": {
-            "text": "*Infracost output*\n```Project: infracost/infracost-azure-devops/examples/terraform-project/code/dev\nModule path: dev\n\n~ module.base.aws_instance.web_app\n  +$25.40 ($51.97 → $77.37)\n\n    ~ Instance usage (Linux/UNIX, on-demand, t2.micro → t2.medium)\n      +$25.40 ($8.47 → $33.87)\n\nMonthly cost change for infracost/infracost-azure-devops/examples/terraform-project/code/dev (Module path: dev)\nAmount:  +$25.40 ($51.97 → $77.37)\nPercent: +49%\n\n──────────────────────────────────\nProject: infracost/infracost-azure-devops/examples/terraform-project/code/prod\nModule path: prod\n\n~ module.base.aws_instance.web_app\n  +$561 ($748 → $1,308)\n\n    ~ Instance usage (Linux/UNIX, on-demand, m5.4xlarge → m5.8xlarge)\n      +$561 ($561 → $1,121)\n\nMonthly cost change for infracost/infracost-azure-devops/examples/terraform-project/code/prod (Module path: prod)\nAmount:  +$561 ($748 → $1,308)\nPercent: +75%\n\n──────────────────────────────────\nKey: ~ changed, + added, - removed\n\n4 cloud resources were detected:\n∙ 4 were estimated, all of which include usage-based costs, see https://infracost.io/usage-file```",
+            "text": "*Infracost output*\n```Project: infracost/infracost-azure-devops/examples/terraform-project/code/dev\nModule path: dev\n\n~ module.base.aws_instance.web_app\n  +$25 ($52 → $77)\n\n    ~ Instance usage (Linux/UNIX, on-demand, t2.micro → t2.medium)\n      +$25 ($8 → $34)\n\nMonthly cost change for infracost/infracost-azure-devops/examples/terraform-project/code/dev (Module path: dev)\nAmount:  +$25 ($52 → $77)\nPercent: +49%\n\n──────────────────────────────────\nProject: infracost/infracost-azure-devops/examples/terraform-project/code/prod\nModule path: prod\n\n~ module.base.aws_instance.web_app\n  +$561 ($748 → $1,308)\n\n    ~ Instance usage (Linux/UNIX, on-demand, m5.4xlarge → m5.8xlarge)\n      +$561 ($561 → $1,121)\n\nMonthly cost change for infracost/infracost-azure-devops/examples/terraform-project/code/prod (Module path: prod)\nAmount:  +$561 ($748 → $1,308)\nPercent: +75%\n\n──────────────────────────────────\nKey: ~ changed, + added, - removed\n\n4 cloud resources were detected:\n∙ 4 were estimated, all of which include usage-based costs, see https://infracost.io/usage-file```",
             "type": "mrkdwn"
           },
           "type": "section"
@@ -39,7 +39,7 @@
           "type": "plain_text"
         },
         {
-          "text": "+$25.40 ($51.97 → $77.37)",
+          "text": "+$25 ($52 → $77)",
           "type": "plain_text"
         },
         {

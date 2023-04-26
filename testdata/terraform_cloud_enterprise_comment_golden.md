@@ -30,17 +30,17 @@ Project: infracost/infracost-azure-devops/examples/plan-json/terraform-cloud-ent
       +$561
 
     + root_block_device
-    
+
         + Storage (general purpose SSD, gp2)
-          +$5.00
+          +$5
 
     + ebs_block_device[0]
-    
+
         + Storage (provisioned IOPS SSD, io1)
           +$125
-    
+
         + Provisioned IOPS
-          +$52.00
+          +$52
 
 + aws_lambda_function.hello_world
   Monthly cost depends on usage
@@ -48,6 +48,11 @@ Project: infracost/infracost-azure-devops/examples/plan-json/terraform-cloud-ent
     + Requests
       Monthly cost depends on usage
         +$0.20 per 1M requests
+
+
+    + Ephemeral storage
+        Monthly cost depends on usage
+        +$0.0000000309 per GB-seconds
 
     + Duration (first 6B)
       Monthly cost depends on usage

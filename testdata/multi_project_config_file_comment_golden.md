@@ -10,9 +10,9 @@
   <tbody>
     <tr>
       <td>infracost/infracost-azure-devop...i-project-config-file/code/dev</td>
-      <td align="right">$51.97</td>
-      <td align="right">$77.37</td>
-      <td>+$25.40 (+49%)</td>
+      <td align="right">$52</td>
+      <td align="right">$77</td>
+      <td>+$25 (+49%)</td>
     </tr>
     <tr>
       <td>infracost/infracost-azure-devop...-project-config-file/code/prod</td>
@@ -38,13 +38,13 @@ Project: infracost/infracost-azure-devops/examples/multi-project-config-file/cod
 Module path: dev
 
 ~ module.base.aws_instance.web_app
-  +$25.40 ($51.97 → $77.37)
+  +$25 ($52 → $77)
 
     ~ Instance usage (Linux/UNIX, on-demand, t2.micro → t2.medium)
-      +$25.40 ($8.47 → $33.87)
+      +$25 ($8 → $34)
 
 Monthly cost change for infracost/infracost-azure-devops/examples/multi-project-config-file/code/dev (Module path: dev)
-Amount:  +$25.40 ($51.97 → $77.37)
+Amount:  +$25 ($52 → $77)
 Percent: +49%
 
 ──────────────────────────────────
