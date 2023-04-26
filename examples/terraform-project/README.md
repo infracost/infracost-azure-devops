@@ -19,7 +19,6 @@ jobs:
         value: /tmp/ssh_agent.sock
       # If you're using Terraform Cloud/Enterprise and have variables stored on there
       # you can specify the following to automatically retrieve the variables:
-      # env:
       # - name: INFRACOST_TERRAFORM_CLOUD_TOKEN
       #   value: $(tfcToken)
       # - name: INFRACOST_TERRAFORM_CLOUD_HOST
@@ -57,6 +56,9 @@ jobs:
                               --format=json \
                               --out-file=/tmp/infracost-base.json
         displayName: Generate Infracost cost estimate baseline
+        env:
+          # The SYSTEM_ACCESSTOKEN is used to add the pull request metadata to Infracost's output
+          SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
       # Generate an Infracost diff and save it to a JSON file.
       - bash: |
@@ -65,6 +67,9 @@ jobs:
                          --compare-to=/tmp/infracost-base.json \
                          --out-file=/tmp/infracost.json
         displayName: Generate Infracost diff
+        env:
+          # The SYSTEM_ACCESSTOKEN is used to add the pull request metadata to Infracost's output
+          SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
       # Posts a comment to the PR using the 'update' behavior.
       # This creates a single comment and updates it. The "quietest" option.

@@ -100,6 +100,9 @@ jobs:
                               --format=json \
                               --out-file=/tmp/infracost-base.json
         displayName: Generate Infracost cost estimate baseline
+        env:
+          # The SYSTEM_ACCESSTOKEN is used to add the pull request metadata to Infracost's output
+          SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
       # Generate an Infracost diff and save it to a JSON file.
       - bash: |
@@ -107,6 +110,10 @@ jobs:
                          --format=json \
                          --compare-to=/tmp/infracost-base.json \
                          --out-file=/tmp/infracost.json
+        displayName: Generate Infracost diff
+        env:
+          # The SYSTEM_ACCESSTOKEN is used to add the pull request metadata to Infracost's output
+          SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
       - bash: sentinel apply -global breakdown="$(cat /tmp/infracost.json)" examples/sentinel/policy/policy.policy | tee /tmp/sentinel.out
         displayName: Run Sentinel
