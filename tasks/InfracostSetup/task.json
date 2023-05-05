@@ -8,9 +8,9 @@
   "category": "Utility",
   "author": "Infracost",
   "version": {
-    "Major": 1,
+    "Major": 2,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 0
   },
   "instanceNameFormat": "InfracostSetup $(version)",
   "inputs": [
@@ -45,14 +45,6 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "**Only needed for self-hosted users** (https://www.infracost.io/docs/cloud_pricing_api/self_hosted), endpoint of the Cloud Pricing API, e.g. https://cloud-pricing-api."
-    },
-    {
-      "name": "enableDashboard",
-      "type": "boolean",
-      "label": "Enable Dashboard",
-      "defaultValue": false,
-      "required": false,
-      "helpMarkDown": "Enables [Infracost dashboard features](https://www.infracost.io/docs/features/share_links), not supported for self-hosted Cloud Pricing API. Available options are true and false, defaults to false."
     }
   ],
   "execution": {

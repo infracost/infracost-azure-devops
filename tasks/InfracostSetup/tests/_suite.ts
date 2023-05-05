@@ -110,7 +110,6 @@ describe('InfracostSetup', function () {
     expect(() => {
       assert.ok(test.stdOutContained('[mock infracost] configure set pricing_api_endpoint http://example.com'), 'configures pricing_api_endpoint');
       assert.ok(test.stdOutContained('[mock infracost] configure set currency EUR'), 'configures currency');
-      assert.ok(test.stdOutContained('[mock infracost] configure set enable_dashboard true'), 'configures enable_dashboard');
 
       assert.ok(test.succeeded, 'task succeeded');
     }, test, done);

@@ -38,7 +38,7 @@ jobs:
       #   env:
       #     GIT_SSH_KEY_BASE_64: $(gitSshKeyBase64)
 
-      - task: InfracostSetup@1
+      - task: InfracostSetup@2
         displayName: Setup Infracost
         inputs:
           apiKey: $(infracostApiKey)

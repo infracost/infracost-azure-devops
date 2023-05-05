@@ -79,7 +79,7 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
 
           # Install the Infracost CLI, see https://github.com/infracost/infracost-azure-devops#infracostsetup
           # for other inputs such as version, and pricingApiEndpoint (for self-hosted users).
-          - task: InfracostSetup@1
+          - task: InfracostSetup@2
             displayName: Setup Infracost
             inputs:
               apiKey: $(infracostApiKey)
@@ -202,7 +202,7 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
 
             # Install the Infracost CLI, see https://github.com/infracost/infracost-azure-devops#infracostsetup
             # for other inputs such as version, and pricingApiEndpoint (for self-hosted users).
-            - task: InfracostSetup@1
+            - task: InfracostSetup@2
               displayName: Setup Infracost
               inputs:
                 apiKey: $(infracostApiKey)
@@ -313,7 +313,7 @@ This task installs and configures the Infracost CLI.
 
 ```yml
 steps:
-  - task: InfracostSetup@v1
+  - task: InfracostSetup@v2
     inputs:
       apiKey: $(infracostApiKey)
 ```
@@ -324,7 +324,6 @@ It accepts the following inputs:
 - `version`: Optional, defaults to `0.10.x`. [SemVer ranges](https://www.npmjs.com/package/semver#ranges) are supported, so instead of a [full version](https://github.com/infracost/infracost/releases) string, you can use `0.10.x`. This enables you to automatically get the latest backward compatible changes in the 0.10 release (e.g. new resources or bug fixes).
 - `currency`: Optional. Convert output from USD to your preferred [ISO 4217 currency](https://en.wikipedia.org/wiki/ISO_4217#Active_codes), e.g. EUR, BRL or INR.
 - `pricingApiEndpoint`: Optional. For [self-hosted](https://www.infracost.io/docs/cloud_pricing_api/self_hosted) users, endpoint of the Cloud Pricing API, e.g. https://cloud-pricing-api.
-- `enableDashboard`: Optional, defaults to `false`. Enables [Infracost dashboard features](https://www.infracost.io/docs/features/share_links), not supported for self-hosted Cloud Pricing API.
 
 ## Contributing
 
