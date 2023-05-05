@@ -149,12 +149,6 @@ const options: ConfigOption[] = [
     required: false,
     type: 'string'
   },
-  {
-    inputName: 'enableDashboard',
-    configName: 'enable_dashboard',
-    required: false,
-    type: 'boolean'
-  }
 ];
 
 /**
@@ -260,7 +254,7 @@ function exportEnvVars() {
   if (repoUrl) {
     taskLib.setVariable('INFRACOST_VCS_REPOSITORY_URL', repoUrl);
   }
-  
+
   const logLevel = taskLib.getVariable('System.Debug') === 'true' ? 'debug' : 'info';
   taskLib.setVariable('INFRACOST_LOG_LEVEL', logLevel)
 }

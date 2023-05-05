@@ -7,7 +7,6 @@ interface MockHelperOptions {
   version?: string,
   pricingApiEndpoint?: string,
   currency?: string,
-  enableDashboard?: string,
   platform?: 'darwin' | 'linux' | 'win32',
   arch?: 'x32' | 'x64' | 'arm' | 'arm64',
 }
@@ -70,11 +69,6 @@ export default function setupRunner(opts: MockHelperOptions): MockRun.TaskMockRu
       [`infracost configure set currency ${opts.currency}`]: {
         'code': opts.currency === 'invalid-option' ? 1 : 0,
         'stdout': `[mock infracost] configure set currency ${opts.currency}`,
-        'stderr': '',
-      },
-      [`infracost configure set enable_dashboard ${opts.enableDashboard}`]: {
-        'code': 0,
-        'stdout': `[mock infracost] configure set enable_dashboard ${opts.enableDashboard}`,
         'stderr': '',
       },
     },

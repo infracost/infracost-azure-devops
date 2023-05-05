@@ -1,6 +1,6 @@
 {
   "name": "setuptask",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "setup infracost cli task",
   "main": "index.js",
   "directories": {
