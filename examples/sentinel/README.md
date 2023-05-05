@@ -70,7 +70,7 @@ jobs:
         value: examples/terraform-project/code
 
     steps:
-      - task: InfracostSetup@1
+      - task: InfracostSetup@2
         displayName: Setup Infracost
         inputs:
           apiKey: $(infracostApiKey)
