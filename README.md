@@ -155,6 +155,8 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
 
 ### GitHub Repos Quick Start
 
+👉👉 We recommend using the [**free Infracost GitHub App**](https://www.infracost.io/docs/integrations/github_app/) instead as it has many benefits over Azure DevOps integration
+
 1. Create a new pipeline, selecting
    1. **Github** when prompted in the **"Connect"** stage
    2. Select the appropriate repo you wish to integrate Infracost with in the **"Select"** stage
