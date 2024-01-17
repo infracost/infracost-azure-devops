@@ -1,10 +1,8 @@
 # Infracost Azure Pipelines integration
 
-This project provides Azure Pipeline tasks for Infracost along with examples of how you can use it to see cloud cost estimates for Terraform in pull requests 💰
+This project provides the Azure Pipeline integration for Infracost, so you can see cloud cost estimates and FinOps best practices for Terraform in pull requests 💰
 
-<img src="https://github.com/infracost/infracost-azure-devops/blob/master/screenshot.png?raw=true" width="700px" alt="Example screenshot" />
-
-Follow our [migration guide](https://www.infracost.io/docs/guides/azure_devops_migration/) if you used our old version of this repo.
+<img src="https://github.com/infracost/infracost-azure-devops/blob/updates/screenshot.png?raw=true" width="700px" alt="Example screenshot" />
 
 ## Table of contents
 
@@ -13,8 +11,6 @@ Follow our [migration guide](https://www.infracost.io/docs/guides/azure_devops_m
   + [GitHub Repos Quick Start](#github-repos-quick-start)
   * [Troubleshooting](#troubleshooting)
     + [403 error when posting to Azure Repo](#403-error-when-posting-to-azure-repo)
-* [Examples](#examples)
-  + [Cost policy examples](#cost-policy-examples)
 * [Tasks](#tasks)
   + [InfracostSetup](#infracostsetup)
 * [Contributing](#contributing)
@@ -22,7 +18,7 @@ Follow our [migration guide](https://www.infracost.io/docs/guides/azure_devops_m
 
 ## Quick start
 
-The Azure Pipelines Infracost tasks can be used with either Azure Repos (only git is supported) or GitHub repos. The following steps assume a simple Terraform directory is being used, we recommend you use a more relevant [example](#examples) if required.
+The Azure Pipelines Infracost tasks can be used with either Azure Repos (only git is supported) or GitHub repos.
 
 1. In the Azure DevOps Marketplace, Add the  [Infracost tasks](https://marketplace.visualstudio.com/items?itemName=Infracost.infracost-tasks) to your organization by clicking 'Get it free', selecting your organization and clicking Install. If you do not have permission to install the task, you can submit a request to your organization's admin who will get emailed the details of the request.
 2. If you haven't done so already, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
@@ -32,96 +28,150 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
 
 ### Azure Repos Quick start
 
-1. Create a new pipeline, selecting
-   1. **Azure Repos Git** when prompted in the **"Connect"** stage
-   2. Select the appropriate repo you wish to integrate Infracost with in the **"Select"** stage
-   3. Choose "Starter Pipeline" in the **"Configure"** stage
-   4. Replace the Starter Pipeline yaml with the following:
-    ```yaml
-    # You can set up build triggers, as per the Quick Start guide to see comments on all pull
-    # requests to a specific branch.
-    # If you are seeing the build triggered twice you can try uncommenting the below line:
-    # trigger: none
+1. Create a new pipeline, selecting:
+    1. **Azure Repos Git** when prompted in the **"Connect"** stage
+    2. Select the appropriate repo you wish to integrate Infracost with in the **"Select"** stage
+    3. Choose "Starter Pipeline" in the **"Configure"** stage
+    4. Replace the Starter Pipeline yaml with the following.
+    5. select "Save" from the "Save and run" dropdown and add the appropriate commit message
 
-    variables:
-      - name: TF_ROOT
-        value: PATH/TO/TERRAFORM/CODE # Update this!
-      # If you use private modules you'll need this env variable to use
-      # the same ssh-agent socket value across all steps.
-      - name: SSH_AUTH_SOCK
-        value: /tmp/ssh_agent.sock
-      # If you're using Terraform Cloud/Enterprise and have variables stored on there
-      # you can specify the following to automatically retrieve the variables:
-      # - name: INFRACOST_TERRAFORM_CLOUD_TOKEN
-      #   value: $(tfcToken)
-      # - name: INFRACOST_TERRAFORM_CLOUD_HOST
-      #   value: app.terraform.io # Change this if you're using Terraform Enterprise
+      ```yaml
+      # Infracost runs on pull requests and posts PR comments.
+      # If you use Infracost Cloud, Infracost also runs on main/master branch pushes so the dashboard is updated.
+      # The Azure Pipelines docs (https://docs.microsoft.com/en-us/azure/devops/pipelines/process/tasks) describe other trigger options.
+      pr:
+      - '*'
+      trigger:
+        branches:
+          include:
+          - main
+          - master
 
-    jobs:
-      - job: infracost
-        displayName: Run Infracost
-        pool:
-          vmImage: ubuntu-latest
+      variables:
+        # If you use private modules you'll need this env variable to use
+        # the same ssh-agent socket value across all steps.
+        - name: SSH_AUTH_SOCK
+          value: /tmp/ssh_agent.sock
+        # If you store Terraform variables or modules in a 3rd party such as (e.g. TFC or Spacelift),
+        # specify the following so Infracost can automatically retrieve them.
+        # See https://www.infracost.io/docs/features/terraform_modules/#registry-modules for details.
+        # - name: INFRACOST_TERRAFORM_CLOUD_TOKEN
+        #   value: $(tfcToken)
+        # - name: INFRACOST_TERRAFORM_CLOUD_HOST
+        #   value: app.terraform.io
 
-        steps:
-          # If you use private modules, add a base 64 encoded secret
-          # called gitSshKeyBase64 with your private key, so Infracost can access
-          # private repositories (similar to how Terraform/Terragrunt does).
-          # - bash: |
-          #     ssh-agent -a $(SSH_AUTH_SOCK)
-          #     mkdir -p ~/.ssh
-          #     echo "$(echo $GIT_SSH_KEY_BASE_64 | base64 -d)" | tr -d '\r' | ssh-add -
-          #     # Update this to github.com, gitlab.com, bitbucket.org, ssh.dev.azure.com or your source control server's domain
-          #     ssh-keyscan ssh.dev.azure.com >> ~/.ssh/known_hosts
-          #   displayName: Add GIT_SSH_KEY
-          #   env:
-          #     GIT_SSH_KEY_BASE_64: $(gitSshKeyBase64)
+      jobs:
+        # Run Infracost on pull requests
+        - job: infracost_pull_request_checks
+          condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+          displayName: Run Infracost on pull requests
+          pool:
+            vmImage: ubuntu-latest # This pipeline works on windows-latest too
 
-          # Install the Infracost CLI, see https://github.com/infracost/infracost-azure-devops#infracostsetup
-          # for other inputs such as version, and pricingApiEndpoint (for self-hosted users).
-          - task: InfracostSetup@2
-            displayName: Setup Infracost
-            inputs:
-              apiKey: $(infracostApiKey)
+          steps:
+            # If you use private git SSH modules, add a base 64 encoded secret
+            # called gitSshKeyBase64 with your private key, so Infracost can access
+            # private repositories (similar to how Terraform/Terragrunt does).
+            # - bash: |
+            #     ssh-agent -a $(SSH_AUTH_SOCK)
+            #     mkdir -p ~/.ssh
+            #     echo "$(echo $GIT_SSH_KEY_BASE_64 | base64 -d)" | tr -d '\r' | ssh-add -
+            #     # Update this to github.com, gitlab.com, bitbucket.org, ssh.dev.azure.com or your source control server's domain
+            #     ssh-keyscan ssh.dev.azure.com >> ~/.ssh/known_hosts
+            #   displayName: Add GIT_SSH_KEY
+            #   env:
+            #     GIT_SSH_KEY_BASE_64: $(gitSshKeyBase64)
 
-          # Clone the base branch of the pull request (e.g. main/master) into a temp directory.
-          - bash: |
-              branch=$(System.PullRequest.TargetBranch)
-              branch=${branch#refs/heads/}
-              # Try adding the following to git clone if you're having issues cloning a private repo: --config http.extraheader="AUTHORIZATION: bearer $(System.AccessToken)"
-              git clone $(Build.Repository.Uri) --branch=${branch} --single-branch /tmp/base
-            displayName: Checkout base branch
+            # Install the Infracost CLI, see https://github.com/infracost/infracost-azure-devops#infracostsetup
+            - task: InfracostSetup@2
+              displayName: Setup Infracost
+              inputs:
+                apiKey: $(infracostApiKey)
 
-          # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
-          - bash: |
-              infracost breakdown --path=/tmp/base/$(TF_ROOT) \
-                                  --format=json \
-                                  --out-file=/tmp/infracost-base.json
-            displayName: Generate Infracost cost estimate baseline
+            # Clone the base branch of the pull request (e.g. main/master) into a temp directory.
+            - bash: |
+                git clone $(Build.Repository.Uri) --branch=$(System.PullRequest.TargetBranchName) --single-branch /tmp/base
+              displayName: Checkout base branch
 
-          # Generate an Infracost diff and save it to a JSON file.
-          - bash: |
-              infracost diff --path=$(TF_ROOT) \
-                             --format=json \
-                             --compare-to=/tmp/infracost-base.json \
-                             --out-file=/tmp/infracost.json
-            displayName: Generate Infracost diff
+            # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
+            - bash: |
+                cd /tmp/base
+                infracost breakdown --path=. \
+                  --format=json \
+                  --out-file=/tmp/infracost-base.json
+              displayName: Generate Infracost cost estimate baseline
 
-          # Posts a comment to the PR using the 'update' behavior.
-          # This creates a single comment and updates it. The "quietest" option.
-          # The other valid behaviors are:
-          #   delete-and-new - Delete previous comments and create a new one.
-          #   new - Create a new cost estimate comment on every push.
-          # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
-          - bash: |
-               infracost comment azure-repos --path=/tmp/infracost.json \
-                                             --azure-access-token=$(System.AccessToken) \
-                                             --pull-request=$(System.PullRequest.PullRequestId) \
-                                             --repo-url=$(Build.Repository.Uri) \
-                                             --behavior=update
-            displayName: Post Infracost comment
-    ```
-   5. select "Save" from the "Save and run" dropdown and add the appropriate commit message
+            # Generate an Infracost diff and save it to a JSON file.
+            - bash: |
+                cd -
+                infracost diff --path=. \
+                  --format=json \
+                  --compare-to=/tmp/infracost-base.json \
+                  --out-file=/tmp/infracost.json
+              displayName: Generate Infracost diff
+
+            # Add a cost estimate comment to a Azure Repos pull request.
+            - bash: |
+                infracost comment azure-repos \
+                  --path=/tmp/infracost.json \
+                  --azure-access-token=$(System.AccessToken) \
+                  --pull-request=$(System.PullRequest.PullRequestId) \
+                  --repo-url=$(Build.Repository.Uri) \
+                  --behavior=update
+              displayName: Post PR comment
+
+        # The following job is needed when using Infracost Cloud
+        - job: infracost_cloud_update
+          displayName: Update Infracost Cloud
+          condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
+          pool:
+            vmImage: ubuntu-latest # This pipeline works on windows-latest too
+
+          steps:
+            # If you use private git SSH modules, add a base 64 encoded secret
+            # called gitSshKeyBase64 with your private key, so Infracost can access
+            # private repositories (similar to how Terraform/Terragrunt does).
+            # - bash: |
+            #     ssh-agent -a $(SSH_AUTH_SOCK)
+            #     mkdir -p ~/.ssh
+            #     echo "$(echo $GIT_SSH_KEY_BASE_64 | base64 -d)" | tr -d '\r' | ssh-add -
+            #     # Update this to github.com, gitlab.com, bitbucket.org, ssh.dev.azure.com or your source control server's domain
+            #     ssh-keyscan github.com >> ~/.ssh/known_hosts
+            #   displayName: Add GIT_SSH_KEY
+            #   env:
+            #     GIT_SSH_KEY_BASE_64: $(gitSshKeyBase64)
+
+            # Install the Infracost CLI, see https://github.com/infracost/infracost-azure-devops#infracostsetup
+            - task: InfracostSetup@2
+              displayName: Setup Infracost
+              inputs:
+                apiKey: $(infracostApiKey)
+
+            - bash: |
+                PATTERN="Merged PR ([0-9]+):"
+                if [[ "$(Build.SourceVersionMessage)" =~ $PATTERN ]]; then
+                  PR_ID=${BASH_REMATCH[1]}
+                  echo "Updating status of $PR_ID"
+                  curl \
+                    --request POST \
+                    --header "Content-Type: application/json" \
+                    --header "X-API-Key: $(infracostApiKey)" \
+                    --data "{ \"query\": \"mutation {updatePullRequestStatus( url: \\\"$(Build.Repository.Uri)/pullrequest/${PR_ID}\\\", status: MERGED )}\" }" \
+                    "https://dashboard.api.infracost.io/graphql";
+                else
+                  echo "Nothing to do as the commit message did not contain a merged PR ID."
+                fi
+              displayName: 'Update PR status in Infracost Cloud'
+
+            - bash: |
+                infracost breakdown \
+                  --path=. \
+                  --format=json \
+                  --out-file=/tmp/infracost.json
+
+                infracost upload --path=/tmp/infracost.json || echo "Always pass main branch runs even if there are policy failures"
+              displayName: 'Run Infracost on default branch and update Infracost Cloud'
+      ```
 2. Enable pull request build triggers. **Without this, Azure Pipelines do not trigger builds with the pull request ID**, thus comments cannot be posted by the integration.
     1. From your Azure DevOps organization, click on **your project** > Project Settings > Repositories
    ![](https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/repository-settings.png?raw=true)
@@ -145,13 +195,11 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
 
 5. 🎉 That's it! Send a new pull request to change something in Terraform that costs money. You should see a pull request comment that gets updated, e.g. the 📉 and 📈 emojis will update as changes are pushed!
 
-    <img src="https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/azure-pr-comment.png?raw=true" alt="Example pull request" width="90%" />
-
 6. In [Infracost Cloud](https://dashboard.infracost.io), go to Org Settings and enable the dashboard, then trigger your CI/CD pipeline again. This causes the CLI to send its JSON output to your dashboard; the JSON does not contain any cloud credentials or secrets, see the [FAQ](https://infracost.io/docs/faq/) for more information.
 
-    This is our SaaS product that builds on top of Infracost open source. It enables team leads, managers and FinOps practitioners to setup [tagging policies](https://www.infracost.io/docs/infracost_cloud/tagging_policies/), [guardrails](https://www.infracost.io/docs/infracost_cloud/guardrails/) and [best practices](https://www.infracost.io/docs/infracost_cloud/cost_policies/) to help guide the team. For example, you can check for required tag keys/values, or suggest switching AWS GP2 volumes to GP3 as they are more performant and cheaper.
+    This is our SaaS product that builds on top of Infracost open source. It enables you to check for best practices such as using latest generation instance types or block storage, e.g. consider switching AWS gp2 volumes to gp3 as they are more performant and cheaper. Team leads, managers and FinOps practitioners can also setup [tagging policies](https://www.infracost.io/docs/infracost_cloud/tagging_policies/) and [guardrails](https://www.infracost.io/docs/infracost_cloud/guardrails/) to help guide the team.
 
-    <img src="https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/infracost-cloud-dashboard.png?raw=true" alt="Infracost Cloud gives team leads, managers and FinOps practitioners visibility across all cost estimates in CI/CD" width="58%" /><img src="https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/pull-request-tags.png?raw=true" alt="Communicate and enforce FinOps tags in pull requests" width="42%" />
+    <img src="https://github.com/infracost/infracost-azure-devops/blob/updates/.github/assets/infracost-cloud-dashboard.png?raw=true" alt="Infracost Cloud enables you to check for best practices." width="80%" />
 
 If there are issues, you can enable the 'Enable system diagnostics' check box when running the pipeline manually or for more options see [this page](https://docs.microsoft.com/en-us/azure/devops/pipelines/troubleshooting/review-logs).
 
@@ -160,52 +208,60 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
 👉👉 We recommend using the [**free Infracost GitHub App**](https://www.infracost.io/docs/integrations/github_app/) instead as it has many benefits over Azure DevOps integration
 
 1. Create a new pipeline, selecting
-   1. **Github** when prompted in the **"Connect"** stage
-   2. Select the appropriate repo you wish to integrate Infracost with in the **"Select"** stage
-   3. Choose "Starter Pipeline" in the **"Configure"** stage
-   4. Replace the Starter Pipeline yaml with the following:
+    1. **Github** when prompted in the **"Connect"** stage
+    2. Select the appropriate repo you wish to integrate Infracost with in the **"Select"** stage
+    3. Choose "Starter Pipeline" in the **"Configure"** stage
+    4. Replace the Starter Pipeline yaml with the following.
+    5. select "Save" from the "Save and run" dropdown and add the appropriate commit message
+
       ```yaml
-      # The Azure Pipelines docs (https://docs.microsoft.com/en-us/azure/devops/pipelines/process/tasks) describe other options.
-      # Running on pull requests to `master` (or your default branch) is a good default.
+      # Infracost runs on pull requests and posts PR comments.
+      # If you use Infracost Cloud, Infracost also runs on main/master branch pushes so the dashboard is updated.
+      # The Azure Pipelines docs (https://docs.microsoft.com/en-us/azure/devops/pipelines/process/tasks) describe other trigger options.
       pr:
-        - master
+      - '*'
+      trigger:
+        branches:
+          include:
+          - main
+          - master
 
       variables:
-        - name: TF_ROOT
-          value: PATH/TO/TERRAFORM/CODE # Update this!
         # If you use private modules you'll need this env variable to use
         # the same ssh-agent socket value across all steps.
         - name: SSH_AUTH_SOCK
           value: /tmp/ssh_agent.sock
-        # If you're using Terraform Cloud/Enterprise and have variables stored on there
-        # you can specify the following to automatically retrieve the variables:
-        # env:
+        # If you store Terraform variables or modules in a 3rd party such as (e.g. TFC or Spacelift),
+        # specify the following so Infracost can automatically retrieve them.
+        # See https://www.infracost.io/docs/features/terraform_modules/#registry-modules for details.
         # - name: INFRACOST_TERRAFORM_CLOUD_TOKEN
         #   value: $(tfcToken)
         # - name: INFRACOST_TERRAFORM_CLOUD_HOST
-        #   value: app.terraform.io # Change this if you're using Terraform Enterprise
+        #   value: app.terraform.io
+
       jobs:
-        - job: infracost
-          displayName: Run Infracost
+        # Run Infracost on pull requests
+        - job: infracost_pull_request_checks
+          condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+          displayName: Run Infracost on pull requests
           pool:
-            vmImage: ubuntu-latest
+            vmImage: ubuntu-latest # This pipeline works on windows-latest too
 
           steps:
-           # If you use private modules, add a base 64 encoded secret
-           # called gitSshKeyBase64 with your private key, so Infracost can access
-           # private repositories (similar to how Terraform/Terragrunt does).
-           # - bash: |
-           #     ssh-agent -a $(SSH_AUTH_SOCK)
-           #     mkdir -p ~/.ssh
-           #     echo "$(echo $GIT_SSH_KEY_BASE_64 | base64 -d)" | tr -d '\r' | ssh-add -
-           #     # Update this to github.com, gitlab.com, bitbucket.org, ssh.dev.azure.com or your source control server's domain
-           #     ssh-keyscan github.com >> ~/.ssh/known_hosts
-           #   displayName: Add GIT_SSH_KEY
-           #   env:
-           #     GIT_SSH_KEY_BASE_64: $(gitSshKeyBase64)
+            # If you use private git SSH modules, add a base 64 encoded secret
+            # called gitSshKeyBase64 with your private key, so Infracost can access
+            # private repositories (similar to how Terraform/Terragrunt does).
+            # - bash: |
+            #     ssh-agent -a $(SSH_AUTH_SOCK)
+            #     mkdir -p ~/.ssh
+            #     echo "$(echo $GIT_SSH_KEY_BASE_64 | base64 -d)" | tr -d '\r' | ssh-add -
+            #     # Update this to github.com, gitlab.com, bitbucket.org, ssh.dev.azure.com or your source control server's domain
+            #     ssh-keyscan github.com >> ~/.ssh/known_hosts
+            #   displayName: Add GIT_SSH_KEY
+            #   env:
+            #     GIT_SSH_KEY_BASE_64: $(gitSshKeyBase64)
 
             # Install the Infracost CLI, see https://github.com/infracost/infracost-azure-devops#infracostsetup
-            # for other inputs such as version, and pricingApiEndpoint (for self-hosted users).
             - task: InfracostSetup@2
               displayName: Setup Infracost
               inputs:
@@ -213,43 +269,89 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
 
             # Clone the base branch of the pull request (e.g. main/master) into a temp directory.
             - bash: |
-                branch=$(System.PullRequest.TargetBranch)
-                branch=${branch#refs/heads/}
-                git clone $(Build.Repository.Uri) --branch=${branch} --single-branch /tmp/base
+                git clone $(Build.Repository.Uri) --branch=$(System.PullRequest.TargetBranchName) --single-branch /tmp/base
               displayName: Checkout base branch
-
 
             # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
             - bash: |
-                infracost breakdown --path=/tmp/base/$(TF_ROOT) \
-                                    --format=json \
-                                    --out-file=/tmp/infracost-base.json
+                cd /tmp/base
+                infracost breakdown --path=. \
+                  --format=json \
+                  --out-file=/tmp/infracost-base.json
               displayName: Generate Infracost cost estimate baseline
 
             # Generate an Infracost diff and save it to a JSON file.
             - bash: |
-                infracost diff --path=$(TF_ROOT) \
-                               --format=json \
-                               --compare-to=/tmp/infracost-base.json \
-                               --out-file=/tmp/infracost.json
+                cd -
+                infracost diff --path=. \
+                  --format=json \
+                  --compare-to=/tmp/infracost-base.json \
+                  --out-file=/tmp/infracost.json
               displayName: Generate Infracost diff
 
-          # Posts a comment to the PR using the 'update' behavior.
-          # This creates a single comment and updates it. The "quietest" option.
-          # The other valid behaviors are:
-          #   delete-and-new - Delete previous comments and create a new one.
-          #   hide-and-new - Minimize previous comments and create a new one.
-          #   new - Create a new cost estimate comment on every push.
-          # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
-          - bash: |
-              infracost comment github --path=/tmp/infracost.json \
-                                       --github-token=$(githubToken) \
-                                       --pull-request=$(System.PullRequest.PullRequestNumber) \
-                                       --repo=$(Build.Repository.Name) \
-                                       --behavior=update
-            displayName: Post Infracost comment
+            # Add a cost estimate comment to a Azure Repos pull request.
+            - bash: |
+                infracost comment github \
+                  --path=/tmp/infracost.json \
+                  --github-token=$(githubToken)\
+                  --pull-request=$(System.PullRequest.PullRequestNumber) \
+                  --repo=$(Build.Repository.Name) \
+                  --behavior=update
+              displayName: Post PR comment
+
+        # The following job is needed when using Infracost Cloud
+        - job: infracost_cloud_update
+          displayName: Update Infracost Cloud
+          condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
+          pool:
+            vmImage: ubuntu-latest # This pipeline works on windows-latest too
+
+          steps:
+            # If you use private git SSH modules, add a base 64 encoded secret
+            # called gitSshKeyBase64 with your private key, so Infracost can access
+            # private repositories (similar to how Terraform/Terragrunt does).
+            # - bash: |
+            #     ssh-agent -a $(SSH_AUTH_SOCK)
+            #     mkdir -p ~/.ssh
+            #     echo "$(echo $GIT_SSH_KEY_BASE_64 | base64 -d)" | tr -d '\r' | ssh-add -
+            #     # Update this to github.com, gitlab.com, bitbucket.org, ssh.dev.azure.com or your source control server's domain
+            #     ssh-keyscan github.com >> ~/.ssh/known_hosts
+            #   displayName: Add GIT_SSH_KEY
+            #   env:
+            #     GIT_SSH_KEY_BASE_64: $(gitSshKeyBase64)
+
+            # Install the Infracost CLI, see https://github.com/infracost/infracost-azure-devops#infracostsetup
+            - task: InfracostSetup@2
+              displayName: Setup Infracost
+              inputs:
+                apiKey: $(infracostApiKey)
+
+            - bash: |
+                PATTERN1="Merge pull request #([0-9]+) from"
+                PATTERN2=".* \(#([0-9]+)\)"
+
+                if [[ "$(Build.SourceVersionMessage)" =~ $PATTERN1 || "$(Build.SourceVersionMessage)" =~ $PATTERN2 ]]; then
+                  PR_ID=${BASH_REMATCH[1]}
+                  echo "Updating status of $PR_ID"
+                  curl \
+                    --request POST \
+                    --header "Content-Type: application/json" \
+                    --header "X-API-Key: $(infracostApiKey)" \
+                    --data "{ \"query\": \"mutation {updatePullRequestStatus( url: \\\"$(Build.Repository.Uri)/pulls/${PR_ID}\\\", status: MERGED )}\" }" \
+                    "https://dashboard.api.infracost.io/graphql";
+                else
+                  echo "Nothing to do as the commit message did not contain a merged PR ID."
+                fi
+              displayName: 'Update PR status in Infracost Cloud'
+
+            - bash: |
+                infracost breakdown --path=. \
+                  --format=json \
+                  --out-file=/tmp/infracost.json
+
+                infracost upload --path=/tmp/infracost.json || echo "Always pass main branch runs even if there are policy failures"
+              displayName: 'Run Infracost on default branch and update Infracost Cloud'
       ```
-   5. select "Save" from the "Save and run" dropdown and add the appropriate commit message
 2. Create a GitHub token (such as [Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)) that can be used by the pipeline to post comments. The token needs to have `repo` scope so it can post comments. If you are using SAML single sign-on, you must first [authorize the token](https://docs.github.com/en/enterprise-cloud@latest/authentication/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on).
 3. Add secret variables to the pipeline you created in step 1. From your Azure DevOps organization, click on your project > Pipelines > your pipeline > Edit > Variables, and click the + sign to add variables for the following:
 
@@ -259,13 +361,11 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
 
    If there are issues, check the GitHub Actions logs and [this page](https://www.infracost.io/docs/troubleshooting/).
 
-    <img src="https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/pr-comment.png?raw=true" alt="Example pull request" width="70%" />
-
 5. In [Infracost Cloud](https://dashboard.infracost.io), go to Org Settings and enable the dashboard, then trigger your CI/CD pipeline again. This causes the CLI to send its JSON output to your dashboard; the JSON does not contain any cloud credentials or secrets, see the [FAQ](https://infracost.io/docs/faq/) for more information.
 
-    This is our SaaS product that builds on top of Infracost open source. It enables team leads, managers and FinOps practitioners to setup [tagging policies](https://www.infracost.io/docs/infracost_cloud/tagging_policies/), [guardrails](https://www.infracost.io/docs/infracost_cloud/guardrails/) and [best practices](https://www.infracost.io/docs/infracost_cloud/cost_policies/) to help guide the team. For example, you can check for required tag keys/values, or suggest switching AWS GP2 volumes to GP3 as they are more performant and cheaper.
+    This is our SaaS product that builds on top of Infracost open source. It enables you to check for best practices such as using latest generation instance types or block storage, e.g. consider switching AWS gp2 volumes to gp3 as they are more performant and cheaper. Team leads, managers and FinOps practitioners can also setup [tagging policies](https://www.infracost.io/docs/infracost_cloud/tagging_policies/) and [guardrails](https://www.infracost.io/docs/infracost_cloud/guardrails/) to help guide the team.
 
-    <img src="https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/infracost-cloud-dashboard.png?raw=true" alt="Infracost Cloud gives team leads, managers and FinOps practitioners visibility across all cost estimates in CI/CD" width="58%" /><img src="https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/pull-request-tags.png?raw=true" alt="Communicate and enforce FinOps tags in pull requests" width="42%" />
+    <img src="https://github.com/infracost/infracost-azure-devops/blob/updates/.github/assets/infracost-cloud-dashboard.png?raw=true" alt="Infracost Cloud enables you to check for best practices." width="80%" />
 
 If there are issues, you can enable the 'Enable system diagnostics' check box when running the pipeline manually or for more options see [this page](https://docs.microsoft.com/en-us/azure/devops/pipelines/troubleshooting/review-logs).
 
@@ -291,15 +391,6 @@ Try the following steps:
         SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     ```
 3. If you're using the "Limit job authorization scope to current project for non-release pipelines" option in Azure Repos, see [this article](https://www.linkedin.com/pulse/azure-pipelines-infracost-dreaded-403-error-pete-mallam/): this changes the Build Service Identity that will be performing the task. So rather than the usual Build Service for the project, you are now using a Build Service for the Organization.
-
-## Examples
-
-The [examples](https://github.com/infracost/infracost-azure-devops/tree/master/examples) directory demonstrates how these actions can be used for different projects. They all work by using the default Infracost CLI option that parses HCL, thus a Terraform Plan JSON is not needed.
-  - [Terraform/Terragrunt projects (single or multi)](https://github.com/infracost/infracost-azure-devops/tree/master/examples/terraform-project): a repository containing one or more (e.g. mono repos) Terraform or Terragrunt projects
-  - [Multi-projects using a config file](https://github.com/infracost/infracost-azure-devops/tree/master/examples/multi-project-config-file): repository containing multiple Terraform projects that need different inputs, i.e. variable files or Terraform workspaces
-  - [Slack](https://github.com/infracost/infracost-azure-devops/tree/master/examples/slack): send cost estimates to Slack
-
-For advanced use cases where the estimate needs to be generated from Terraform plan JSON files, see the [plan JSON examples here](https://github.com/infracost/infracost-azure-devops/tree/master/examples#plan-json-examples).
 
 ## Task
 
