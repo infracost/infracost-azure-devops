@@ -1,39 +1,30 @@
 
-💰 Infracost estimate: **monthly cost will increase by $586 (+73%) 📈**
+<h3>Infracost report</h3>
+<h4>💰 Monthly cost will increase by $586 📈</h4>
 <table>
   <thead>
     <td>Project</td>
-    <td>Previous</td>
-    <td>New</td>
-    <td>Diff</td>
+    <td>Cost change</td>
+    <td>New monthly cost</td>
   </thead>
   <tbody>
     <tr>
       <td>infracost/infracost-azure-devop...les/terraform-project/code/dev</td>
-      <td align="right">$52</td>
-      <td align="right">$77</td>
       <td>+$25 (+49%)</td>
+      <td align="right">$77</td>
     </tr>
     <tr>
       <td>infracost/infracost-azure-devop...es/terraform-project/code/prod</td>
-      <td align="right">$748</td>
-      <td align="right">$1,308</td>
       <td>+$561 (+75%)</td>
-    </tr>
-    <tr>
-      <td>All projects</td>
-      <td align="right">$800</td>
-      <td align="right">$1,386</td>
-      <td>+$586 (+73%)</td>
+      <td align="right">$1,308</td>
     </tr>
   </tbody>
 </table>
-
-
 <details>
-<summary><strong>Infracost output</strong></summary>
+<summary>Cost details</summary>
 
 ```
+──────────────────────────────────
 Project: infracost/infracost-azure-devops/examples/terraform-project/code/dev
 Module path: dev
 
@@ -66,13 +57,17 @@ Key: ~ changed, + added, - removed
 
 4 cloud resources were detected:
 ∙ 4 were estimated, all of which include usage-based costs, see https://infracost.io/usage-file
+
+Infracost estimate: Monthly cost will increase by $586 ↑
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┓
+┃ Project                                                          ┃ Cost change  ┃ New monthly cost ┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━┫
+┃ infracost/infracost-azure-devop...les/terraform-project/code/dev ┃  +$25 (+49%) ┃ $77              ┃
+┃ infracost/infracost-azure-devop...es/terraform-project/code/prod ┃ +$561 (+75%) ┃ $1,308           ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━┛
 ```
 </details>
-
-This comment will be updated when the cost estimate changes.
-
-<sub>
-  Is this comment useful? <a href="https://dashboard.infracost.io/feedback/redirect?runId=&value=yes" rel="noopener noreferrer" target="_blank">Yes</a>, <a href="https://dashboard.infracost.io/feedback/redirect?runId=&value=no" rel="noopener noreferrer" target="_blank">No</a>, <a href="https://dashboard.infracost.io/feedback/redirect?runId=&value=other" rel="noopener noreferrer" target="_blank">Other</a>
+<sub>This comment will be updated when code changes.
 </sub>
 
 Comment not posted to GitHub (--dry-run was specified)
