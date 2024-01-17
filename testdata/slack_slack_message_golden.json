@@ -4,7 +4,7 @@
       "blocks": [
         {
           "text": {
-            "text": "*Infracost output*\n```Project: infracost/infracost-azure-devops/examples/terraform-project/code/dev\nModule path: dev\n\n~ module.base.aws_instance.web_app\n  +$25 ($52 → $77)\n\n    ~ Instance usage (Linux/UNIX, on-demand, t2.micro → t2.medium)\n      +$25 ($8 → $34)\n\nMonthly cost change for infracost/infracost-azure-devops/examples/terraform-project/code/dev (Module path: dev)\nAmount:  +$25 ($52 → $77)\nPercent: +49%\n\n──────────────────────────────────\nProject: infracost/infracost-azure-devops/examples/terraform-project/code/prod\nModule path: prod\n\n~ module.base.aws_instance.web_app\n  +$561 ($748 → $1,308)\n\n    ~ Instance usage (Linux/UNIX, on-demand, m5.4xlarge → m5.8xlarge)\n      +$561 ($561 → $1,121)\n\nMonthly cost change for infracost/infracost-azure-devops/examples/terraform-project/code/prod (Module path: prod)\nAmount:  +$561 ($748 → $1,308)\nPercent: +75%\n\n──────────────────────────────────\nKey: ~ changed, + added, - removed\n\n4 cloud resources were detected:\n∙ 4 were estimated, all of which include usage-based costs, see https://infracost.io/usage-file```",
+            "text": "*Infracost output*\n```──────────────────────────────────\nProject: infracost/infracost-azure-devops/examples/terraform-project/code/dev\nModule path: dev\n\n~ module.base.aws_instance.web_app\n  +$25 ($52 → $77)\n\n    ~ Instance usage (Linux/UNIX, on-demand, t2.micro → t2.medium)\n      +$25 ($8 → $34)\n\nMonthly cost change for infracost/infracost-azure-devops/examples/terraform-project/code/dev (Module path: dev)\nAmount:  +$25 ($52 → $77)\nPercent: +49%\n\n──────────────────────────────────\nProject: infracost/infracost-azure-devops/examples/terraform-project/code/prod\nModule path: prod\n\n~ module.base.aws_instance.web_app\n  +$561 ($748 → $1,308)\n\n    ~ Instance usage (Linux/UNIX, on-demand, m5.4xlarge → m5.8xlarge)\n      +$561 ($561 → $1,121)\n\nMonthly cost change for infracost/infracost-azure-devops/examples/terraform-project/code/prod (Module path: prod)\nAmount:  +$561 ($748 → $1,308)\nPercent: +75%\n\n──────────────────────────────────\nKey: ~ changed, + added, - removed\n\n4 cloud resources were detected:\n∙ 4 were estimated, all of which include usage-based costs, see https://infracost.io/usage-file\n\nInfracost estimate: Monthly cost will increase by $586 ↑\n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┓\n┃ Project                                                          ┃ Cost change  ┃ New monthly cost ┃\n┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━┫\n┃ infracost/infracost-azure-devop...les/terraform-project/code/dev ┃  +$25 (+49%) ┃ $77              ┃\n┃ infracost/infracost-azure-devop...es/terraform-project/code/prod ┃ +$561 (+75%) ┃ $1,308           ┃\n┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━┛```",
             "type": "mrkdwn"
           },
           "type": "section"
@@ -16,7 +16,7 @@
   "blocks": [
     {
       "text": {
-        "text": "💰 Infracost estimate: *monthly cost will increase by $586 (+73%) 📈*",
+        "text": "💰 Infracost estimate: *Monthly cost will increase by $586 📈*",
         "type": "mrkdwn"
       },
       "type": "section"
@@ -61,5 +61,7 @@
       ],
       "type": "section"
     }
-  ]
+  ],
+  "delete_original": false,
+  "replace_original": false
 }

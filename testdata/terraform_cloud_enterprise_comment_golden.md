@@ -1,26 +1,25 @@
 
-💰 Infracost estimate: **monthly cost will increase by $743 📈**
+<h3>Infracost report</h3>
+<h4>💰 Monthly cost will increase by $743 📈</h4>
 <table>
   <thead>
     <td>Project</td>
-    <td>Previous</td>
-    <td>New</td>
-    <td>Diff</td>
+    <td>Cost change</td>
+    <td>New monthly cost</td>
   </thead>
   <tbody>
     <tr>
       <td>infracost/infracost-azure-devop...loud-enterprise/code/plan.json</td>
-      <td align="right">$0</td>
-      <td align="right">$743</td>
       <td>+$743</td>
+      <td align="right">$743</td>
     </tr>
   </tbody>
 </table>
-
 <details>
-<summary><strong>Infracost output</strong></summary>
+<summary>Cost details</summary>
 
 ```
+──────────────────────────────────
 Project: infracost/infracost-azure-devops/examples/plan-json/terraform-cloud-enterprise/code/plan.json
 
 + aws_instance.web_app
@@ -30,15 +29,15 @@ Project: infracost/infracost-azure-devops/examples/plan-json/terraform-cloud-ent
       +$561
 
     + root_block_device
-
+    
         + Storage (general purpose SSD, gp2)
           +$5
 
     + ebs_block_device[0]
-
+    
         + Storage (provisioned IOPS SSD, io1)
           +$125
-
+    
         + Provisioned IOPS
           +$52
 
@@ -49,9 +48,8 @@ Project: infracost/infracost-azure-devops/examples/plan-json/terraform-cloud-ent
       Monthly cost depends on usage
         +$0.20 per 1M requests
 
-
     + Ephemeral storage
-        Monthly cost depends on usage
+      Monthly cost depends on usage
         +$0.0000000309 per GB-seconds
 
     + Duration (first 6B)
@@ -66,13 +64,16 @@ Key: ~ changed, + added, - removed
 
 2 cloud resources were detected:
 ∙ 2 were estimated, all of which include usage-based costs, see https://infracost.io/usage-file
+
+Infracost estimate: Monthly cost will increase by $743 ↑
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┓
+┃ Project                                                          ┃ Cost change ┃ New monthly cost ┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━┫
+┃ infracost/infracost-azure-devop...loud-enterprise/code/plan.json ┃       +$743 ┃ $743             ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━┛
 ```
 </details>
-
-This comment will be updated when the cost estimate changes.
-
-<sub>
-  Is this comment useful? <a href="https://dashboard.infracost.io/feedback/redirect?runId=&value=yes" rel="noopener noreferrer" target="_blank">Yes</a>, <a href="https://dashboard.infracost.io/feedback/redirect?runId=&value=no" rel="noopener noreferrer" target="_blank">No</a>, <a href="https://dashboard.infracost.io/feedback/redirect?runId=&value=other" rel="noopener noreferrer" target="_blank">Other</a>
+<sub>This comment will be updated when code changes.
 </sub>
 
 Comment not posted to GitHub (--dry-run was specified)
