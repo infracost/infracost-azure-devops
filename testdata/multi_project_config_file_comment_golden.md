@@ -43,7 +43,7 @@ Project: infracost/infracost-azure-devops/examples/multi-project-config-file/cod
 Module path: prod
 
 ~ module.base.aws_instance.web_app
-+$561 ($748 → $1,308)
+  +$561 ($748 → $1,308)
 
     ~ Instance usage (Linux/UNIX, on-demand, m5.4xlarge → m5.8xlarge)
       +$561 ($561 → $1,121)

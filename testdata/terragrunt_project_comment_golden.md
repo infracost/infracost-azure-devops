@@ -25,6 +25,7 @@
 
 ```
 ──────────────────────────────────
+Project: infracost/infracost-azure-devops/examples/plan-json/terragrunt/code/dev/plan.json
 
 
 + aws_instance.web_app
@@ -86,7 +87,6 @@ Project: infracost/infracost-azure-devops/examples/plan-json/terragrunt/code/pro
         + Provisioned IOPS
           +$52
 
-+ aws_lambda_function.hello_world
 + aws_lambda_function.hello_world
   Monthly cost depends on usage
 
