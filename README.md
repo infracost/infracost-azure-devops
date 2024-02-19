@@ -2,7 +2,7 @@
 
 This project provides the Azure Pipeline integration for Infracost, so you can see cloud cost estimates and FinOps best practices for Terraform in pull requests 💰
 
-<img src="https://github.com/infracost/infracost-azure-devops/blob/updates/screenshot.png?raw=true" width="700px" alt="Example screenshot" />
+<img src="https://github.com/infracost/infracost-azure-devops/blob/master/screenshot.png?raw=true" width="700px" alt="Example screenshot" />
 
 ## Table of contents
 
@@ -20,7 +20,7 @@ This project provides the Azure Pipeline integration for Infracost, so you can s
 
 The Azure Pipelines Infracost tasks can be used with either Azure Repos (only git is supported) or GitHub repos.
 
-1. In the Azure DevOps Marketplace, Add the  [Infracost tasks](https://marketplace.visualstudio.com/items?itemName=Infracost.infracost-tasks) to your organization by clicking 'Get it free', selecting your organization and clicking Install. If you do not have permission to install the task, you can submit a request to your organization's admin who will get emailed the details of the request.
+1. In the Azure DevOps Marketplace, add the [Infracost tasks](https://marketplace.visualstudio.com/items?itemName=Infracost.infracost-tasks) to your organization by clicking 'Get it free', selecting your organization and clicking Install. If you do not have permission to install the task, you can submit a request to your organization's admin who will get emailed the details of the request.
 2. If you haven't done so already, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
 3. Retrieve your Infracost API key by running `infracost configure get api_key`.
 4. If you are using an Azure Repos repositories follow the [Azure Repos quick start](#azure-repos-quick-start). Currently this only supports Git repositories.
@@ -193,19 +193,19 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
 
     - `infracostApiKey`: with your Infracost API key as the value, and select 'Keep this value secret'.
 
-5. 🎉 That's it! Send a new pull request to change something in Terraform that costs money. You should see a pull request comment that gets updated, e.g. the 📉 and 📈 emojis will update as changes are pushed!
+5. Follow [these simple steps](https://www.infracost.io/docs/infracost_cloud/get_started/#4-send-a-pull-request) to test the integration. This is important as it ensures the CLI commands are running correctly in your workflow 👌
 
-6. In [Infracost Cloud](https://dashboard.infracost.io), go to Org Settings and enable the dashboard, then trigger your CI/CD pipeline again. This causes the CLI to send its JSON output to your dashboard; the JSON does not contain any cloud credentials or secrets, see the [FAQ](https://infracost.io/docs/faq/) for more information.
+6. [Infracost Cloud](https://dashboard.infracost.io) is our SaaS product that builds on top of Infracost open source. It enables team leads, managers and FinOps practitioners to setup [tagging policies](https://www.infracost.io/docs/infracost_cloud/tagging_policies/), [guardrails](https://www.infracost.io/docs/infracost_cloud/guardrails/) and [best practices](https://www.infracost.io/docs/infracost_cloud/cost_policies/) to help guide the team. For example, you can check for required tag keys/values, or suggest switching AWS gp2 volumes to gp3 as they are more performant and cheaper.
 
-    This is our SaaS product that builds on top of Infracost open source. It enables you to check for best practices such as using latest generation instance types or block storage, e.g. consider switching AWS gp2 volumes to gp3 as they are more performant and cheaper. Team leads, managers and FinOps practitioners can also setup [tagging policies](https://www.infracost.io/docs/infracost_cloud/tagging_policies/) and [guardrails](https://www.infracost.io/docs/infracost_cloud/guardrails/) to help guide the team.
+    If you **do not** want to use [Infracost Cloud](https://dashboard.infracost.io), go to Org Settings and disable the dashboard. This causes the CLI not to send its JSON output to your dashboard; the JSON does not contain any cloud credentials or secrets, see the [FAQ](https://infracost.io/docs/faq/) for more information.
 
-    <img src="https://github.com/infracost/infracost-azure-devops/blob/updates/.github/assets/infracost-cloud-dashboard.png?raw=true" alt="Infracost Cloud enables you to check for best practices." width="80%" />
+    <img src="https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/infracost-cloud-dashboard.png?raw=true" alt="Infracost Cloud enables you to check for best practices such as using latest generation instance types or block storage, as well as setup tagging policies and guardrails to help guide the team." width="80%" />
 
 If there are issues, you can enable the 'Enable system diagnostics' check box when running the pipeline manually or for more options see [this page](https://docs.microsoft.com/en-us/azure/devops/pipelines/troubleshooting/review-logs).
 
 ### GitHub Repos Quick Start
 
-👉👉 We recommend using the [**free Infracost GitHub App**](https://www.infracost.io/docs/integrations/github_app/) instead as it has many benefits over Azure DevOps integration
+👉👉 We recommend using the [**free Infracost GitHub App**](https://www.infracost.io/docs/integrations/github_app/) as it's much simpler to setup and faster to run
 
 1. Create a new pipeline, selecting
     1. **Github** when prompted in the **"Connect"** stage
@@ -357,19 +357,17 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
 
     - `infracostApiKey`: with your Infracost API key as the value, and select 'Keep this value secret'.
     - `githubToken` with your GitHub access token as the value, and select 'Keep this value secret'.
-4. 🎉 That's it! Send a new pull request to change something in Terraform that costs money. You should see a pull request comment that gets updated, e.g. the 📉 and 📈 emojis will update as changes are pushed!
+4. Follow [these simple steps](https://www.infracost.io/docs/infracost_cloud/get_started/#4-send-a-pull-request) to test the integration. This is important as it ensures the CLI commands are running correctly in your workflow 👌
 
-   If there are issues, check the GitHub Actions logs and [this page](https://www.infracost.io/docs/troubleshooting/).
+5. [Infracost Cloud](https://dashboard.infracost.io) is our SaaS product that builds on top of Infracost open source. It enables team leads, managers and FinOps practitioners to setup [tagging policies](https://www.infracost.io/docs/infracost_cloud/tagging_policies/), [guardrails](https://www.infracost.io/docs/infracost_cloud/guardrails/) and [best practices](https://www.infracost.io/docs/infracost_cloud/cost_policies/) to help guide the team. For example, you can check for required tag keys/values, or suggest switching AWS gp2 volumes to gp3 as they are more performant and cheaper.
 
-5. In [Infracost Cloud](https://dashboard.infracost.io), go to Org Settings and enable the dashboard, then trigger your CI/CD pipeline again. This causes the CLI to send its JSON output to your dashboard; the JSON does not contain any cloud credentials or secrets, see the [FAQ](https://infracost.io/docs/faq/) for more information.
+    If you **do not** want to use [Infracost Cloud](https://dashboard.infracost.io), go to Org Settings and disable the dashboard. This causes the CLI not to send its JSON output to your dashboard; the JSON does not contain any cloud credentials or secrets, see the [FAQ](https://infracost.io/docs/faq/) for more information.
 
-    This is our SaaS product that builds on top of Infracost open source. It enables you to check for best practices such as using latest generation instance types or block storage, e.g. consider switching AWS gp2 volumes to gp3 as they are more performant and cheaper. Team leads, managers and FinOps practitioners can also setup [tagging policies](https://www.infracost.io/docs/infracost_cloud/tagging_policies/) and [guardrails](https://www.infracost.io/docs/infracost_cloud/guardrails/) to help guide the team.
-
-    <img src="https://github.com/infracost/infracost-azure-devops/blob/updates/.github/assets/infracost-cloud-dashboard.png?raw=true" alt="Infracost Cloud enables you to check for best practices." width="80%" />
-
-If there are issues, you can enable the 'Enable system diagnostics' check box when running the pipeline manually or for more options see [this page](https://docs.microsoft.com/en-us/azure/devops/pipelines/troubleshooting/review-logs).
+    <img src="https://github.com/infracost/infracost-azure-devops/blob/master/.github/assets/infracost-cloud-dashboard.png?raw=true" alt="Infracost Cloud enables you to check for best practices such as using latest generation instance types or block storage, as well as setup tagging policies and guardrails to help guide the team." width="80%" />
 
 ### Troubleshooting
+
+If there are issues, you can enable the 'Enable system diagnostics' check box when running the pipeline manually or for more options see [this page](https://docs.microsoft.com/en-us/azure/devops/pipelines/troubleshooting/review-logs).
 
 #### 403 error when posting to Azure Repo
 If you receive a 403 error when running the `infracost comment` command in your pipeline:
