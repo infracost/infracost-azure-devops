@@ -90,7 +90,7 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
 
             # Clone the base branch of the pull request (e.g. main/master) into a temp directory.
             - bash: |
-                git clone $(Build.Repository.Uri) --branch=$(System.PullRequest.TargetBranchName) --single-branch /tmp/base
+                git -c http.extraheader="Authorization: Bearer $(System.AccessToken)" $(Build.Repository.Uri) --branch=$(System.PullRequest.TargetBranchName) --single-branch /tmp/base
               displayName: Checkout base branch
 
             # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
@@ -269,7 +269,9 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
 
             # Clone the base branch of the pull request (e.g. main/master) into a temp directory.
             - bash: |
-                git clone $(Build.Repository.Uri) --branch=$(System.PullRequest.TargetBranchName) --single-branch /tmp/base
+                REPO_URL=$(Build.Repository.Uri)
+                REPO_URL_WITH_TOKEN=${REPO_URL/https:\/\//https:\/\/x-access-token:$(githubToken)@}
+                git clone $REPO_URL_WITH_TOKEN --branch=$(System.PullRequest.TargetBranchName) --single-branch /tmp/base
               displayName: Checkout base branch
 
             # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
