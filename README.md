@@ -377,7 +377,7 @@ If you receive a 403 error when running the `infracost comment` command in your 
 
 Try the following steps:
 1. This is normally because the build agent does not have permissions to post to the Azure Repo. Make sure step 3 (Enable Azure Pipelines to post pull request comments) of the [Azure Repos Quick start](#azure-repos-quick-start) is complete.
-2. If the above step does not fix the issue, change the "Post Infracost comment" task to the following format so instead of using `$(System.AccessToken)` directly, you pass it in via an environment variable:
+2. If the above step does not fix the issue, change the "Post Infracost comment" task to the following format so instead of using `$(System.AccessToken)` directly, you pass it in via an environment variable. Also add the `SYSTEM_ACCESSTOKEN` env lines to the `git clone`, `infracost breakdown` and `infracost diff` steps as they use that token to get pull request metadata such as the pull request title.
     ```sh
     - script: |
         infracost comment azure-repos \
@@ -391,6 +391,20 @@ Try the following steps:
         SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     ```
 3. If you're using the "Limit job authorization scope to current project for non-release pipelines" option in Azure Repos, see [this article](https://www.linkedin.com/pulse/azure-pipelines-infracost-dreaded-403-error-pete-mallam/): this changes the Build Service Identity that will be performing the task. So rather than the usual Build Service for the project, you are now using a Build Service for the Organization.
+
+4. If none of the above steps work, create a new Azure DevOps [Personal Access Token (PAT)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) with full permissions so you can test that the pull request comment can be posted using your PAT. Add the token as a secret variable called `personalAccessToken` in your Azure pipeline; so go to project > Pipelines > your pipeline > Edit > Variables, and click the + sign to add it. Also tick the 'Keep this value secret' option. Once you have tested that the pull request comments work fine with your PAT, contact Microsoft Azure Support to see if they can help you troubleshoot why your built-in System.AccessToken does not have permission to post pull request comments.
+  ```sh
+    - script: |
+        infracost comment azure-repos \
+          --path=/tmp/infracost.json \
+          --azure-access-token=$PERSONAL_ACCESS_TOKEN \
+          --pull-request=$(System.PullRequest.PullRequestId) \
+          --repo-url=$(Build.Repository.Uri) \
+          --behavior=update
+      displayName: Post Infracost comment
+      env:
+        PERSONAL_ACCESS_TOKEN: $(personalAccessToken)
+  ```
 
 ## Task
 
