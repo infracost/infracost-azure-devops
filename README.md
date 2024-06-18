@@ -377,7 +377,7 @@ If you receive a 403 error when running the `infracost comment` command in your 
 
 Try the following steps:
 1. This is normally because the build agent does not have permissions to post to the Azure Repo. Make sure step 3 (Enable Azure Pipelines to post pull request comments) of the [Azure Repos Quick start](#azure-repos-quick-start) is complete.
-2. If the above step does not fix the issue, change the "Post Infracost comment" task to the following format so instead of using `$(System.AccessToken)` directly, you pass it in via an environment variable. Also add the `SYSTEM_ACCESSTOKEN` env lines to the `infracost breakdown` and `infracost diff` steps as they use that token to get pull request metadata such as the pull request title.
+2. If the above step does not fix the issue, change the "Post Infracost comment" task to the following format so instead of using `$(System.AccessToken)` directly, you pass it in via an environment variable. Also add the `SYSTEM_ACCESSTOKEN` env lines to the `git clone`, `infracost breakdown` and `infracost diff` steps as they use that token to get pull request metadata such as the pull request title.
     ```sh
     - script: |
         infracost comment azure-repos \
