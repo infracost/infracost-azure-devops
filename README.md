@@ -1,5 +1,10 @@
 # Infracost Azure Pipelines integration
 
+### Try the Azure Repos App
+👉👉 We recommend using the [**free Infracost Azure Repos App**](https://www.infracost.io/docs/integrations/azure_repos_app/) as it's much simpler to setup and faster to run
+
+---
+
 This project provides the Azure Pipeline integration for Infracost, so you can see cloud cost estimates and FinOps best practices for Terraform in pull requests 💰
 
 <img src="https://github.com/infracost/infracost-azure-devops/blob/master/screenshot.png?raw=true" width="700px" alt="Example screenshot" />
