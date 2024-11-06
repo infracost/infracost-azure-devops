@@ -105,6 +105,8 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
                   --format=json \
                   --out-file=/tmp/infracost-base.json
               displayName: Generate Infracost cost estimate baseline
+              env:
+                SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
             # Generate an Infracost diff and save it to a JSON file.
             - bash: |
@@ -114,6 +116,8 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
                   --compare-to=/tmp/infracost-base.json \
                   --out-file=/tmp/infracost.json
               displayName: Generate Infracost diff
+              env:
+                SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
             # Add a cost estimate comment to a Azure Repos pull request.
             - bash: |
@@ -124,6 +128,8 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
                   --repo-url=$(Build.Repository.Uri) \
                   --behavior=update
               displayName: Post PR comment
+              env:
+                SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
         # The following job is needed when using Infracost Cloud
         - job: infracost_cloud_update
@@ -176,6 +182,8 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
 
                 infracost upload --path=/tmp/infracost.json || echo "Always pass main branch runs even if there are policy failures"
               displayName: 'Run Infracost on default branch and update Infracost Cloud'
+              env:
+                SYSTEM_ACCESSTOKEN: $(System.AccessToken)
       ```
 2. Enable pull request build triggers. **Without this, Azure Pipelines do not trigger builds with the pull request ID**, thus comments cannot be posted by the integration.
     1. From your Azure DevOps organization, click on **your project** > Project Settings > Repositories
@@ -286,6 +294,8 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
                   --format=json \
                   --out-file=/tmp/infracost-base.json
               displayName: Generate Infracost cost estimate baseline
+              env:
+                SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
             # Generate an Infracost diff and save it to a JSON file.
             - bash: |
@@ -295,6 +305,8 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
                   --compare-to=/tmp/infracost-base.json \
                   --out-file=/tmp/infracost.json
               displayName: Generate Infracost diff
+              env:
+                SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
             # Add a cost estimate comment to a Azure Repos pull request.
             - bash: |
@@ -305,6 +317,8 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
                   --repo=$(Build.Repository.Name) \
                   --behavior=update
               displayName: Post PR comment
+              env:
+                SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
         # The following job is needed when using Infracost Cloud
         - job: infracost_cloud_update
@@ -358,6 +372,8 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
 
                 infracost upload --path=/tmp/infracost.json || echo "Always pass main branch runs even if there are policy failures"
               displayName: 'Run Infracost on default branch and update Infracost Cloud'
+              env:
+                SYSTEM_ACCESSTOKEN: $(System.AccessToken)
       ```
 2. Create a GitHub token (such as [Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)) that can be used by the pipeline to post comments. The token needs to have `repo` scope so it can post comments. If you are using SAML single sign-on, you must first [authorize the token](https://docs.github.com/en/enterprise-cloud@latest/authentication/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on).
 3. Add secret variables to the pipeline you created in step 1. From your Azure DevOps organization, click on your project > Pipelines > your pipeline > Edit > Variables, and click the + sign to add variables for the following:
