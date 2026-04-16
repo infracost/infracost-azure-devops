@@ -50,6 +50,7 @@ jobs:
       # Generate an Infracost diff and save it to a JSON file.
       - bash: |
           infracost diff --path=$(TF_ROOT)/$(WORKSPACE)-plan.json \
+                         --project-name=$(WORKSPACE) \
                          --format=json \
                          --out-file=/tmp/infracost_$(WORKSPACE).json
         displayName: Generate Infracost diff
