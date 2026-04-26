@@ -103,7 +103,13 @@ function fixupExamples(examples) {
               displayName: 'Output the comment',
             },
             {
+              bash: `cp /tmp/infracost_comment.md ${goldenFilePath}`,
+              condition: `eq(variables['UPDATE_GOLDENS'], 'true')`,
+              displayName: 'Update golden file',
+            },
+            {
               bash: `diff -y --ignore-blank-lines --ignore-space-change ${goldenFilePath} /tmp/infracost_comment.md`,
+              condition: `ne(variables['UPDATE_GOLDENS'], 'true')`,
               displayName: 'Check the comment',
             },
           );
@@ -120,7 +126,13 @@ function fixupExamples(examples) {
               displayName: 'Output the Slack message',
             },
             {
+              bash: `cp /tmp/slack_message_formatted.json ${goldenFilePath}`,
+              condition: `eq(variables['UPDATE_GOLDENS'], 'true')`,
+              displayName: 'Update golden file',
+            },
+            {
               bash: `diff -y --ignore-blank-lines --ignore-space-change ${goldenFilePath} /tmp/slack_message_formatted.json`,
+              condition: `ne(variables['UPDATE_GOLDENS'], 'true')`,
               displayName: 'Check the Slack message',
             },
           );
@@ -128,6 +140,18 @@ function fixupExamples(examples) {
           steps.push(step);
         }
       }
+
+      // Publish updated golden files as artifacts when UPDATE_GOLDENS is set
+      steps.push({
+        task: 'PublishBuildArtifacts@1',
+        condition: `eq(variables['UPDATE_GOLDENS'], 'true')`,
+        displayName: 'Upload updated golden files',
+        inputs: {
+          PathtoPublish: './testdata',
+          ArtifactName: `golden_${job.job}`,
+          publishLocation: 'Container',
+        },
+      });
 
       job.steps = steps;
     }
