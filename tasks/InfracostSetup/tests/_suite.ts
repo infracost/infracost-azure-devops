@@ -3,15 +3,14 @@ import * as assert from 'assert';
 import * as MockTest from 'azure-pipelines-task-lib/mock-test';
 
 describe('InfracostSetup', function () {
-  function expect(validator: () => void, runner: MockTest.MockTestRunner, done: Mocha.Done) {
+  function expect(validator: () => void, runner: MockTest.MockTestRunner) {
     try {
       validator();
-      done();
     }
     catch (error) {
       console.log('STDERR', runner.stderr);
       console.log('STDOUT', runner.stdout);
-      done(error);
+      throw error;
     }
   }
 
@@ -31,7 +30,7 @@ describe('InfracostSetup', function () {
     delete process.env['INFRACOST_VCS_REPOSITORY_URL'];
   });
 
-  it('installs the latest version of Infracost CLI', async (done: Mocha.Done) => {
+  it('installs the latest version of Infracost CLI', async () => {
     const test = await run('pass-default.js');
 
     expect(() => {
@@ -58,10 +57,10 @@ describe('InfracostSetup', function () {
       assert.ok(test.stdOutContained('[mock infracost] configure set api_key test-api-key'), 'configures API key');
 
       assert.ok(test.succeeded, 'task succeeded');
-    }, test, done);
+    }, test);
   });
 
-  it('installs the specific CLI version when version is provided', async (done: Mocha.Done) => {
+  it('installs the specific CLI version when version is provided', async () => {
     const test = await run('pass-with-version.js');
 
     expect(() => {
@@ -71,10 +70,10 @@ describe('InfracostSetup', function () {
       );
 
       assert.ok(test.succeeded, 'task succeeded');
-    }, test, done);
+    }, test);
   });
 
-  it('installs the CLI version when version is provided as latest', async (done: Mocha.Done) => {
+  it('installs the CLI version when version is provided as latest', async () => {
     const test = await run('pass-with-latest-version.js');
 
     expect(() => {
@@ -84,10 +83,10 @@ describe('InfracostSetup', function () {
       );
 
       assert.ok(test.succeeded, 'task succeeded');
-    }, test, done);
+    }, test);
   });
 
-  it('installs the CLI when OS is Windows', async (done: Mocha.Done) => {
+  it('installs the CLI when OS is Windows', async () => {
     const test = await run('pass-os-windows.js');
 
     expect(() => {
@@ -101,10 +100,10 @@ describe('InfracostSetup', function () {
       );
 
       assert.ok(test.succeeded, 'task succeeded');
-    }, test, done);
+    }, test);
   });
 
-  it('configures CLI when options are provided', async (done: Mocha.Done) => {
+  it('configures CLI when options are provided', async () => {
     const test = await run('pass-with-inputs.js');
 
     expect(() => {
@@ -112,25 +111,25 @@ describe('InfracostSetup', function () {
       assert.ok(test.stdOutContained('[mock infracost] configure set currency EUR'), 'configures currency');
 
       assert.ok(test.succeeded, 'task succeeded');
-    }, test, done);
+    }, test);
   });
 
-  it('fails when API key is missing', async (done: Mocha.Done) => {
+  it('fails when API key is missing', async () => {
     const test = await run('fail-api-key-missing.js');
 
     expect(() => {
       assert.ok(test.stdOutContained('Input required: apiKey'), 'requires apiKey');
 
       assert.ok(test.failed, 'task failed');
-    }, test, done);
+    }, test);
   });
 
-  it('fails when invalid input is provided for configuration', async (done: Mocha.Done) => {
+  it('fails when invalid input is provided for configuration', async () => {
     const test = await run('fail-invalid-input.js');
 
     expect(() => {
 
       assert.ok(test.failed, 'task failed');
-    }, test, done);
+    }, test);
   });
 });
