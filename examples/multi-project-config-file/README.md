@@ -1,6 +1,8 @@
 # Multi-project using config file
 
-This example shows how to run Infracost in Azure Pipelines with multiple Terraform projects using a config file. The [config file]((https://www.infracost.io/docs/config_file/)) can be used to specify variable files or the Terraform workspaces for different projects.
+This example shows how to run Infracost in Azure Pipelines with one or more Terraform projects using a config file. The [config file]((https://www.infracost.io/docs/config_file/)) can be used to specify variable files or the Terraform workspaces for different projects.
+
+The config file path passed to `--config-file` (here `$(TF_ROOT)/infracost.yml`) should be a path *relative to the repository root* (not an absolute path), and the same config file must exist on the base branch you're comparing against. The paths *inside* the config (e.g. `path: ./terraform`) are resolved relative to the config file itself, so this lets the base-branch run pick up the base-branch's project files rather than the merge-request branch's.
 
 [//]: <> (BEGIN EXAMPLE)
 ```yml
@@ -45,7 +47,10 @@ jobs:
         displayName: Checkout base branch
 
       # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
+      # `cd /tmp/base` ensures $(TF_ROOT)/infracost.yml resolves against the base-branch checkout.
+      # If your config file isn't checked into the base branch, uncomment the `cp` line below to copy it across before running.
       - bash: |
+          # cp $(TF_ROOT)/infracost.yml /tmp/base/$(TF_ROOT)/infracost.yml
           cd /tmp/base
           infracost breakdown --config-file=$(TF_ROOT)/infracost.yml \
                               --format=json \
