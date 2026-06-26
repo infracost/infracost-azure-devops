@@ -95,8 +95,12 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
 
             # Clone the base branch of the pull request (e.g. main/master) into a temp directory.
             - bash: |
-                git -c http.extraheader="Authorization: Bearer $(System.AccessToken)" clone $(Build.Repository.Uri) --branch=$(System.PullRequest.TargetBranchName) --single-branch /tmp/base
+                git -c http.extraheader="Authorization: Bearer $SYSTEM_ACCESSTOKEN" clone "$REPO_URL" --branch="$TARGET_BRANCH" --single-branch /tmp/base
               displayName: Checkout base branch
+              env:
+                SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+                REPO_URL: $(Build.Repository.Uri)
+                TARGET_BRANCH: $(System.PullRequest.TargetBranchName)
 
             # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
             - bash: |
@@ -160,19 +164,23 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
 
             - bash: |
                 PATTERN="Merged PR ([0-9]+):"
-                if [[ "$(Build.SourceVersionMessage)" =~ $PATTERN ]]; then
+                if [[ "$SOURCE_VERSION_MESSAGE" =~ $PATTERN ]]; then
                   PR_ID=${BASH_REMATCH[1]}
                   echo "Updating status of $PR_ID"
                   curl \
                     --request POST \
                     --header "Content-Type: application/json" \
-                    --header "X-API-Key: $(infracostApiKey)" \
-                    --data "{ \"query\": \"mutation {updatePullRequestStatus( url: \\\"$(Build.Repository.Uri)/pullrequest/${PR_ID}\\\", status: MERGED )}\" }" \
+                    --header "X-API-Key: $INFRACOST_API_KEY" \
+                    --data "{ \"query\": \"mutation {updatePullRequestStatus( url: \\\"$REPO_URL/pullrequest/${PR_ID}\\\", status: MERGED )}\" }" \
                     "https://dashboard.api.infracost.io/graphql";
                 else
                   echo "Nothing to do as the commit message did not contain a merged PR ID."
                 fi
               displayName: 'Update PR status in Infracost Cloud'
+              env:
+                SOURCE_VERSION_MESSAGE: $(Build.SourceVersionMessage)
+                INFRACOST_API_KEY: $(infracostApiKey)
+                REPO_URL: $(Build.Repository.Uri)
 
             - bash: |
                 infracost breakdown \
@@ -282,10 +290,13 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
 
             # Clone the base branch of the pull request (e.g. main/master) into a temp directory.
             - bash: |
-                REPO_URL=$(Build.Repository.Uri)
-                REPO_URL_WITH_TOKEN=${REPO_URL/https:\/\//https:\/\/x-access-token:$(githubToken)@}
-                git clone $REPO_URL_WITH_TOKEN --branch=$(System.PullRequest.TargetBranchName) --single-branch /tmp/base
+                REPO_URL_WITH_TOKEN=${REPO_URL/https:\/\//https:\/\/x-access-token:$GITHUB_TOKEN@}
+                git clone "$REPO_URL_WITH_TOKEN" --branch="$TARGET_BRANCH" --single-branch /tmp/base
               displayName: Checkout base branch
+              env:
+                REPO_URL: $(Build.Repository.Uri)
+                GITHUB_TOKEN: $(githubToken)
+                TARGET_BRANCH: $(System.PullRequest.TargetBranchName)
 
             # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
             - bash: |
@@ -351,19 +362,23 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
                 PATTERN1="Merge pull request #([0-9]+) from"
                 PATTERN2=".* \(#([0-9]+)\)"
 
-                if [[ "$(Build.SourceVersionMessage)" =~ $PATTERN1 || "$(Build.SourceVersionMessage)" =~ $PATTERN2 ]]; then
+                if [[ "$SOURCE_VERSION_MESSAGE" =~ $PATTERN1 || "$SOURCE_VERSION_MESSAGE" =~ $PATTERN2 ]]; then
                   PR_ID=${BASH_REMATCH[1]}
                   echo "Updating status of $PR_ID"
                   curl \
                     --request POST \
                     --header "Content-Type: application/json" \
-                    --header "X-API-Key: $(infracostApiKey)" \
-                    --data "{ \"query\": \"mutation {updatePullRequestStatus( url: \\\"$(Build.Repository.Uri)/pulls/${PR_ID}\\\", status: MERGED )}\" }" \
+                    --header "X-API-Key: $INFRACOST_API_KEY" \
+                    --data "{ \"query\": \"mutation {updatePullRequestStatus( url: \\\"$REPO_URL/pulls/${PR_ID}\\\", status: MERGED )}\" }" \
                     "https://dashboard.api.infracost.io/graphql";
                 else
                   echo "Nothing to do as the commit message did not contain a merged PR ID."
                 fi
               displayName: 'Update PR status in Infracost Cloud'
+              env:
+                SOURCE_VERSION_MESSAGE: $(Build.SourceVersionMessage)
+                INFRACOST_API_KEY: $(infracostApiKey)
+                REPO_URL: $(Build.Repository.Uri)
 
             - bash: |
                 infracost breakdown --path=. \
