@@ -1,5 +1,5 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
-import * as toolLib from 'azure-pipelines-tool-lib/tool';
+import * as toolLib from './tool';
 import * as path from 'path';
 import * as os from 'os';
 import * as semver from 'semver';

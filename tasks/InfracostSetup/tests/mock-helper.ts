@@ -37,7 +37,7 @@ export default function setupRunner(opts: MockHelperOptions): MockRun.TaskMockRu
     };
   });
 
-  taskRunner.registerMock('azure-pipelines-tool-lib/tool', {
+  taskRunner.registerMock('./tool', {
     downloadTool: (url: string): string => {
       console.log(`[mock tool-lib] downloadTool ${url}`);
       return 'mocked-path-to-downloaded-file';
