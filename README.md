@@ -16,6 +16,7 @@ This project provides the Azure Pipeline integration for Infracost, so you can s
   + [GitHub Repos Quick Start](#github-repos-quick-start)
   * [Troubleshooting](#troubleshooting)
     + [403 error when posting to Azure Repo](#403-error-when-posting-to-azure-repo)
+    + [Your infracost.yml config file is ignored](#your-infracostyml-config-file-is-ignored)
 * [Tasks](#tasks)
   + [InfracostSetup](#infracostsetup)
 * [Contributing](#contributing)
@@ -103,6 +104,8 @@ The Azure Pipelines Infracost tasks can be used with either Azure Repos (only gi
                 TARGET_BRANCH: $(System.PullRequest.TargetBranchName)
 
             # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
+            # If you use an infracost.yml config file, pass --config-file=infracost.yml instead of --path=. here and in the
+            # diff step below, otherwise it is ignored. See https://github.com/infracost/infracost-azure-devops#your-infracostyml-config-file-is-ignored
             - bash: |
                 cd /tmp/base
                 infracost breakdown --path=. \
@@ -299,6 +302,8 @@ If there are issues, you can enable the 'Enable system diagnostics' check box wh
                 TARGET_BRANCH: $(System.PullRequest.TargetBranchName)
 
             # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
+            # If you use an infracost.yml config file, pass --config-file=infracost.yml instead of --path=. here and in the
+            # diff step below, otherwise it is ignored. See https://github.com/infracost/infracost-azure-devops#your-infracostyml-config-file-is-ignored
             - bash: |
                 cd /tmp/base
                 infracost breakdown --path=. \
@@ -442,6 +447,28 @@ Try the following steps:
         PERSONAL_ACCESS_TOKEN: $(personalAccessToken)
   ```
 
+#### Your infracost.yml config file is ignored
+
+Your [config file](https://www.infracost.io/docs/features/config_file/) works when you run Infracost locally, but the pipeline ignores it. The logs show a line like this, and the pull request comment shows projects you did not define:
+
+```
+INFO Autodetected 4 Terraform projects across 4 root modules
+```
+
+This task installs the `0.10.x` CLI, which does not look for `infracost.yml` on its own. You have to point at the file with `--config-file`, and that flag cannot be used together with `--path`.
+
+So in every `infracost breakdown` and `infracost diff` step, swap `--path=.` for `--config-file=`:
+
+```sh
+# before
+infracost breakdown --path=. --format=json --out-file=/tmp/infracost-base.json
+
+# after
+infracost breakdown --config-file=infracost.yml --format=json --out-file=/tmp/infracost-base.json
+```
+
+Leave the `infracost comment` and `infracost upload` steps as they are. Their `--path` points at the JSON output file, not at your Terraform.
+
 ## Task
 
 We recommend you use the above quick start guide and examples, which uses the following task.
@@ -460,7 +487,7 @@ steps:
 It accepts the following inputs:
 
 - `apiKey`: Required. Your Infracost API key. It can be retrieved by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
-- `version`: Optional, defaults to `0.10.x`. [SemVer ranges](https://www.npmjs.com/package/semver#ranges) are supported, so instead of a [full version](https://github.com/infracost/infracost/releases) string, you can use `0.10.x`. This enables you to automatically get the latest backward compatible changes in the 0.10 release (e.g. new resources or bug fixes).
+- `version`: Optional, defaults to `0.10.x`. [SemVer ranges](https://www.npmjs.com/package/semver#ranges) are supported, so instead of a [full version](https://github.com/infracost/infracost/releases) string, you can use `0.10.x`. This enables you to automatically get the latest backward compatible changes in the 0.10 release (e.g. new resources or bug fixes). This task can only install `0.10.x` releases. It cannot install Infracost v2 yet, so a range like `2.x` fails to download. If you use an `infracost.yml` config file, see [Your infracost.yml config file is ignored](#your-infracostyml-config-file-is-ignored).
 - `currency`: Optional. Convert output from USD to your preferred [ISO 4217 currency](https://en.wikipedia.org/wiki/ISO_4217#Active_codes), e.g. EUR, BRL or INR.
 
 ## Contributing
