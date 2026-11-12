@@ -69,6 +69,11 @@ describe('InfracostSetup', function () {
         'downloads the specified version',
       );
 
+      assert.ok(
+        !test.stdOutContained('this task targets 0.10.x'),
+        'does not warn about CLI 2.x',
+      );
+
       assert.ok(test.succeeded, 'task succeeded');
     }, test);
   });
@@ -82,7 +87,46 @@ describe('InfracostSetup', function () {
         'downloads the latest version',
       );
 
+      assert.ok(
+        !test.stdOutContained('this task targets 0.10.x'),
+        'does not flag latest as CLI 2.x, the latest release of infracost/infracost is 0.10.x',
+      );
+
       assert.ok(test.succeeded, 'task succeeded');
+    }, test);
+  });
+
+  it('fails when the version provided is a CLI 2.x release', async () => {
+    const test = await run('fail-with-v2-version.js');
+
+    expect(() => {
+      assert.ok(
+        test.stdOutContained('version: 2.19.1 installs Infracost CLI 2.19.1, but this task targets 0.10.x'),
+        'names the version the pipeline set',
+      );
+      assert.ok(
+        test.stdOutContained('https://www.infracost.io/docs/integrations/azure_pipelines/'),
+        'points at the CI 2.x setup guide',
+      );
+      assert.ok(
+        !test.stdOutContained('[mock tool-lib] downloadTool'),
+        'does not attempt a download that can only 404',
+      );
+
+      assert.ok(test.failed, 'task failed');
+    }, test);
+  });
+
+  it('fails when the version range resolves to a CLI 2.x release', async () => {
+    const test = await run('fail-with-range-resolving-to-v2.js');
+
+    expect(() => {
+      assert.ok(
+        test.stdOutContained('version: >=0.9 installs Infracost CLI 2.18.3, but this task targets 0.10.x'),
+        'names the range the pipeline set, not just what it resolved to',
+      );
+
+      assert.ok(test.failed, 'task failed');
     }, test);
   });
 

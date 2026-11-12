@@ -118,6 +118,28 @@ async function getVersion(): Promise<string> {
 }
 
 /**
+ * cli2SetupGuide points at the Infracost CI 2.x instructions for Azure Pipelines.
+ */
+const cli2SetupGuide = 'https://www.infracost.io/docs/integrations/azure_pipelines/';
+
+/**
+ * checkCLI2() throws when the version resolves to a CLI 2.x release. The 2.x assets are
+ * published in the infracost/cli repo, which this task never downloads from, so the
+ * install can only 404.
+ *
+ * @param version - the version resolved by getVersion()
+ */
+function checkCLI2(version: string) {
+  const resolved = semver.coerce(version);
+  if (resolved && resolved.major >= 2) {
+    const input = taskLib.getInput('version') ?? '';
+    throw new Error(
+      `version: ${input} installs Infracost CLI ${resolved.version}, but this task targets 0.10.x. Pin version: 0.10.x, or move to Infracost CI 2.x: ${cli2SetupGuide}`
+    );
+  }
+}
+
+/**
  * ConfigOption is an interface defining an input option that the InfracostSetup task can take.
  */
 interface ConfigOption {
@@ -268,6 +290,7 @@ async function run() {
     exportEnvVars();
 
     const version = await getVersion();
+    checkCLI2(version);
     await downloadTool(version);
 
     await configureInfracost();

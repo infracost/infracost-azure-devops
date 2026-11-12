@@ -9,6 +9,7 @@ interface MockHelperOptions {
   currency?: string,
   platform?: 'darwin' | 'linux' | 'win32',
   arch?: 'x32' | 'x64' | 'arm' | 'arm64',
+  releases?: string[],
 }
 
 export default function setupRunner(opts: MockHelperOptions): MockRun.TaskMockRunner {
@@ -33,7 +34,7 @@ export default function setupRunner(opts: MockHelperOptions): MockRun.TaskMockRu
   taskRunner.registerMock('node-fetch', (url: string) => {
     console.log(`[mock node-fetch] fetch ${url}`);
     return {
-      json: () => [{ name: 'v0.9.15' }, { name: 'v0.9.16' }, { name: 'v0.9.17' }],
+      json: () => (opts.releases ?? ['v0.9.15', 'v0.9.16', 'v0.9.17']).map((name) => ({ name })),
     };
   });
 
